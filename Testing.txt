@@ -1,5 +1,165 @@
-Show the percentage discount,
-Early buy discount,
-First 100 buyer special discount,
-Promocode,
-Referral will provide
+To implement the API system as outlined in your Business Requirements Document (BRD) using FastAPI, you will need to create endpoints corresponding to each of the features specified. Below is a simplified example of how to set up a FastAPI application with the required routes for Patient Management, Appointment Scheduling, Electronic Medical Records (EMR), Prescription Management, and Billing & Insurance APIs.
+
+### FastAPI Setup
+
+First, make sure to install FastAPI and an ASGI server like `uvicorn`:
+
+```bash
+pip install fastapi uvicorn
+```
+
+### FastAPI Application Code
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+
+app = FastAPI()
+
+# Sample data stores
+patients = {}
+appointments = {}
+medical_records = {}
+prescriptions = {}
+billing = {}
+
+# Models for Pydantic
+class Patient(BaseModel):
+    id: int
+    name: str
+    contact: str
+    medical_history: str
+
+class Appointment(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    date_time: str
+
+class MedicalRecord(BaseModel):
+    patient_id: int
+    record_details: str
+
+class Prescription(BaseModel):
+    id: int
+    patient_id: int
+    drug_name: str
+    dosage: str
+
+class Invoice(BaseModel):
+    id: int
+    patient_id: int
+    amount: float
+
+# Patient Management API
+@app.post("/patients", response_model=Patient)
+def create_patient(patient: Patient):
+    if patient.id in patients:
+        raise HTTPException(status_code=400, detail="Patient already exists")
+    patients[patient.id] = patient
+    return patient
+
+@app.get("/patients/{id}", response_model=Patient)
+def get_patient(id: int):
+    if id not in patients:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    return patients[id]
+
+@app.put("/patients/{id}", response_model=Patient)
+def update_patient(id: int, patient: Patient):
+    if id not in patients:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    patients[id] = patient
+    return patient
+
+@app.delete("/patients/{id}")
+def delete_patient(id: int):
+    if id not in patients:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    del patients[id]
+    return {"message": "Patient deleted"}
+
+# Appointment Scheduling API
+@app.post("/appointments", response_model=Appointment)
+def schedule_appointment(appointment: Appointment):
+    if appointment.id in appointments:
+        raise HTTPException(status_code=400, detail="Appointment already exists")
+    appointments[appointment.id] = appointment
+    return appointment
+
+@app.put("/appointments/{id}", response_model=Appointment)
+def modify_appointment(id: int, appointment: Appointment):
+    if id not in appointments:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    appointments[id] = appointment
+    return appointment
+
+@app.get("/doctors/{doctor_id}/availability")
+def get_doctor_availability(doctor_id: int):
+    # Implementation for retrieving doctor availability can be complex.
+    # For simplicity, returning a placeholder response.
+    return {"doctor_id": doctor_id, "available_slots": ["2023-10-01T10:00", "2023-10-01T11:00"]}
+
+# Electronic Medical Records (EMR) API
+@app.post("/patients/{id}/records", response_model=MedicalRecord)
+def add_medical_record(id: int, record: MedicalRecord):
+    if id not in patients:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    medical_records[id] = record
+    return record
+
+@app.get("/patients/{id}/records")
+def get_medical_records(id: int):
+    if id not in medical_records:
+        raise HTTPException(status_code=404, detail="Medical records not found")
+    return medical_records[id]
+
+# Prescription Management API
+@app.post("/prescriptions", response_model=Prescription)
+def create_prescription(prescription: Prescription):
+    if prescription.id in prescriptions:
+        raise HTTPException(status_code=400, detail="Prescription already exists")
+    prescriptions[prescription.id] = prescription
+    return prescription
+
+@app.get("/prescriptions/{id}")
+def get_prescription(id: int):
+    if id not in prescriptions:
+        raise HTTPException(status_code=404, detail="Prescription not found")
+    return prescriptions[id]
+
+# Billing & Insurance API
+@app.post("/billing", response_model=Invoice)
+def create_invoice(invoice: Invoice):
+    if invoice.id in billing:
+        raise HTTPException(status_code=400, detail="Invoice already exists")
+    billing[invoice.id] = invoice
+    return invoice
+
+@app.get("/billing/{id}")
+def get_invoice(id: int):
+    if id not in billing:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    return billing[id]
+
+# Run the application
+# Use the command below to run the server
+# uvicorn main:app --reload
+```
+
+### Running the Application
+
+Save the code above in a file (e.g., `main.py`), and then run the FastAPI app using:
+
+```bash
+uvicorn main:app --reload
+```
+
+### Accessing the API
+
+Once the server is running, you can access the API documentation at `http://127.0.0.1:8000/docs`, where you can interact with the API endpoints.
+
+### Note
+
+This implementation is simplified for demonstration purposes. In a production environment, you would need to implement proper error handling, input validation, authentication, and persistence using a database instead of in-memory dictionaries. Additionally, consider implementing security measures to comply with regulations such as HIPAA or GDPR.
