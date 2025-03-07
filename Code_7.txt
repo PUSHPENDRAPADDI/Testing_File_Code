@@ -1,0 +1,99 @@
+Certainly! Below is a simple example of a FastAPI application that could serve as a starting point for a service related to the role of Asset Curation Lead – Developer Productivity. This example focuses on creating an API to manage AI assets (prompts and agents) and includes endpoints for adding, retrieving, and deleting assets.
+
+### FastAPI Application Example
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List
+
+app = FastAPI()
+
+# Define a model for AI assets
+class AIAsset(BaseModel):
+    id: int
+    name: str
+    description: str
+    type: str  # e.g., "prompt" or "agent"
+    content: str  # This could be the actual prompt or agent code
+
+# In-memory storage for AI assets
+ai_assets = []
+
+@app.post("/assets/", response_model=AIAsset)
+def create_asset(asset: AIAsset):
+    # Check if the asset already exists
+    for existing_asset in ai_assets:
+        if existing_asset.id == asset.id:
+            raise HTTPException(status_code=400, detail="Asset with this ID already exists.")
+    
+    ai_assets.append(asset)
+    return asset
+
+@app.get("/assets/", response_model=List[AIAsset])
+def get_assets():
+    return ai_assets
+
+@app.get("/assets/{asset_id}", response_model=AIAsset)
+def get_asset(asset_id: int):
+    for asset in ai_assets:
+        if asset.id == asset_id:
+            return asset
+    raise HTTPException(status_code=404, detail="Asset not found.")
+
+@app.delete("/assets/{asset_id}")
+def delete_asset(asset_id: int):
+    global ai_assets
+    ai_assets = [asset for asset in ai_assets if asset.id != asset_id]
+    return {"detail": "Asset deleted."}
+
+@app.put("/assets/{asset_id}", response_model=AIAsset)
+def update_asset(asset_id: int, updated_asset: AIAsset):
+    for idx, asset in enumerate(ai_assets):
+        if asset.id == asset_id:
+            ai_assets[idx] = updated_asset
+            return updated_asset
+    raise HTTPException(status_code=404, detail="Asset not found.")
+
+# Run the application with: uvicorn main:app --reload
+```
+
+### Requirements
+
+To run this FastAPI application, you'll need to have Python and FastAPI installed. You can install FastAPI and an ASGI server (like Uvicorn) using pip:
+
+```bash
+pip install fastapi uvicorn
+```
+
+### Running the Application
+
+You can run the application using Uvicorn by saving the code to a file named `main.py` and executing the following command in your terminal:
+
+```bash
+uvicorn main:app --reload
+```
+
+### API Endpoints
+
+- `POST /assets/`: Create a new AI asset.
+- `GET /assets/`: Retrieve a list of all AI assets.
+- `GET /assets/{asset_id}`: Retrieve a specific AI asset by ID.
+- `DELETE /assets/{asset_id}`: Delete an AI asset by ID.
+- `PUT /assets/{asset_id}`: Update an existing AI asset.
+
+### Example JSON for Asset Creation
+
+Here is an example JSON payload you can use to create an asset:
+
+```json
+{
+    "id": 1,
+    "name": "Sample AI Prompt",
+    "description": "This is a sample prompt for AI.",
+    "type": "prompt",
+    "content": "What is the capital of France?"
+}
+```
+
+This example serves as a foundation to build upon for your role, as you might want to add features like user authentication, database integration, or more sophisticated governance and evaluation mechanisms based on the requirements of your organization.
