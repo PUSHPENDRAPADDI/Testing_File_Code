@@ -1,0 +1,322 @@
+Creating a cab application involves building a backend service using Node.js and Express. Below, I'll outline the requirements and generate a basic Express application that meets those requirements.
+
+### Requirements
+1. **User Management**
+   - Register a user (rider)
+   - Login a user (rider)
+   - View user profile
+
+2. **Driver Management**
+   - Register a driver
+   - Login a driver
+   - View driver profile
+
+3. **Ride Management**
+   - Request a ride
+   - View ride status
+   - Complete a ride
+
+4. **Payment Management**
+   - Process payment for a completed ride
+
+5. **Basic Security**
+   - Use JWT for authentication
+
+### Project Setup
+1. **Initialize a Node.js Project**
+   ```bash
+   mkdir cab-app
+   cd cab-app
+   npm init -y
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   npm install express mongoose bcryptjs jsonwebtoken dotenv
+   ```
+
+3. **Create Folder Structure**
+   ```bash
+   mkdir models routes middleware config
+   ```
+
+### Basic Code Structure
+
+#### 1. `server.js`
+```javascript
+const express = require('express');
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const userRoutes = require('./routes/userRoutes');
+const driverRoutes = require('./routes/driverRoutes');
+const rideRoutes = require('./routes/rideRoutes');
+
+dotenv.config();
+
+const app = express();
+app.use(express.json());
+
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.log(err));
+
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/drivers', driverRoutes);
+app.use('/api/rides', rideRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
+```
+
+#### 2. `config/db.js`
+```javascript
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log('MongoDB connected');
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exit(1);
+    }
+};
+
+module.exports = connectDB;
+```
+
+#### 3. `models/User.js`
+```javascript
+const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+});
+
+const User = mongoose.model('User', userSchema);
+module.exports = User;
+```
+
+#### 4. `models/Driver.js`
+```javascript
+const mongoose = require('mongoose');
+
+const driverSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    vehicle: { type: String, required: true },
+    license: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+});
+
+const Driver = mongoose.model('Driver', driverSchema);
+module.exports = Driver;
+```
+
+#### 5. `models/Ride.js`
+```javascript
+const mongoose = require('mongoose');
+
+const rideSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    driverId: { type: mongoose.Schema.Types.ObjectId, ref: 'Driver' },
+    status: { type: String, enum: ['requested', 'in-progress', 'completed'], default: 'requested' },
+    startLocation: { type: String, required: true },
+    endLocation: { type: String, required: true },
+    fare: { type: Number },
+});
+
+const Ride = mongoose.model('Ride', rideSchema);
+module.exports = Ride;
+```
+
+#### 6. `routes/userRoutes.js`
+```javascript
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+const router = express.Router();
+
+// Register
+router.post('/register', async (req, res) => {
+    const { name, email, password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ name, email, password: hashedPassword });
+    
+    await user.save();
+    res.status(201).json({ message: 'User registered successfully' });
+});
+
+// Login
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+});
+
+// View Profile
+router.get('/profile', async (req, res) => {
+    // Assume we have a middleware that verifies the JWT and attaches user info to req.user
+    const user = await User.findById(req.user.id);
+    res.json(user);
+});
+
+module.exports = router;
+```
+
+#### 7. `routes/driverRoutes.js`
+```javascript
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const Driver = require('../models/Driver');
+
+const router = express.Router();
+
+// Register
+router.post('/register', async (req, res) => {
+    const { name, vehicle, license, email, password } = req.body;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const driver = new Driver({ name, vehicle, license, email, password: hashedPassword });
+    
+    await driver.save();
+    res.status(201).json({ message: 'Driver registered successfully' });
+});
+
+// Login
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    const driver = await Driver.findOne({ email });
+    if (!driver || !(await bcrypt.compare(password, driver.password))) {
+        return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ id: driver._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+});
+
+// View Profile
+router.get('/profile', async (req, res) => {
+    // Assume we have a middleware that verifies the JWT and attaches user info to req.user
+    const driver = await Driver.findById(req.user.id);
+    res.json(driver);
+});
+
+module.exports = router;
+```
+
+#### 8. `routes/rideRoutes.js`
+```javascript
+const express = require('express');
+const Ride = require('../models/Ride');
+
+const router = express.Router();
+
+// Request a ride
+router.post('/request', async (req, res) => {
+    const { userId, startLocation, endLocation } = req.body;
+    const ride = new Ride({ userId, startLocation, endLocation });
+    
+    await ride.save();
+    res.status(201).json(ride);
+});
+
+// Complete a ride
+router.post('/complete/:rideId', async (req, res) => {
+    const { rideId } = req.params;
+    const ride = await Ride.findById(rideId);
+    
+    if (!ride) {
+        return res.status(404).json({ message: 'Ride not found' });
+    }
+
+    ride.status = 'completed';
+    ride.fare = calculateFare(ride.startLocation, ride.endLocation); // Implement fare calculation logic
+    await ride.save();
+
+    res.json(ride);
+});
+
+// View ride status
+router.get('/:rideId', async (req, res) => {
+    const { rideId } = req.params;
+    const ride = await Ride.findById(rideId);
+    
+    if (!ride) {
+        return res.status(404).json({ message: 'Ride not found' });
+    }
+
+    res.json(ride);
+});
+
+function calculateFare(startLocation, endLocation) {
+    // Implement fare calculation logic based on distance or other factors
+    return Math.random() * 100; // Sample fare calculation
+}
+
+module.exports = router;
+```
+
+### 9. Middleware for JWT Authentication (optional)
+You can implement a simple middleware to protect your routes. 
+
+#### `middleware/auth.js`
+```javascript
+const jwt = require('jsonwebtoken');
+
+const auth = (req, res, next) => {
+    const token = req.headers['authorization'];
+    
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) return res.status(500).json({ message: 'Failed to authenticate token' });
+        
+        req.user = decoded;
+        next();
+    });
+};
+
+module.exports = auth;
+```
+
+### 10. Environment Variables
+Create a `.env` file in the root of your project:
+```
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+```
+
+### Running the Application
+1. **Start the server**
+   ```bash
+   node server.js
+   ```
+
+2. **Test the API**
+   You can use tools like Postman or Insomnia to test the API endpoints.
+
+### Conclusion
+This is a basic structure for a cab application using Node.js and Express. You can expand upon this by adding more features, handling different error cases, improving security, implementing real fare calculations, and integrating with a payment gateway.
