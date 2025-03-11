@@ -1,164 +1,189 @@
-Certainly! Below is an implementation of a basic FastAPI application based on the Business Requirements Document (BRD) provided. This code includes endpoints for Patient Management, Appointment Scheduling, Electronic Medical Records (EMR), Prescription Management, and Billing & Insurance as described in the BRD.
+Creating a cab app using Express.js involves setting up a server that can handle various functionalities like user registration, booking rides, tracking rides, and managing drivers. Below is a simplified version of how you might structure such an application. 
 
-```python
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List, Optional
+This example assumes basic requirements such as user registration, ride booking, and ride tracking. We will not cover the complete implementation but will provide necessary endpoints along with basic structure.
 
-app = FastAPI()
+### Step 1: Set Up Your Project
 
-# In-memory data storage for demonstration purposes
-patients_db = {}
-appointments_db = {}
-records_db = {}
-prescriptions_db = {}
-billing_db = {}
+First, create a new Node.js project and install required dependencies.
 
-# Models
-class Patient(BaseModel):
-    id: int
-    name: str
-    contact: str
-    medical_history: str
-
-class Appointment(BaseModel):
-    id: int
-    patient_id: int
-    doctor_id: int
-    time: str  # ISO format datetime string
-
-class MedicalRecord(BaseModel):
-    patient_id: int
-    record: str
-
-class Prescription(BaseModel):
-    id: int
-    patient_id: int
-    doctor_id: int
-    medication: str
-
-class Invoice(BaseModel):
-    id: int
-    patient_id: int
-    amount: float
-
-# Patient Management API
-@app.post("/patients", response_model=Patient)
-def register_patient(patient: Patient):
-    if patient.id in patients_db:
-        raise HTTPException(status_code=400, detail="Patient already exists.")
-    patients_db[patient.id] = patient
-    return patient
-
-@app.get("/patients/{id}", response_model=Patient)
-def retrieve_patient(id: int):
-    patient = patients_db.get(id)
-    if not patient:
-        raise HTTPException(status_code=404, detail="Patient not found.")
-    return patient
-
-@app.put("/patients/{id}", response_model=Patient)
-def update_patient(id: int, patient: Patient):
-    if id not in patients_db:
-        raise HTTPException(status_code=404, detail="Patient not found.")
-    patients_db[id] = patient
-    return patient
-
-@app.delete("/patients/{id}")
-def deactivate_patient(id: int):
-    if id not in patients_db:
-        raise HTTPException(status_code=404, detail="Patient not found.")
-    del patients_db[id]
-    return {"detail": "Patient profile deactivated."}
-
-# Appointment Scheduling API
-@app.post("/appointments", response_model=Appointment)
-def schedule_appointment(appointment: Appointment):
-    if appointment.id in appointments_db:
-        raise HTTPException(status_code=400, detail="Appointment already exists.")
-    appointments_db[appointment.id] = appointment
-    return appointment
-
-@app.put("/appointments/{id}", response_model=Appointment)
-def modify_appointment(id: int, appointment: Appointment):
-    if id not in appointments_db:
-        raise HTTPException(status_code=404, detail="Appointment not found.")
-    appointments_db[id] = appointment
-    return appointment
-
-@app.get("/doctors/{id}/availability")
-def retrieve_doctor_availability(id: int):
-    # Mock example - In a real application, this would check availability in a database
-    return {"doctor_id": id, "available_times": ["2023-10-01T09:00:00", "2023-10-01T10:00:00"]}
-
-# Electronic Medical Records (EMR) API
-@app.get("/patients/{id}/records", response_model=List[MedicalRecord])
-def retrieve_medical_records(id: int):
-    records = [record for record in records_db.get(id, [])]
-    return records
-
-@app.post("/patients/{id}/records", response_model=MedicalRecord)
-def add_update_medical_record(id: int, record: MedicalRecord):
-    if id not in records_db:
-        records_db[id] = []
-    records_db[id].append(record)
-    return record
-
-# Prescription Management API
-@app.post("/prescriptions", response_model=Prescription)
-def generate_prescription(prescription: Prescription):
-    if prescription.id in prescriptions_db:
-        raise HTTPException(status_code=400, detail="Prescription already exists.")
-    prescriptions_db[prescription.id] = prescription
-    return prescription
-
-@app.get("/prescriptions/{id}", response_model=Prescription)
-def retrieve_prescription_details(id: int):
-    prescription = prescriptions_db.get(id)
-    if not prescription:
-        raise HTTPException(status_code=404, detail="Prescription not found.")
-    return prescription
-
-# Billing & Insurance API
-@app.post("/billing", response_model=Invoice)
-def generate_invoice(invoice: Invoice):
-    if invoice.id in billing_db:
-        raise HTTPException(status_code=400, detail="Invoice already exists.")
-    billing_db[invoice.id] = invoice
-    return invoice
-
-@app.get("/billing/{id}", response_model=Invoice)
-def retrieve_invoice_details(id: int):
-    invoice = billing_db.get(id)
-    if not invoice:
-        raise HTTPException(status_code=404, detail="Invoice not found.")
-    return invoice
-
-@app.post("/insurance/claims")
-def process_insurance_claim(claim_data: dict):
-    # Implementation of insurance claim processing logic (mock example)
-    return {"detail": "Insurance claim processed."}
-
-# Run the application using: uvicorn <filename>:app --reload
+```bash
+mkdir cab-app
+cd cab-app
+npm init -y
+npm install express mongoose body-parser cors
 ```
 
-### Instructions to Run the FastAPI Application
-1. Install FastAPI and an ASGI server (e.g., `uvicorn`):
-   ```bash
-   pip install fastapi uvicorn
-   ```
+### Step 2: Create Basic Server Structure
 
-2. Save the above code to a file named `main.py`.
+Create the following folder structure:
 
-3. Run the FastAPI application:
-   ```bash
-   uvicorn main:app --reload
-   ```
+```
+cab-app/
+│
+├── models/
+│   ├── User.js
+│   ├── Ride.js
+│
+├── routes/
+│   ├── users.js
+│   ├── rides.js
+│
+├── app.js
+└── config.js
+```
 
-4. You can access the documentation for the API at `http://127.0.0.1:8000/docs`.
+### Step 3: Create Configuration File
 
-### Additional Notes
-- This implementation uses in-memory data storage (dictionaries) for demonstration purposes. In a production environment, you would typically use a database.
-- Error handling is included for cases where resources are not found or already exist.
-- The `retrieve_doctor_availability` endpoint is a mock example. You should implement actual logic based on your application's needs.
-- Security measures such as authentication and authorization (OAuth 2.0/JWT) are not included in this basic example but should be implemented according to your requirements.
+Create a `config.js` file for your database connection settings.
+
+```javascript
+// config.js
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/cabapp', { useNewUrlParser: true, useUnifiedTopology: true });
+    console.log("MongoDB connected.");
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
+```
+
+### Step 4: Create Mongoose Models
+
+#### User Model (models/User.js)
+
+```javascript
+// models/User.js
+const mongoose = require('mongoose');
+
+const UserSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+});
+
+module.exports = mongoose.model('User', UserSchema);
+```
+
+#### Ride Model (models/Ride.js)
+
+```javascript
+// models/Ride.js
+const mongoose = require('mongoose');
+
+const RideSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  pickupLocation: { type: String, required: true },
+  dropoffLocation: { type: String, required: true },
+  status: { type: String, default: 'pending' },
+  createdAt: { type: Date, default: Date.now },
+});
+
+module.exports = mongoose.model('Ride', RideSchema);
+```
+
+### Step 5: Create Routes
+
+#### User Routes (routes/users.js)
+
+```javascript
+// routes/users.js
+const express = require('express');
+const User = require('../models/User');
+const router = express.Router();
+
+// Register a new user
+router.post('/register', async (req, res) => {
+  const { name, email, password } = req.body;
+  const user = new User({ name, email, password });
+  try {
+    const savedUser = await user.save();
+    res.status(201).json(savedUser);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+module.exports = router;
+```
+
+#### Ride Routes (routes/rides.js)
+
+```javascript
+// routes/rides.js
+const express = require('express');
+const Ride = require('../models/Ride');
+const router = express.Router();
+
+// Book a new ride
+router.post('/book', async (req, res) => {
+  const { userId, pickupLocation, dropoffLocation } = req.body;
+  const ride = new Ride({ userId, pickupLocation, dropoffLocation });
+  try {
+    const savedRide = await ride.save();
+    res.status(201).json(savedRide);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Get rides for a user
+router.get('/:userId/rides', async (req, res) => {
+  try {
+    const rides = await Ride.find({ userId: req.params.userId });
+    res.status(200).json(rides);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+module.exports = router;
+```
+
+### Step 6: Set Up the Main Application File
+
+Create `app.js` to set up the Express server and middleware.
+
+```javascript
+// app.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const connectDB = require('./config');
+
+const userRoutes = require('./routes/users');
+const rideRoutes = require('./routes/rides');
+
+const app = express();
+connectDB();
+
+app.use(cors());
+app.use(bodyParser.json());
+
+app.use('/api/users', userRoutes);
+app.use('/api/rides', rideRoutes);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+```
+
+### Step 7: Run Your Application
+
+Finally, run your application:
+
+```bash
+node app.js
+```
+
+### Conclusion
+
+You now have a basic cab app backend structure using Express.js and MongoDB with endpoints for user registration and ride booking. For a complete application, you would want to implement authentication (e.g., JWT), error handling, input validation, and possibly a frontend to interact with your API.
+
+Feel free to expand upon this example to meet additional requirements or add more features as needed!
