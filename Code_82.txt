@@ -1,0 +1,174 @@
+Sure! Below is a sample FastAPI application that implements a simplified version of the Claim Import POC as described in your Business Requirements Document (BRD). This implementation includes endpoints for receiving claims, validating them, matching patients and providers, repricing claims, and returning the processed claims.
+
+### FastAPI Application Structure
+
+```plaintext
+claim_import/
+│
+├── main.py
+├── models.py
+├── schemas.py
+└── database.py
+```
+
+### Step 1: Set Up the Environment
+
+Make sure you have FastAPI and an ASGI server (like `uvicorn`) installed. You can install them using pip:
+
+```bash
+pip install fastapi[all] psycopg2
+```
+
+### Step 2: Create Database Connection
+
+#### `database.py`
+
+This file will handle the connection to the PostgreSQL database.
+
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = "postgresql://username:password@localhost/dbname"
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+```
+
+### Step 3: Define Data Models
+
+#### `models.py`
+
+This file will define the data models corresponding to the claims, patients, and providers.
+
+```python
+from sqlalchemy import Column, Integer, String, Float
+from .database import Base
+
+class Claim(Base):
+    __tablename__ = "claims"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    patient_id = Column(Integer, index=True)
+    provider_id = Column(Integer, index=True)
+    amount = Column(Float)
+    status = Column(String)
+
+class Patient(Base):
+    __tablename__ = "patients"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    first_name = Column(String)
+    last_name = Column(String)
+    dob = Column(String)
+
+class Provider(Base):
+    __tablename__ = "providers"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    tin = Column(String)
+    npi = Column(String)
+    last_name = Column(String)
+```
+
+### Step 4: Define Pydantic Schemas
+
+#### `schemas.py`
+
+This file will define the request and response schemas.
+
+```python
+from pydantic import BaseModel
+from typing import List
+
+class ClaimBase(BaseModel):
+    patient_id: int
+    provider_id: int
+    amount: float
+
+class ClaimCreate(ClaimBase):
+    pass
+
+class ClaimResponse(ClaimBase):
+    id: int
+    status: str
+
+    class Config:
+        orm_mode = True
+
+class Patient(BaseModel):
+    first_name: str
+    last_name: str
+    dob: str
+
+class Provider(BaseModel):
+    tin: str
+    npi: str
+    last_name: str
+```
+
+### Step 5: Implement FastAPI Endpoints
+
+#### `main.py`
+
+This file will implement the FastAPI application with the necessary endpoints.
+
+```python
+from fastapi import FastAPI, HTTPException, Depends
+from sqlalchemy.orm import Session
+from . import models, schemas
+from .database import SessionLocal, engine
+
+models.Base.metadata.create_all(bind=engine)
+
+app = FastAPI()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.post("/claims/", response_model=schemas.ClaimResponse)
+def create_claim(claim: schemas.ClaimCreate, db: Session = Depends(get_db)):
+    # Validate and match patient and provider
+    patient = db.query(models.Patient).filter(
+        models.Patient.id == claim.patient_id).first()
+    provider = db.query(models.Provider).filter(
+        models.Provider.id == claim.provider_id).first()
+    
+    if not patient or not provider:
+        raise HTTPException(status_code=404, detail="Patient or Provider not found")
+
+    # Reprice claim (simple logic for demonstration)
+    repriced_amount = claim.amount * 0.8  # Apply a discount for demonstration
+
+    db_claim = models.Claim(**claim.dict(), amount=repriced_amount, status="Processed")
+    db.add(db_claim)
+    db.commit()
+    db.refresh(db_claim)
+    
+    return db_claim
+
+@app.get("/claims/{claim_id}", response_model=schemas.ClaimResponse)
+def read_claim(claim_id: int, db: Session = Depends(get_db)):
+    claim = db.query(models.Claim).filter(models.Claim.id == claim_id).first()
+    if claim is None:
+        raise HTTPException(status_code=404, detail="Claim not found")
+    return claim
+```
+
+### Step 6: Run the Application
+
+You can run the FastAPI application using `uvicorn`. Open a terminal and execute:
+
+```bash
+uvicorn main:app --reload
+```
+
+### Conclusion
+
+This code provides a basic structure for your Claim Import POC application using FastAPI. You can extend it further by implementing additional features, handling errors more gracefully, implementing authentication, and integrating queues for processing claims. Make sure to adjust the database connection string and structure according to your actual database schema and requirements.
