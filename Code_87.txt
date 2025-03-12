@@ -1,0 +1,187 @@
+Certainly! Below is a sample implementation of the Healthcare API System using FastAPI in Python. This code provides a basic structure for the API endpoints outlined in your Business Requirements Document (BRD).
+
+### Project Structure
+```
+healthcare_api/
+│
+├── main.py
+├── models.py
+├── schemas.py
+└── database.py
+```
+
+### 1. `main.py`
+This file contains the main FastAPI application and the routes for each API module.
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+from database import Database
+
+app = FastAPI()
+
+# Instantiate the database
+db = Database()
+
+# Patient Management API
+class Patient(BaseModel):
+    id: int
+    name: str
+    age: int
+    medical_history: List[str]
+
+@app.post("/patients", response_model=Patient)
+def register_patient(patient: Patient):
+    return db.add_patient(patient)
+
+@app.get("/patients/{id}", response_model=Patient)
+def get_patient(id: int):
+    patient = db.get_patient(id)
+    if patient is None:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    return patient
+
+@app.put("/patients/{id}", response_model=Patient)
+def update_patient(id: int, patient: Patient):
+    updated_patient = db.update_patient(id, patient)
+    if updated_patient is None:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    return updated_patient
+
+@app.delete("/patients/{id}", response_model=Patient)
+def deactivate_patient(id: int):
+    deleted_patient = db.deactivate_patient(id)
+    if deleted_patient is None:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    return deleted_patient
+
+
+# Appointment Scheduling API
+class Appointment(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    time: str
+
+@app.post("/appointments", response_model=Appointment)
+def schedule_appointment(appointment: Appointment):
+    return db.add_appointment(appointment)
+
+@app.put("/appointments/{id}", response_model=Appointment)
+def modify_appointment(id: int, appointment: Appointment):
+    updated_appointment = db.update_appointment(id, appointment)
+    if updated_appointment is None:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    return updated_appointment
+
+
+# Electronic Medical Records (EMR) API
+class MedicalRecord(BaseModel):
+    patient_id: int
+    record: str
+
+@app.post("/patients/{id}/records", response_model=MedicalRecord)
+def add_medical_record(id: int, record: MedicalRecord):
+    return db.add_medical_record(id, record)
+
+
+# Prescription Management API
+class Prescription(BaseModel):
+    id: int
+    patient_id: int
+    medication: str
+
+@app.post("/prescriptions", response_model=Prescription)
+def generate_prescription(prescription: Prescription):
+    return db.add_prescription(prescription)
+
+
+# Billing & Insurance API
+class Invoice(BaseModel):
+    id: int
+    patient_id: int
+    amount: float
+
+@app.post("/billing", response_model=Invoice)
+def generate_invoice(invoice: Invoice):
+    return db.add_invoice(invoice)
+
+
+# Start the application with: uvicorn main:app --reload
+```
+
+### 2. `models.py`
+This file can hold your database models if you decide to use an ORM like SQLAlchemy. For simplicity, we will mock the database interactions in this example.
+
+```python
+class Database:
+    def __init__(self):
+        self.patients = {}
+        self.appointments = {}
+        self.records = {}
+        self.prescriptions = {}
+        self.invoices = {}
+        self.patient_id_counter = 1
+        self.appointment_id_counter = 1
+
+    def add_patient(self, patient):
+        patient.id = self.patient_id_counter
+        self.patients[self.patient_id_counter] = patient
+        self.patient_id_counter += 1
+        return patient
+
+    def get_patient(self, id):
+        return self.patients.get(id)
+
+    def update_patient(self, id, patient):
+        if id in self.patients:
+            self.patients[id] = patient
+            patient.id = id
+            return patient
+        return None
+
+    def deactivate_patient(self, id):
+        return self.patients.pop(id, None)
+
+    def add_appointment(self, appointment):
+        appointment.id = self.appointment_id_counter
+        self.appointments[self.appointment_id_counter] = appointment
+        self.appointment_id_counter += 1
+        return appointment
+
+    def update_appointment(self, id, appointment):
+        if id in self.appointments:
+            self.appointments[id] = appointment
+            appointment.id = id
+            return appointment
+        return None
+
+    def add_medical_record(self, id, record):
+        self.records.setdefault(id, []).append(record)
+        return record
+
+    def add_prescription(self, prescription):
+        self.prescriptions[prescription.id] = prescription
+        return prescription
+
+    def add_invoice(self, invoice):
+        self.invoices[invoice.id] = invoice
+        return invoice
+```
+
+### 3. `schemas.py`
+This file can be used to define Pydantic schemas for your request and response models. However, for brevity, we have included them directly in `main.py`.
+
+### 4. `database.py`
+This file simulates a database. In a production setting, you would replace this with actual database interactions using an ORM or raw SQL queries.
+
+### Running the Application
+You can run your FastAPI application with the following command:
+
+```bash
+uvicorn main:app --reload
+```
+
+### Conclusion
+This implementation provides a basic structure for your Healthcare API System based on the requirements defined in your BRD. You can expand upon this by adding features such as authentication, validation, and connecting to an actual database. Adjust the endpoints, models, and database interactions as necessary to fit your actual use case.
