@@ -1,0 +1,164 @@
+Below is an example of how to implement the healthcare API system described in the Business Requirements Document (BRD) using FastAPI, a modern, fast (high-performance), web framework for building APIs with Python 3.6+ based on standard Python type hints.
+
+### FastAPI Implementation
+
+First, ensure you've installed FastAPI and an ASGI server like Uvicorn:
+
+```bash
+pip install fastapi uvicorn
+```
+
+Now, you can create the API using the following code structure:
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+
+app = FastAPI()
+
+# Data models
+class Patient(BaseModel):
+    id: int
+    name: str
+    contact_details: str
+    medical_history: str
+
+class Appointment(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    date_time: str
+
+class MedicalRecord(BaseModel):
+    patient_id: int
+    record_id: int
+    details: str
+
+class Prescription(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    medication: str
+
+class Invoice(BaseModel):
+    id: int
+    patient_id: int
+    amount: float
+
+# In-memory storage
+patients = []
+appointments = []
+medical_records = []
+prescriptions = []
+invoices = []
+
+# Patient Management API
+@app.post("/patients", response_model=Patient)
+def register_patient(patient: Patient):
+    patients.append(patient)
+    return patient
+
+@app.get("/patients/{id}", response_model=Patient)
+def get_patient(id: int):
+    patient = next((p for p in patients if p.id == id), None)
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    return patient
+
+@app.put("/patients/{id}", response_model=Patient)
+def update_patient(id: int, updated_patient: Patient):
+    for i, patient in enumerate(patients):
+        if patient.id == id:
+            patients[i] = updated_patient
+            return updated_patient
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+@app.delete("/patients/{id}")
+def deactivate_patient(id: int):
+    for i, patient in enumerate(patients):
+        if patient.id == id:
+            patients.pop(i)
+            return {"detail": "Patient deactivated"}
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+# Appointment Scheduling API
+@app.post("/appointments", response_model=Appointment)
+def schedule_appointment(appointment: Appointment):
+    appointments.append(appointment)
+    return appointment
+
+@app.put("/appointments/{id}", response_model=Appointment)
+def modify_appointment(id: int, updated_appointment: Appointment):
+    for i, appointment in enumerate(appointments):
+        if appointment.id == id:
+            appointments[i] = updated_appointment
+            return updated_appointment
+    raise HTTPException(status_code=404, detail="Appointment not found")
+
+@app.get("/doctors/{id}/availability")
+def get_doctor_availability(id: int):
+    # Placeholder for doctor availability logic
+    return {"doctor_id": id, "available": True}  # Replace with actual logic
+
+# EMR API
+@app.post("/patients/{id}/records", response_model=MedicalRecord)
+def add_medical_record(id: int, record: MedicalRecord):
+    record.patient_id = id
+    medical_records.append(record)
+    return record
+
+@app.get("/patients/{id}/records", response_model=List[MedicalRecord])
+def get_medical_records(id: int):
+    records = [record for record in medical_records if record.patient_id == id]
+    return records
+
+# Prescription Management API
+@app.post("/prescriptions", response_model=Prescription)
+def generate_prescription(prescription: Prescription):
+    prescriptions.append(prescription)
+    return prescription
+
+@app.get("/prescriptions/{id}", response_model=Prescription)
+def get_prescription(id: int):
+    prescription = next((p for p in prescriptions if p.id == id), None)
+    if not prescription:
+        raise HTTPException(status_code=404, detail="Prescription not found")
+    return prescription
+
+# Billing & Insurance API
+@app.post("/billing", response_model=Invoice)
+def generate_invoice(invoice: Invoice):
+    invoices.append(invoice)
+    return invoice
+
+@app.get("/billing/{id}", response_model=Invoice)
+def get_invoice(id: int):
+    invoice = next((inv for inv in invoices if inv.id == id), None)
+    if not invoice:
+        raise HTTPException(status_code=404, detail="Invoice not found")
+    return invoice
+
+# Run the application
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+### Running the API
+
+1. Save the above code in a Python file, e.g., `healthcare_api.py`.
+2. Run the FastAPI application using Uvicorn:
+
+   ```bash
+   uvicorn healthcare_api:app --reload
+   ```
+
+3. You can access the API documentation at `http://127.0.0.1:8000/docs`.
+
+### Note:
+
+- This implementation uses in-memory storage (lists) for simplicity. In a production environment, you would typically use a database for persistent storage.
+- The security and compliance aspects mentioned in your BRD (like HIPAA/GDPR compliance) need to be implemented in a real-world application.
+- The API endpoints should include authentication and authorization mechanisms (e.g., OAuth 2.0, JWT) for secure access.
+- The logic for doctor availability and enhanced prescription validation (e.g., drug interactions) would also need to be developed further.
