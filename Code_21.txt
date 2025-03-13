@@ -1,0 +1,134 @@
+To implement a basic claim import solution using FastAPI in Python, we will create an API that receives claims data via a WebAPI, validates the XML format, matches existing patient and provider records, reprices the claim, and sends it back to the MPI Core system. Below is a simplified version of such an implementation.
+
+### Prerequisites
+
+1. Install FastAPI and an ASGI server like `uvicorn`:
+   ```bash
+   pip install fastapi uvicorn
+   ```
+
+2. Install `xmlschema` for XML validation:
+   ```bash
+   pip install xmlschema
+   ```
+
+3. Install `asyncpg` for PostgreSQL database interaction:
+   ```bash
+   pip install asyncpg
+   ```
+
+### Directory Structure
+```
+claim_import/
+├── main.py
+└── models.py
+```
+
+### models.py
+This file will define the data models used in the application.
+
+```python
+from pydantic import BaseModel
+from typing import Optional
+
+class Claim(BaseModel):
+    claim_id: str
+    patient_first_name: str
+    patient_last_name: str
+    patient_dob: str
+    provider_tin: str
+    provider_npi: str
+    provider_last_name: str
+    amount: float
+
+class RepricedClaim(BaseModel):
+    claim_id: str
+    repriced_amount: float
+    status: str
+```
+
+### main.py
+This file will handle the FastAPI application, including the endpoints for receiving claims.
+
+```python
+import xml.etree.ElementTree as ET
+from fastapi import FastAPI, HTTPException
+from models import Claim, RepricedClaim
+import asyncpg
+import os
+
+app = FastAPI()
+
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://user:password@localhost/dbname')
+
+async def fetch_patient(patient_first_name: str, patient_last_name: str, dob: str):
+    # Simulate fetching from a database
+    return True  # Placeholder for actual database query
+
+async def fetch_provider(provider_tin: str, provider_npi: str, provider_last_name: str):
+    # Simulate fetching from a database
+    return True  # Placeholder for actual database query
+
+async def reprice_claim(claim: Claim):
+    # Simulate claim repricing logic
+    return claim.amount * 0.8  # Example repricing logic (20% discount)
+
+@app.post("/claims/import")
+async def import_claim(claim_xml: str):
+    try:
+        # Parse the XML
+        root = ET.fromstring(claim_xml)
+        claim_data = {
+            "claim_id": root.find("claim_id").text,
+            "patient_first_name": root.find("patient_first_name").text,
+            "patient_last_name": root.find("patient_last_name").text,
+            "patient_dob": root.find("patient_dob").text,
+            "provider_tin": root.find("provider_tin").text,
+            "provider_npi": root.find("provider_npi").text,
+            "provider_last_name": root.find("provider_last_name").text,
+            "amount": float(root.find("amount").text),
+        }
+        
+        claim = Claim(**claim_data)
+
+        # Validate patient
+        if not await fetch_patient(claim.patient_first_name, claim.patient_last_name, claim.patient_dob):
+            raise HTTPException(status_code=404, detail="Patient not found")
+
+        # Validate provider
+        if not await fetch_provider(claim.provider_tin, claim.provider_npi, claim.provider_last_name):
+            raise HTTPException(status_code=404, detail="Provider not found")
+
+        # Reprice the claim
+        repriced_amount = await reprice_claim(claim)
+        repriced_claim = RepricedClaim(claim_id=claim.claim_id, repriced_amount=repriced_amount, status="Processed")
+
+        return repriced_claim
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+### Running the Application
+
+1. Save the above two files in a directory named `claim_import`.
+2. Set up your PostgreSQL database and adjust the `DATABASE_URL` in `main.py` as needed.
+3. Run the FastAPI application:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+### Testing the API
+You can test the endpoint using tools like Postman or curl. Here’s an example of how to call the API with `curl`:
+
+```bash
+curl -X POST "http://localhost:8000/claims/import" -H "Content-Type: application/xml" -d '<claim><claim_id>1234</claim_id><patient_first_name>John</patient_first_name><patient_last_name>Doe</patient_last_name><patient_dob>1980-01-01</patient_dob><provider_tin>123456789</provider_tin><provider_npi>987654321</provider_npi><provider_last_name>Smith</provider_last_name><amount>1000.0</amount></claim>'
+```
+
+### Note
+- This is a basic implementation and may need enhancements like error handling, database interactions, user authentication, and XML schema validation. 
+- For real applications, consider implementing logging, validation, and security measures as per requirements. 
+- Make sure to set up your PostgreSQL database and implement the actual data-fetching logic according to your database schema.
