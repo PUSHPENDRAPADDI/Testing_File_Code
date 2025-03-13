@@ -1,0 +1,150 @@
+Certainly! Below is an example of a FastAPI application that implements a basic version of the Claim Import POC as outlined in your Business Requirements Document (BRD). The code will set up endpoints for receiving claim files, validating them, matching patients and providers, repricing claims, and sending the results back.
+
+Please note that this is a simplified version and may require additional features, error handling, logging, and security measures for a production-ready application.
+
+### FastAPI Implementation
+
+```python
+from fastapi import FastAPI, HTTPException, UploadFile, Form
+from pydantic import BaseModel
+from typing import List, Optional
+import xml.etree.ElementTree as ET
+import uuid
+
+app = FastAPI()
+
+# Simulated in-memory databases for patients and providers
+patients_db = [
+    {"id": 1, "first_name": "John", "last_name": "Doe", "dob": "1990-01-01"},
+    {"id": 2, "first_name": "Jane", "last_name": "Smith", "dob": "1992-02-02"},
+]
+
+providers_db = [
+    {"id": 1, "tin": "123456789", "npi": "987654321", "last_name": "Brown"},
+    {"id": 2, "tin": "987654321", "npi": "123456789", "last_name": "Johnson"},
+]
+
+# Model for incoming claims
+class Claim(BaseModel):
+    patient_first_name: str
+    patient_last_name: str
+    patient_dob: str
+    provider_tin: str
+    provider_npi: str
+    claim_amount: float
+
+# Model for outgoing claims
+class OutboundClaim(BaseModel):
+    claim_id: str
+    patient_id: Optional[int]
+    provider_id: Optional[int]
+    repriced_amount: float
+
+
+@app.post("/claims/import/", response_model=List[OutboundClaim])
+async def import_claims(file: UploadFile):
+    if file.content_type != 'application/xml':
+        raise HTTPException(status_code=400, detail="Invalid file type. Please upload an XML file.")
+
+    # Parse the XML file
+    try:
+        tree = ET.parse(file.file)
+        root = tree.getroot()
+    except ET.ParseError:
+        raise HTTPException(status_code=400, detail="Error parsing XML file.")
+
+    outbound_claims = []
+    
+    for claim in root.findall('claim'):
+        claim_data = Claim(
+            patient_first_name=claim.find('patient_first_name').text,
+            patient_last_name=claim.find('patient_last_name').text,
+            patient_dob=claim.find('patient_dob').text,
+            provider_tin=claim.find('provider_tin').text,
+            provider_npi=claim.find('provider_npi').text,
+            claim_amount=float(claim.find('claim_amount').text)
+        )
+
+        # Validate patient
+        patient = next((p for p in patients_db if 
+                        p["first_name"] == claim_data.patient_first_name and 
+                        p["last_name"] == claim_data.patient_last_name and 
+                        p["dob"] == claim_data.patient_dob), None)
+
+        if not patient:
+            raise HTTPException(status_code=404, detail="Patient not found.")
+
+        # Validate provider
+        provider = next((pr for pr in providers_db if 
+                         pr["tin"] == claim_data.provider_tin and 
+                         pr["npi"] == claim_data.provider_npi), None)
+
+        if not provider:
+            raise HTTPException(status_code=404, detail="Provider not found.")
+
+        # Reprice claim (for simplicity, just applying a flat rate discount)
+        repriced_amount = claim_data.claim_amount * 0.9  # Example: applying 10% discount
+
+        outbound_claim = OutboundClaim(
+            claim_id=str(uuid.uuid4()),
+            patient_id=patient["id"],
+            provider_id=provider["id"],
+            repriced_amount=repriced_amount
+        )
+        
+        outbound_claims.append(outbound_claim)
+
+    return outbound_claims
+
+# You can run the FastAPI application using the command below:
+# uvicorn main:app --reload
+```
+
+### Instructions to Run the Code
+
+1. **Install FastAPI and Uvicorn**:
+   Make sure you have FastAPI and Uvicorn installed. You can install them using pip:
+   ```bash
+   pip install fastapi uvicorn
+   ```
+
+2. **Save the Code**:
+   Save the code to a file named `main.py`.
+
+3. **Run the Application**:
+   Use the following command to run the FastAPI application:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+4. **Test the API**:
+   You can test the API by sending a POST request to `http://127.0.0.1:8000/claims/import/` with an XML file containing claims data.
+
+### Example XML Structure
+
+Here’s an example of how the XML file should look:
+
+```xml
+<claims>
+    <claim>
+        <patient_first_name>John</patient_first_name>
+        <patient_last_name>Doe</patient_last_name>
+        <patient_dob>1990-01-01</patient_dob>
+        <provider_tin>123456789</provider_tin>
+        <provider_npi>987654321</provider_npi>
+        <claim_amount>100.00</claim_amount>
+    </claim>
+    <claim>
+        <patient_first_name>Jane</patient_first_name>
+        <patient_last_name>Smith</patient_last_name>
+        <patient_dob>1992-02-02</patient_dob>
+        <provider_tin>987654321</provider_tin>
+        <provider_npi>123456789</provider_npi>
+        <claim_amount>150.00</claim_amount>
+    </claim>
+</claims>
+```
+
+### Notes
+- This implementation is basic and intended for educational purposes. In a production environment, you would need to consider aspects like error handling, logging, security, and optimizations.
+- The repricing logic is simplified and should be expanded based on your actual requirements.
