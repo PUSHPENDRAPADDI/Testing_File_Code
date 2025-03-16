@@ -1,4 +1,14 @@
-Sure! Below is a simple implementation of a FastAPI application that could serve as a starting point for the Claim Import solution as described in the Business Requirements Document (BRD). This example includes endpoints for receiving claims, validating them, matching patients and providers, repricing claims, and sending the results back.
+Certainly! Below is a basic implementation of a FastAPI app that could serve as the foundation for the Claim Import solution described in your Business Requirements Document (BRD). The app includes endpoints for receiving claims, validating claims, and sending the processed claims back to the MPI Core system.
+
+### FastAPI Implementation
+
+1. **Install FastAPI and Uvicorn**: Make sure you have FastAPI and Uvicorn installed. You can do this with pip:
+
+   ```bash
+   pip install fastapi uvicorn
+   ```
+
+2. **Create the FastAPI Application**: Below is a simple example of how to set up the FastAPI application.
 
 ```python
 from fastapi import FastAPI, HTTPException, UploadFile, File
@@ -8,19 +18,7 @@ import xml.etree.ElementTree as ET
 
 app = FastAPI()
 
-# Mock databases
-patients_db = [
-    {"first_name": "John", "last_name": "Doe", "dob": "1990-01-01"},
-    {"first_name": "Jane", "last_name": "Smith", "dob": "1985-05-05"},
-]
-
-providers_db = [
-    {"tin": "123456789", "npi": "987654321", "last_name": "Brown"},
-    {"tin": "987654321", "npi": "123456789", "last_name": "White"},
-]
-
-claims_db = []  # To store processed claims
-
+# Model for Claim
 class Claim(BaseModel):
     patient_first_name: str
     patient_last_name: str
@@ -28,91 +26,98 @@ class Claim(BaseModel):
     provider_tin: str
     provider_npi: str
     provider_last_name: str
-    amount: float
+    claim_amount: float
 
-@app.post("/receive_claims/")
-async def receive_claims(file: UploadFile = File(...)):
-    content = await file.read()
-    claims = parse_xml(content)
+class ClaimResponse(BaseModel):
+    claim_id: str
+    status: str
+    repriced_amount: Optional[float] = None
+    error_message: Optional[str] = None
 
-    processed_claims = []
-    for claim in claims:
-        try:
-            validated_claim = validate_claim(claim)
-            matched_patient = match_patient(validated_claim)
-            matched_provider = match_provider(validated_claim)
+# Mock database
+patients_db = []  # This would be a database in a real application.
+providers_db = []  # This would be a database in a real application.
 
-            repriced_claim = reprice_claim(validated_claim)
-            processed_claims.append(repriced_claim)
+@app.post("/import-claim", response_model=ClaimResponse)
+async def import_claim(claim: Claim):
+    # Validate patient
+    patient_record = next((p for p in patients_db if (p['first_name'] == claim.patient_first_name and
+                                                       p['last_name'] == claim.patient_last_name and
+                                                       p['dob'] == claim.patient_dob)), None)
+    if not patient_record:
+        return ClaimResponse(claim_id="N/A", status="Failed", error_message="Patient not found")
 
-        except HTTPException as e:
-            return {"error": str(e)}
+    # Validate provider
+    provider_record = next((p for p in providers_db if (p['tin'] == claim.provider_tin and
+                                                         p['npi'] == claim.provider_npi and
+                                                         p['last_name'] == claim.provider_last_name)), None)
+    if not provider_record:
+        return ClaimResponse(claim_id="N/A", status="Failed", error_message="Provider not found")
 
-    # Send processed claims back to MPI Core (mocked here)
-    claims_db.extend(processed_claims)
-    return {"status": "Claims processed successfully", "claims": processed_claims}
+    # Reprice the claim (mock repricing logic)
+    repriced_amount = claim.claim_amount * 0.8  # Example repricing logic
 
-def parse_xml(xml_content: bytes) -> List[Claim]:
-    # Parse the incoming XML content and convert it to a list of Claim objects
-    # Here we mock this behavior. You would use xml.etree.ElementTree or similar to parse.
-    return [
-        Claim(patient_first_name="John", patient_last_name="Doe", patient_dob="1990-01-01",
-              provider_tin="123456789", provider_npi="987654321", provider_last_name="Brown", amount=100.0),
-        # Add more claims as needed
-    ]
+    # Here you would add logic to save the claim and return a response
+    return ClaimResponse(claim_id="1234", status="Success", repriced_amount=repriced_amount)
 
-def validate_claim(claim: Claim) -> Claim:
-    # Validate incoming claim data
-    if not claim.patient_first_name or not claim.patient_last_name:
-        raise HTTPException(status_code=400, detail="Invalid patient data")
-    if not claim.provider_tin or not claim.provider_npi:
-        raise HTTPException(status_code=400, detail="Invalid provider data")
-    return claim
+@app.post("/upload-claims", response_model=List[ClaimResponse])
+async def upload_claims(file: UploadFile = File(...)):
+    if file.content_type != 'application/xml':
+        raise HTTPException(status_code=400, detail="Invalid file type. Only XML files are accepted")
 
-def match_patient(claim: Claim) -> Optional[dict]:
-    for patient in patients_db:
-        if (patient["first_name"] == claim.patient_first_name and
-            patient["last_name"] == claim.patient_last_name and
-            patient["dob"] == claim.patient_dob):
-            return patient
-    raise HTTPException(status_code=404, detail="Patient not found")
+    # Parse XML file
+    try:
+        tree = ET.parse(file.file)
+        root = tree.getroot()
+        claims = []
+        
+        for claim_elem in root.findall('claim'):
+            claim_data = Claim(
+                patient_first_name=claim_elem.find('patient_first_name').text,
+                patient_last_name=claim_elem.find('patient_last_name').text,
+                patient_dob=claim_elem.find('patient_dob').text,
+                provider_tin=claim_elem.find('provider_tin').text,
+                provider_npi=claim_elem.find('provider_npi').text,
+                provider_last_name=claim_elem.find('provider_last_name').text,
+                claim_amount=float(claim_elem.find('claim_amount').text)
+            )
+            claims.append(claim_data)
 
-def match_provider(claim: Claim) -> Optional[dict]:
-    for provider in providers_db:
-        if (provider["tin"] == claim.provider_tin and
-            provider["npi"] == claim.provider_npi and
-            provider["last_name"] == claim.provider_last_name):
-            return provider
-    raise HTTPException(status_code=404, detail="Provider not found")
+        responses = []
+        for claim in claims:
+            response = await import_claim(claim)
+            responses.append(response)
 
-def reprice_claim(claim: Claim) -> Claim:
-    # Mock repricing logic
-    claim.amount *= 0.8  # Assuming a 20% discount for repricing
-    return claim
+        return responses
 
-# Run the FastAPI application
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error processing file: {str(e)}")
+
+# Mock data for testing
+patients_db.append({'first_name': 'John', 'last_name': 'Doe', 'dob': '1980-01-01'})
+providers_db.append({'tin': '123456789', 'npi': '987654321', 'last_name': 'Smith'})
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
 ```
 
-### Explanation of the Code:
-1. **FastAPI Framework**: We use FastAPI to create the web API for claim processing.
-2. **Mock Databases**: We simulate patient and provider databases using lists of dictionaries.
-3. **Claim Model**: A Pydantic model is defined for the claim structure to facilitate validation and serialization.
-4. **Endpoints**:
-    - **`/receive_claims/`**: Accepts an XML file containing claims, parses it, validates it, matches patients/providers, reprices claims, and finally stores the processed claims.
-5. **Helper Functions**:
-    - **`parse_xml`**: Parses XML content and returns a list of `Claim` objects. You would need to implement actual XML parsing here.
-    - **`validate_claim`**: Validates claim data.
-    - **`match_patient`**: Matches claims to existing patient records.
-    - **`match_provider`**: Matches claims to existing provider records.
-    - **`reprice_claim`**: Applies repricing logic to claims.
+### Explanation:
 
-### Note:
-- This is a basic structure and does not cover all aspects such as error handling at a deeper level, logging, or actual XML parsing. You would need to flesh this out according to your application's requirements and add additional features like authentication and data storage (e.g., PostgreSQL) as needed.
-- Ensure that you have FastAPI and necessary dependencies installed to run this application. You can do this using pip:
+- **Models**: We define a `Claim` model for incoming claims and `ClaimResponse` for the outgoing responses.
+- **Endpoints**:
+  - `POST /import-claim`: Receives a single claim, validates it against mock databases, reprices it, and returns a response.
+  - `POST /upload-claims`: Accepts an XML file, parses it, and imports multiple claims using the `import_claim` function.
+- **Mock Databases**: For demonstration, we use simple lists to store patients and providers. In a real implementation, you would connect to a PostgreSQL database to validate and store claims.
+
+### Running the Application:
+
+Run the FastAPI app by executing the following command:
 
 ```bash
-pip install fastapi[all] python-multipart
+python your_fastapi_filename.py
 ```
+
+You can then interact with the API using tools like Postman or curl. The Swagger UI will also be available at `http://127.0.0.1:8000/docs`. 
+
+This implementation serves as a starting point and can be enhanced further based on specific requirements, such as error handling, logging, database integration, etc.
