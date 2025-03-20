@@ -1,0 +1,161 @@
+Certainly! Below is an implementation of the Business Requirements Document (BRD) for a Healthcare API System using FastAPI in Python. This code provides a basic structure for the endpoints defined in the BRD, including models and example endpoints for each API module.
+
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+
+app = FastAPI()
+
+# Models
+class Patient(BaseModel):
+    id: int
+    name: str
+    contact: str
+    medical_history: str
+
+class Appointment(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    date: str
+    time: str
+
+class MedicalRecord(BaseModel):
+    patient_id: int
+    record_id: int
+    details: str
+
+class Prescription(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    medication: str
+    dosage: str
+
+class Invoice(BaseModel):
+    id: int
+    patient_id: int
+    amount: float
+    status: str
+
+# In-memory databases (for demonstration)
+patients_db = []
+appointments_db = []
+medical_records_db = []
+prescriptions_db = []
+invoices_db = []
+
+# Patient Management Endpoints
+@app.post("/patients", response_model=Patient)
+def register_patient(patient: Patient):
+    patients_db.append(patient)
+    return patient
+
+@app.get("/patients/{id}", response_model=Patient)
+def get_patient(id: int):
+    for patient in patients_db:
+        if patient.id == id:
+            return patient
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+@app.put("/patients/{id}", response_model=Patient)
+def update_patient(id: int, updated_patient: Patient):
+    for index, patient in enumerate(patients_db):
+        if patient.id == id:
+            patients_db[index] = updated_patient
+            return updated_patient
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+@app.delete("/patients/{id}", response_model=Patient)
+def deactivate_patient(id: int):
+    for index, patient in enumerate(patients_db):
+        if patient.id == id:
+            return patients_db.pop(index)
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+# Appointment Scheduling Endpoints
+@app.post("/appointments", response_model=Appointment)
+def schedule_appointment(appointment: Appointment):
+    appointments_db.append(appointment)
+    return appointment
+
+@app.put("/appointments/{id}", response_model=Appointment)
+def modify_appointment(id: int, updated_appointment: Appointment):
+    for index, appointment in enumerate(appointments_db):
+        if appointment.id == id:
+            appointments_db[index] = updated_appointment
+            return updated_appointment
+    raise HTTPException(status_code=404, detail="Appointment not found")
+
+@app.get("/doctors/{id}/availability", response_model=List[str])
+def get_doctor_availability(id: int):
+    # Placeholder for doctor availability. In a real system, this would connect to a database.
+    return ["2023-10-01T10:00", "2023-10-01T11:00"]
+
+# EMR Endpoints
+@app.get("/patients/{id}/records", response_model=List[MedicalRecord])
+def get_medical_records(id: int):
+    return [record for record in medical_records_db if record.patient_id == id]
+
+@app.post("/patients/{id}/records", response_model=MedicalRecord)
+def add_medical_record(id: int, record: MedicalRecord):
+    record.patient_id = id
+    medical_records_db.append(record)
+    return record
+
+# Prescription Management Endpoints
+@app.post("/prescriptions", response_model=Prescription)
+def generate_prescription(prescription: Prescription):
+    prescriptions_db.append(prescription)
+    return prescription
+
+@app.get("/prescriptions/{id}", response_model=Prescription)
+def retrieve_prescription(id: int):
+    for prescription in prescriptions_db:
+        if prescription.id == id:
+            return prescription
+    raise HTTPException(status_code=404, detail="Prescription not found")
+
+# Billing & Insurance Endpoints
+@app.post("/billing", response_model=Invoice)
+def generate_invoice(invoice: Invoice):
+    invoices_db.append(invoice)
+    return invoice
+
+@app.get("/billing/{id}", response_model=Invoice)
+def retrieve_invoice(id: int):
+    for invoice in invoices_db:
+        if invoice.id == id:
+            return invoice
+    raise HTTPException(status_code=404, detail="Invoice not found")
+
+@app.post("/insurance/claims")
+def process_insurance_claim(invoice_id: int):
+    # Placeholder for insurance claim processing logic.
+    return {"message": f"Claim for invoice {invoice_id} processed."}
+
+# Running the application
+# To run the application, use: `uvicorn <filename>:app --reload`
+```
+
+### Notes:
+1. **Data Storage**: The example uses in-memory lists to store data. In a real-world application, you would typically use a database (like PostgreSQL, MongoDB, etc.) for persistent storage.
+2. **Error Handling**: Basic error handling is included using `HTTPException` for not found scenarios.
+3. **Authentication & Security**: The implementation does not include authentication and security features such as OAuth 2.0 or JWT. This is critical for a healthcare application and should be implemented for a production environment.
+4. **Testing**: You can test the API using tools like Postman or Curl after running the FastAPI server with Uvicorn.
+
+### Running the Application
+To run this API, you would need to install FastAPI and Uvicorn:
+
+```bash
+pip install fastapi uvicorn
+```
+
+Then save the above code in a file, for example, `healthcare_api.py`, and run it using:
+
+```bash
+uvicorn healthcare_api:app --reload
+```
+
+This will start the server, and you can access the API at `http://localhost:8000`. The auto-generated documentation can be found at `http://localhost:8000/docs`.
