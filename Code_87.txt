@@ -1,0 +1,112 @@
+Certainly! Below is a Python FastAPI implementation that provides a basic structure for the Claim Import POC according to the requirements outlined in your Business Requirements Document (BRD). This code includes endpoints for receiving claims via WebAPI, validating the XML, performing patient and provider matching, and returning processed claims.
+
+### FastAPI Implementation
+
+```python
+from fastapi import FastAPI, HTTPException, UploadFile, File
+from pydantic import BaseModel
+from typing import List, Dict
+import xml.etree.ElementTree as ET
+
+app = FastAPI()
+
+# Sample in-memory databases for patients and providers
+patients_db = {"patient1": {"name": "John Doe", "id": "patient1"}}
+providers_db = {"provider1": {"name": "Dr. Smith", "id": "provider1"}}
+
+class ProcessedClaim(BaseModel):
+    claim_id: str
+    status: str
+    final_amount: float
+
+@app.post("/receive_claim")
+async def receive_claim(file: UploadFile = File(...)):
+    try:
+        # Read the uploaded XML file
+        contents = await file.read()
+        claim_xml = contents.decode("utf-8")
+
+        # Validate the XML
+        validated_claim = validate_claim_xml(claim_xml)
+
+        # Match patient and provider
+        patient_id = validated_claim.get("patient_id")
+        provider_id = validated_claim.get("provider_id")
+        if patient_id not in patients_db:
+            raise HTTPException(status_code=400, detail="Patient not found")
+        if provider_id not in providers_db:
+            raise HTTPException(status_code=400, detail="Provider not found")
+
+        # Reprice the claim
+        final_amount = reprice_claim(validated_claim)
+
+        # Prepare processed claim response
+        processed_claim = ProcessedClaim(
+            claim_id=validated_claim["claim_id"],
+            status="Processed",
+            final_amount=final_amount
+        )
+
+        # Return the processed claim
+        return processed_claim
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+def validate_claim_xml(claim_xml: str) -> Dict:
+    try:
+        root = ET.fromstring(claim_xml)
+        claim_data = {
+            "claim_id": root.find("claim_id").text,
+            "patient_id": root.find("patient_id").text,
+            "provider_id": root.find("provider_id").text,
+            "amount": float(root.find("amount").text)
+        }
+        return claim_data
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid claim XML format")
+
+def reprice_claim(claim_data: Dict) -> float:
+    # Example repricing logic (this can be replaced with actual business rules)
+    base_amount = claim_data["amount"]
+    repriced_amount = base_amount * 0.8  # Apply a 20% discount as an example
+    return repriced_amount
+
+# To run the application, use the command below:
+# uvicorn filename:app --reload
+```
+
+### Explanation of the Code:
+
+1. **Libraries Used**: 
+   - `FastAPI`: To create the web API.
+   - `pydantic`: To define data models and validate data.
+   - `xml.etree.ElementTree`: To parse and validate XML data.
+
+2. **In-Memory Databases**: 
+   - Two dictionaries are used to simulate patient and provider databases.
+
+3. **Endpoints**:
+   - **`/receive_claim`**: This endpoint accepts an uploaded XML file containing claim information. It handles the entire flow of receiving, validating, matching, repricing, and returning processed claims.
+
+4. **Validation**:
+   - The `validate_claim_xml` function parses the XML to extract claim details. If the XML is invalid or required fields are missing, it raises an HTTP 400 error.
+
+5. **Repricing**:
+   - The `reprice_claim` function applies a simple repricing logic (e.g., a 20% discount) to the claim amount. This logic can be expanded based on actual business rules.
+
+6. **Error Handling**: 
+   - The API raises HTTP exceptions with appropriate messages for different error scenarios.
+
+### Running the Application:
+To run the FastAPI application, save the code in a Python file (e.g., `claim_import.py`) and use the following command:
+
+```bash
+uvicorn claim_import:app --reload
+```
+
+This will start the FastAPI server, and you can interact with the API via tools like Postman or curl, or access the interactive API docs at `http://127.0.0.1:8000/docs`.
+
+### Note:
+- This is a basic implementation and should be expanded with proper error handling, logging, and potentially integration with a PostgreSQL database for persistent storage.
+- Security measures (like data encryption, authentication, etc.) should also be considered for a production environment.
