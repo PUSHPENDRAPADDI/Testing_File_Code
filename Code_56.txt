@@ -1,0 +1,116 @@
+Certainly! Below is an example of a FastAPI application that could serve as a starting point for your Claim Import POC using the OCI platform. This code covers the basic structure for receiving claims via a WebAPI, validating the claim XML, performing patient and provider matching, and repricing the claim. For this example, I've provided dummy implementations for the claim validation, patient/provider matching, and repricing functions.
+
+### FastAPI Code Example
+
+```python
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+from lxml import etree
+from typing import Dict, Optional
+
+app = FastAPI()
+
+# Define the data model for the incoming claim
+class Claim(BaseModel):
+    id: str
+    patient_id: str
+    provider_id: str
+    amount: float
+    # Other relevant fields can be added here
+
+# Dummy database for patient and provider records
+patients_db = {
+    "patient_1": {"name": "John Doe"},
+    "patient_2": {"name": "Jane Doe"},
+}
+
+providers_db = {
+    "provider_1": {"name": "Health Clinic"},
+    "provider_2": {"name": "Wellness Center"},
+}
+
+# Dummy repricing rules (for demonstration purposes)
+repricing_rules = {
+    "provider_1": 0.9,  # 10% discount
+    "provider_2": 0.85,  # 15% discount
+}
+
+@app.post("/claims")
+async def receive_claim(claim: Claim):
+    # Step 1: Validate the claim XML
+    if not validate_claim(claim):
+        raise HTTPException(status_code=400, detail="Invalid claim format")
+
+    # Step 2: Patient and Provider Matching
+    if not match_patient(claim.patient_id):
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    if not match_provider(claim.provider_id):
+        raise HTTPException(status_code=404, detail="Provider not found")
+
+    # Step 3: Reprice the claim
+    final_amount = reprice_claim(claim)
+    
+    # Step 4: Return the processed claim information
+    processed_claim = {
+        "id": claim.id,
+        "patient_id": claim.patient_id,
+        "provider_id": claim.provider_id,
+        "original_amount": claim.amount,
+        "final_amount": final_amount,
+    }
+    
+    return JSONResponse(content=processed_claim, status_code=200)
+
+def validate_claim(claim: Claim) -> bool:
+    # Basic validation logic for claim XML
+    # Here you would implement the XML validation logic
+    # For example, you could use an XML schema to validate the structure
+    return True  # Placeholder for actual validation
+
+def match_patient(patient_id: str) -> bool:
+    return patient_id in patients_db
+
+def match_provider(provider_id: str) -> bool:
+    return provider_id in providers_db
+
+def reprice_claim(claim: Claim) -> float:
+    if claim.provider_id in repricing_rules:
+        discount_rate = repricing_rules[claim.provider_id]
+        return claim.amount * discount_rate
+    return claim.amount  # If no repricing rule, return original amount
+
+# To run the FastAPI application, use the following command in the terminal:
+# uvicorn your_filename:app --reload
+```
+
+### Explanation:
+
+1. **Claim Model**: We define a `Claim` model using Pydantic, which allows us to validate incoming JSON data.
+2. **Endpoints**: The `/claims` endpoint receives a POST request with claim data.
+3. **Validation**: The `validate_claim` function serves as a placeholder for validating the structure of the claim. You can implement XML validation here based on your specific requirements.
+4. **Matching**: The `match_patient` and `match_provider` functions check if the given IDs exist in predefined dictionaries simulating a database.
+5. **Repricing**: The `reprice_claim` function applies a discount based on predefined rules.
+6. **Response**: The application returns the processed claim in JSON format.
+
+### Running the Application
+
+1. Ensure you have FastAPI and a suitable ASGI server like `uvicorn` installed. You can do this using pip:
+
+   ```bash
+   pip install fastapi uvicorn lxml
+   ```
+
+2. Save the code in a file, e.g. `main.py`.
+
+3. Run the application using:
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+4. You can test the API using tools like Postman or cURL by sending POST requests to `http://127.0.0.1:8000/claims` with appropriate JSON data.
+
+### Note:
+This is a basic implementation. You will need to expand the validation logic, integrate with actual databases, handle errors more gracefully, and implement security features as per your project's requirements.
