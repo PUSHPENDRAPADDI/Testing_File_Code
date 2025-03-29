@@ -1,136 +1,130 @@
-Certainly! Below is a sample implementation of a FastAPI application that outlines the structure of the APIs described in your Business Requirements Document (BRD) for a Healthcare API System. This implementation includes basic endpoints for patient management, appointment scheduling, electronic medical records, prescription management, and billing & insurance.
+Creating a simple food delivery application in JavaScript involves several components, including the front-end (user interface) and back-end (server-side logic). Below, I'll provide a basic example of a food app using vanilla JavaScript for the front-end and Node.js with Express for the back-end. This will be a simple application that allows users to view a list of foods and place an order.
 
-```python
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List, Optional
+### 1. Front-End (HTML + JavaScript)
 
-app = FastAPI()
+Here’s a simple HTML page with embedded JavaScript to display a list of foods:
 
-# Data Models
-class Patient(BaseModel):
-    id: int
-    name: str
-    contact_details: str
-    medical_history: str
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Delivery App</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .food-item { border: 1px solid #ccc; padding: 20px; margin: 10px; }
+        .order-button { background-color: #28a745; color: white; border: none; padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Food Delivery App</h1>
+    <div id="food-list"></div>
 
-class Appointment(BaseModel):
-    id: int
-    patient_id: int
-    doctor_id: int
-    date: str
-    time: str
+    <script>
+        async function fetchFoods() {
+            const response = await fetch('http://localhost:3000/api/foods');
+            const foods = await response.json();
+            const foodList = document.getElementById('food-list');
 
-class MedicalRecord(BaseModel):
-    patient_id: int
-    record_details: str
+            foods.forEach(food => {
+                const foodItem = document.createElement('div');
+                foodItem.className = 'food-item';
+                foodItem.innerHTML = `
+                    <h3>${food.name}</h3>
+                    <p>Price: $${food.price}</p>
+                    <button class="order-button" onclick="orderFood(${food.id})">Order</button>
+                `;
+                foodList.appendChild(foodItem);
+            });
+        }
 
-class Prescription(BaseModel):
-    id: int
-    patient_id: int
-    doctor_id: int
-    medication: str
-    dosage: str
+        async function orderFood(foodId) {
+            const response = await fetch(`http://localhost:3000/api/order`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ foodId }),
+            });
 
-class Invoice(BaseModel):
-    id: int
-    patient_id: int
-    amount: float
-    status: str
+            if (response.ok) {
+                alert('Order placed successfully!');
+            } else {
+                alert('Failed to place order.');
+            }
+        }
 
-
-# In-memory "databases"
-patients_db = []
-appointments_db = []
-medical_records_db = []
-prescriptions_db = []
-invoices_db = []
-
-@app.post("/patients", response_model=Patient)
-def register_patient(patient: Patient):
-    patients_db.append(patient)
-    return patient
-
-@app.get("/patients/{id}", response_model=Patient)
-def retrieve_patient(id: int):
-    for patient in patients_db:
-        if patient.id == id:
-            return patient
-    raise HTTPException(status_code=404, detail="Patient not found")
-
-@app.put("/patients/{id}", response_model=Patient)
-def update_patient(id: int, updated_patient: Patient):
-    for index, patient in enumerate(patients_db):
-        if patient.id == id:
-            patients_db[index] = updated_patient
-            return updated_patient
-    raise HTTPException(status_code=404, detail="Patient not found")
-
-@app.delete("/patients/{id}", response_model=dict)
-def deactivate_patient(id: int):
-    for patient in patients_db:
-        if patient.id == id:
-            patients_db.remove(patient)
-            return {"message": "Patient deactivated"}
-    raise HTTPException(status_code=404, detail="Patient not found")
-
-@app.post("/appointments", response_model=Appointment)
-def schedule_appointment(appointment: Appointment):
-    appointments_db.append(appointment)
-    return appointment
-
-@app.put("/appointments/{id}", response_model=Appointment)
-def modify_appointment(id: int, updated_appointment: Appointment):
-    for index, appointment in enumerate(appointments_db):
-        if appointment.id == id:
-            appointments_db[index] = updated_appointment
-            return updated_appointment
-    raise HTTPException(status_code=404, detail="Appointment not found")
-
-@app.get("/patients/{id}/records", response_model=List[MedicalRecord])
-def retrieve_medical_records(id: int):
-    records = [record for record in medical_records_db if record.patient_id == id]
-    return records
-
-@app.post("/prescriptions", response_model=Prescription)
-def generate_prescription(prescription: Prescription):
-    prescriptions_db.append(prescription)
-    return prescription
-
-@app.get("/prescriptions/{id}", response_model=Prescription)
-def retrieve_prescription(id: int):
-    for prescription in prescriptions_db:
-        if prescription.id == id:
-            return prescription
-    raise HTTPException(status_code=404, detail="Prescription not found")
-
-@app.post("/billing", response_model=Invoice)
-def generate_invoice(invoice: Invoice):
-    invoices_db.append(invoice)
-    return invoice
-
-@app.get("/billing/{id}", response_model=Invoice)
-def retrieve_invoice(id: int):
-    for invoice in invoices_db:
-        if invoice.id == id:
-            return invoice
-    raise HTTPException(status_code=404, detail="Invoice not found")
-
-# Run the app with: uvicorn filename:app --reload
+        fetchFoods();
+    </script>
+</body>
+</html>
 ```
 
-### Explanation:
-1. **Data Models**: The FastAPI app uses Pydantic models to define the structure of data for patients, appointments, medical records, prescriptions, and invoices.
+### 2. Back-End (Node.js + Express)
 
-2. **In-memory Databases**: For simplicity, we use lists to store data temporarily. In a real application, you'd want to connect to a persistent database.
+Next, set up a simple back-end using Node.js and Express. First, make sure you have Node.js installed, and then create a new directory for your project. Inside that directory, run:
 
-3. **Endpoints**: Each endpoint is defined according to the requirements in the BRD. The endpoints allow for CRUD operations on patients, appointments, medical records, prescriptions, and invoices.
-
-4. **Error Handling**: The application raises HTTP exceptions when a resource is not found, returning a 404 status code.
-
-### Running the Application:
-To run this FastAPI application, save the code to a file (e.g., `main.py`) and use the command:
 ```bash
-uvicorn main:app --reload
+npm init -y
+npm install express body-parser cors
 ```
-This will start a development server, and you can test the APIs via a tool like Postman or cURL. FastAPI also provides an interactive API documentation at `http://127.0.0.1:8000/docs` where you can test the endpoints directly.
+
+Create a new file called `server.js` and add the following code:
+
+```javascript
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+
+// Sample food data
+let foods = [
+    { id: 1, name: 'Pizza', price: 10.99 },
+    { id: 2, name: 'Burger', price: 8.99 },
+    { id: 3, name: 'Pasta', price: 12.99 }
+];
+
+// API to get foods
+app.get('/api/foods', (req, res) => {
+    res.json(foods);
+});
+
+// API to place an order
+app.post('/api/order', (req, res) => {
+    const { foodId } = req.body;
+    const orderedFood = foods.find(food => food.id === foodId);
+    
+    if (orderedFood) {
+        console.log(`Order placed for: ${orderedFood.name}`);
+        return res.status(200).send('Order placed successfully!');
+    }
+    return res.status(404).send('Food not found.');
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+```
+
+### 3. Running the Application
+
+1. Start the server by running the following command in your terminal:
+
+```bash
+node server.js
+```
+
+2. Open the HTML file you created in a web browser. You should see a list of food items and be able to place orders.
+
+### Note
+
+- This is a basic example. In a production app, you would also want to handle errors, validate inputs, and possibly add a database for persistent storage.
+- You can enhance the app by adding features like user authentication, order history, and payment processing.
