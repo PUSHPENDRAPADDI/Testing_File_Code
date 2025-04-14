@@ -1,251 +1,45 @@
-To implement the `ClientProfileController`, `ClientProfileManagement`, `ClientProfileRepository`, and other associated components based on the provided user story and test cases, we will create various classes and interfaces. The following is a detailed implementation of these components.
+Certainly! Below is a detailed test case for the title "S27_Client Profile_Create_Verify the New Client Profile page navigation from Add New Inquiry page" based on the sample test case format.
 
-### Step 1: Define Models
+---
 
-We'll start with a `ClientProfile` model that includes properties that correspond to the requirements described in the user story.
+### Test Case ID: S27_TC001
 
-```csharp
-// DomainLayer/Models/ClientProfile.cs
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+**Test Case Title:** Verify Navigation to New Client Profile Page from Add New Inquiry Page
 
-namespace DomainLayer.Models
-{
-    public class ClientProfile : BaseEntity
-    {
-        [Key]
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Gender { get; set; }
-        public string RaceEthnicity { get; set; }
-        public DateTime BirthDate { get; set; }
-        public DateTime InquiryDate { get; set; }
-        public string AssignedTo { get; set; }
-        public string Status { get; set; } // e.g., In-Process, Active, Discharged, Abandoned
-        public List<ProspectiveClient> ProspectiveClients { get; set; } // Navigation property for prospective client trips
+**Related User Story:** As a user, I want to create a new client profile so that I can manage client information easily.
 
-        // Additional properties can be added as per requirements
-    }
+**Preconditions:**
+- The user must be logged into the application.
+- The "Add New Inquiry" page should be accessible.
 
-    public class ProspectiveClient
-    {
-        public int Id { get; set; }
-        public int ClientProfileId { get; set; }
-        public string Status { get; set; } // e.g., Scheduled, Discharged
-        // Other properties related to the prospective client can be added here
-    }
-}
-```
+**Test Data:**
+- N/A (No specific test data is required for navigation testing)
 
-### Step 2: Create Repository Interface
+**Test Steps:**
+1. Navigate to the "Add New Inquiry" page.
+2. Locate the "Create New Client Profile" button/link on the "Add New Inquiry" page.
+3. Click on the "Create New Client Profile" button/link.
 
-Define the repository interface for the `ClientProfile`.
+**Expected Results:**
+- Upon clicking the "Create New Client Profile" button/link, the user should be redirected to the "New Client Profile" page.
+- The title of the "New Client Profile" page should be displayed correctly (e.g., "New Client Profile").
+- The "New Client Profile" page should contain all necessary fields and options for creating a new client profile.
 
-```csharp
-// RepositoryLayer/IRepository/IClientProfileRepository.cs
-using DomainLayer.Models;
+**Postconditions:**
+- The user should remain on the "New Client Profile" page for further actions.
 
-namespace RepositoryLayer.IRepository
-{
-    public interface IClientProfileRepository : IRepository<ClientProfile>
-    {
-        // Add any additional methods specific to ClientProfile if needed
-    }
-}
-```
+**Notes:**
+- Ensure that the navigation is smooth without any errors.
+- Validate that all relevant UI elements on the "New Client Profile" page are loaded correctly after navigation.
 
-### Step 3: Implement the Repository
+**Priority:** High
 
-Implement the repository for `ClientProfile`.
+**Status:** Not Executed
 
-```csharp
-// RepositoryLayer/Repository/ClientProfileRepository.cs
-using DomainLayer.Data;
-using DomainLayer.Models;
-using Microsoft.EntityFrameworkCore;
+**Assigned To:** [Tester Name]
 
-namespace RepositoryLayer.Repository
-{
-    public class ClientProfileRepository : Repository<ClientProfile>, IClientProfileRepository
-    {
-        public ClientProfileRepository(ApplicationDbContext dbContext) : base(dbContext) { }
+**Execution Date:** [To be filled during execution]
 
-        // Implement any additional repository methods specific to ClientProfile here
-    }
-}
-```
+---
 
-### Step 4: Create Service Interface
-
-Define the service interface for managing client profiles.
-
-```csharp
-// ServiceLayer/ICustomServices/IClientProfileManagement.cs
-using DomainLayer.Models;
-
-namespace ServiceLayer.ICustomServices
-{
-    public interface IClientProfileManagement : ICustomService<ClientProfile>
-    {
-        void CreateClientProfile(ClientProfile clientProfile);
-        // Additional methods can be added here
-    }
-}
-```
-
-### Step 5: Implement the Service
-
-Implement the service to handle business logic.
-
-```csharp
-// ServiceLayer/CustomServices/ClientProfileManagement.cs
-using DomainLayer.Models;
-using RepositoryLayer.IRepository;
-
-namespace ServiceLayer.CustomServices
-{
-    public class ClientProfileManagement : IClientProfileManagement
-    {
-        private readonly IClientProfileRepository _clientProfileRepository;
-
-        public ClientProfileManagement(IClientProfileRepository clientProfileRepository)
-        {
-            _clientProfileRepository = clientProfileRepository;
-        }
-
-        public void CreateClientProfile(ClientProfile clientProfile)
-        {
-            if (clientProfile != null)
-            {
-                clientProfile.Status = "In-Process"; // Default status
-                _clientProfileRepository.Insert(clientProfile);
-            }
-            else
-            {
-                throw new ArgumentNullException(nameof(clientProfile), "Client profile cannot be null");
-            }
-        }
-
-        public IEnumerable<ClientProfile> GetAll()
-        {
-            return _clientProfileRepository.GetAll();
-        }
-
-        public ClientProfile Get(int id)
-        {
-            return _clientProfileRepository.Get(id);
-        }
-
-        public void Update(ClientProfile clientProfile)
-        {
-            _clientProfileRepository.Update(clientProfile);
-        }
-
-        public void Delete(ClientProfile clientProfile)
-        {
-            _clientProfileRepository.Delete(clientProfile);
-        }
-
-        // Additional methods can be implemented as needed
-    }
-}
-```
-
-### Step 6: Implement the Controller
-
-Finally, implement the controller to handle HTTP requests.
-
-```csharp
-// Controllers/ClientProfileController.cs
-using DomainLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.ICustomServices;
-
-namespace YourNamespace.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClientProfileController : ControllerBase
-    {
-        private readonly IClientProfileManagement _clientProfileManagement;
-
-        public ClientProfileController(IClientProfileManagement clientProfileManagement)
-        {
-            _clientProfileManagement = clientProfileManagement;
-        }
-
-        [HttpPost("create")]
-        public IActionResult CreateClientProfile(ClientProfile clientProfile)
-        {
-            if (clientProfile == null)
-            {
-                return BadRequest("Client profile cannot be null");
-            }
-
-            _clientProfileManagement.CreateClientProfile(clientProfile);
-            return Ok("Client profile created successfully");
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetClientProfile(int id)
-        {
-            var clientProfile = _clientProfileManagement.Get(id);
-            if (clientProfile == null)
-            {
-                return NotFound();
-            }
-            return Ok(clientProfile);
-        }
-
-        [HttpPut("update")]
-        public IActionResult UpdateClientProfile(ClientProfile clientProfile)
-        {
-            if (clientProfile == null)
-            {
-                return BadRequest("Client profile cannot be null");
-            }
-
-            _clientProfileManagement.Update(clientProfile);
-            return Ok("Client profile updated successfully");
-        }
-
-        [HttpDelete("delete/{id}")]
-        public IActionResult DeleteClientProfile(int id)
-        {
-            var clientProfile = _clientProfileManagement.Get(id);
-            if (clientProfile == null)
-            {
-                return NotFound();
-            }
-
-            _clientProfileManagement.Delete(clientProfile);
-            return Ok("Client profile deleted successfully");
-        }
-    }
-}
-```
-
-### Step 7: Configure Dependency Injection
-
-Finally, configure the services and repositories in the `Startup.cs` or `Program.cs` file.
-
-```csharp
-// In Startup.cs or Program.cs (depending on .NET version)
-builder.Services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
-builder.Services.AddScoped<IClientProfileManagement, ClientProfileManagement>();
-```
-
-### Step 8: Run Migrations
-
-Ensure that you run the migrations to create the necessary database tables.
-
-```bash
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-```
-
-### Conclusion
-
-This implementation covers the basic structure required to create a client profile based on the user story and test cases provided. You can expand on this code by adding more error handling, validations, logging, and any additional features that might be required based on the specific needs of your application.
+Feel free to modify any sections or details as per your specific requirements or testing standards!
