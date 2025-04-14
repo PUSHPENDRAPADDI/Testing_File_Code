@@ -1,0 +1,23 @@
+Sure! Below is a detailed test case for the title "S27_Client Profile_Create_Verify unique Client ID is generated upon profile creation." 
+
+### Test Case: S27_Client Profile_Create_Verify unique Client ID is generated upon profile creation
+
+| **Test Case ID** | S27_Client Profile_Create_Verify unique Client ID |
+|------------------|----------------------------------------------------|
+| **Test Case Title** | Verify unique Client ID is generated upon profile creation |
+| **Preconditions** | 1. The user has valid credentials to log in to the system.<br>2. The user has access to the "Create Profile" feature. |
+| **Test Data** | 1. Valid user information (e.g., name, email, phone number).<br>2. Ensure no existing Client ID matches the new profile being created. |
+| **Test Steps** | 1. Log in to the application using valid credentials.<br>2. Navigate to the "Create Profile" section.<br>3. Fill in the required fields with valid user information (name, email, phone number).<br>4. Submit the profile creation form. |
+| **Expected Result** | A unique Client ID is generated and displayed upon successful profile creation. The Client ID should not match any existing Client IDs in the system. |
+| **Postconditions** | 1. The new profile is saved in the system.<br>2. The generated Client ID is stored in the database and can be retrieved. |
+| **Actual Result** | [To be filled after test execution] |
+| **Status** | [Pass/Fail] |
+| **Notes** | 1. Verify that the Client ID follows the expected format and uniqueness constraints.<br>2. Check the database to confirm the Client ID is stored correctly. |
+| **Tested By** | [Enter Tester Name] |
+| **Test Date** | [Enter Date] |
+
+### Additional Considerations:
+- Ensure to test with multiple profile creations to validate that Client IDs are unique across different sessions.
+- Consider edge cases, such as creating profiles simultaneously from different sessions to ensure no duplication occurs.
+
+This structured test case provides clarity on the steps to perform, the expected outcome, and necessary preconditions to validate the functionality regarding the unique Client ID generation.
