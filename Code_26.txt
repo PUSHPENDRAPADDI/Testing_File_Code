@@ -1,0 +1,109 @@
+To provide a detailed code for the `ClientProfileRepository`, we first need a clear understanding of the user story and test cases that will drive the implementation. Since you haven't provided these specific details yet, I will create a generic user story and corresponding test cases for a `ClientProfile` repository in a typical application. 
+
+### User Story
+**Title**: Client Profile Management
+
+**As a** user of the application,  
+**I want** to be able to create, read, update, and delete client profiles,  
+**So that** I can manage the clients effectively.
+
+### Acceptance Criteria
+1. **Insert a Client Profile**: The system should allow the insertion of a new client profile.
+2. **Retrieve a Client Profile**: The system should allow fetching a client profile by its ID.
+3. **Update a Client Profile**: The system should allow updating an existing client profile.
+4. **Delete a Client Profile**: The system should allow deleting a client profile by its ID.
+5. **List All Client Profiles**: The system should allow fetching all client profiles.
+
+### Test Cases
+1. **Test Insert Client Profile**: Ensure a new client profile can be added successfully.
+2. **Test Retrieve Client Profile**: Ensure a client profile can be retrieved by ID.
+3. **Test Update Client Profile**: Ensure an existing client profile can be updated.
+4. **Test Delete Client Profile**: Ensure a client profile can be deleted by ID.
+5. **Test List Client Profiles**: Ensure all client profiles can be listed.
+
+### Implementation
+Below is the implementation of `ClientProfileRepository` with the necessary methods for the user story and acceptance criteria.
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
+using RepositoryLayer.IRepository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : IRepository<ClientProfile>
+    {
+        private readonly ApplicationDbContext _applicationDbContext;
+        private DbSet<ClientProfile> entities;
+
+        public ClientProfileRepository(ApplicationDbContext applicationDbContext)
+        {
+            _applicationDbContext = applicationDbContext;
+            entities = _applicationDbContext.Set<ClientProfile>();
+        }
+
+        public void Insert(ClientProfile entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            entities.Add(entity);
+            SaveChanges();
+        }
+
+        public ClientProfile GetById(int id)
+        {
+            return entities.Find(id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return entities.ToList();
+        }
+
+        public void Update(ClientProfile entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            entities.Update(entity);
+            SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var entity = GetById(id);
+            if (entity == null)
+                throw new KeyNotFoundException($"ClientProfile with ID {id} not found.");
+
+            entities.Remove(entity);
+            SaveChanges();
+        }
+
+        public void SaveChanges()
+        {
+            _applicationDbContext.SaveChanges();
+        }
+    }
+}
+```
+
+### Explanation of Code
+1. **Constructor**: Initializes the `ClientProfileRepository` with an instance of `ApplicationDbContext` and sets up the entity set for `ClientProfile`.
+2. **Insert**: Adds a new client profile to the database and saves changes.
+3. **GetById**: Retrieves a client profile by its ID.
+4. **GetAll**: Returns a list of all client profiles.
+5. **Update**: Updates an existing client profile and saves changes.
+6. **Delete**: Deletes a client profile by its ID and saves changes.
+7. **SaveChanges**: Saves changes to the database.
+
+### Next Steps
+- **Unit Testing**: Create unit tests for each of the methods in the repository to validate their functionality.
+- **Error Handling**: Consider implementing more robust error handling and logging mechanisms as needed.
+- **Dependency Injection**: Ensure that the repository is registered in the dependency injection container for use throughout the application.
+
+Feel free to provide specific user stories and test cases if you have them, and I can tailor the implementation accordingly!
