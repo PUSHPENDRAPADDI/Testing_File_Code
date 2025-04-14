@@ -1,127 +1,71 @@
-Certainly! It looks like you're working on an ASP.NET Core Web API for managing client profiles. Based on the provided code snippet, I will expand on it and add more details, including a user story, test cases, and a more complete implementation.
+### Test Case: S27_Client Profile_Create_Verify the New Client Profile page navigation from Add New Inquiry page
 
-### User Story
+#### Test Case ID
+S27_Client Profile_Create
 
-**Title:** Create Client Profile
+#### Test Case Description
+This test case verifies that the user can navigate from the "Add New Inquiry" page to the "New Client Profile" page after filling out all mandatory fields in the Inquiry form and clicking the "Create Client Profile" button.
 
-**As a** user of the client management system,  
-**I want to** create a new client profile,  
-**So that** I can manage client information effectively.
+#### Pre-requisites
+1. User must have valid credentials to access the IntakeApp.
+2. User must be on the "Add New Inquiry" page.
+3. User must have filled all mandatory Inquiry field details required for Profile creation.
 
-### Acceptance Criteria
-1. The API should accept a JSON object representing a client profile.
-2. If the object is valid, it should save it to the database and return a success message.
-3. If the object is invalid, it should return a bad request response with an appropriate message.
-4. The API should validate required fields in the client profile.
+#### Test Steps
 
-### ClientProfile Model
+1. **Login into IntakeApp**
+   - **Action**: Launch the IntakeApp URL.
+   - **Expected Result**: The application should launch and the Sign-in screen should be displayed.
+  
+2. **Sign in to the Application**
+   - **Action**: 
+     1. Enter the username.
+     2. Click the "Next" button.
+   - **Expected Result**: 
+     - After clicking the "Next" button, the screen should navigate to the Enter Password screen.
 
-Assuming the `ClientProfile` model has the following properties:
+3. **Enter Credentials**
+   - **Action**: 
+     1. Enter the password.
+     2. Click the "Sign in" button.
+   - **Expected Result**: 
+     - Sign-in should be successful.
+     - The system will display the dashboard screen as per the roles configured for the logged-in user.
 
-```csharp
-namespace DomainLayer.Models
-{
-    public class ClientProfile
-    {
-        public int Id { get; set; } // Assuming Id is auto-generated
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public DateTime DateOfBirth { get; set; }
-    }
-}
-```
+4. **Navigate to Add New Inquiry Page**
+   - **Action**: 
+     - Ensure that the user is on the "Add New Inquiry" page.
+   - **Expected Result**: 
+     - The user should be on the "Add New Inquiry" page.
 
-### Complete ClientProfileController Implementation
+5. **Fill Mandatory Inquiry Fields**
+   - **Action**: 
+     - Fill out all mandatory fields in the Inquiry form.
+   - **Expected Result**: 
+     - All mandatory details for profile creation should be filled in the Inquiry form.
 
-Here's the complete implementation of `ClientProfileController` with data validation:
+6. **Click on 'Create Client Profile' Button**
+   - **Action**: 
+     - Click the "Create Client Profile" button.
+   - **Expected Result**: 
+     - The user should be navigated to the "New Client Profile" page.
 
-```csharp
-using DomainLayer.Data;
-using DomainLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.ICustomServices;
+7. **Verify New Client Profile Page**
+   - **Action**: 
+     - Check the header and layout of the "New Client Profile" page.
+   - **Expected Result**: 
+     - The user is on the "New Client Profile" page.
+     - All relevant sections (e.g., Client ID, Inquiry Date, etc.) should be present as specified in the user story.
 
-namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClientProfileController : ControllerBase
-    {
-        private readonly IClientManagementRepository _clientManagementRepository;
+#### Post-conditions
+- The "New Client Profile" page is displayed, allowing the CAC to enter additional details for the client's profile.
 
-        public ClientProfileController(IClientManagementRepository clientManagementRepository)
-        {
-            _clientManagementRepository = clientManagementRepository;
-        }
+#### Business Rules
+- The Client Profile must have a unique ID created for the client in both the product and the EMR.
+- Only a maximum of 3 payors can be added to the client profile.
 
-        [HttpPost("CreateClientProfile")]
-        public IActionResult CreateClientProfile([FromBody] ClientProfile clientProfile)
-        {
-            if (clientProfile == null)
-            {
-                return BadRequest("Client Profile cannot be null.");
-            }
+#### Dependencies
+- The information added to the inquiry form must be accurate and complete to facilitate the creation of the client profile.
 
-            // Validate required fields
-            if (string.IsNullOrWhiteSpace(clientProfile.FirstName) || 
-                string.IsNullOrWhiteSpace(clientProfile.LastName) || 
-                string.IsNullOrWhiteSpace(clientProfile.Email))
-            {
-                return BadRequest("First Name, Last Name, and Email are required.");
-            }
-
-            // Optionally validate the email format
-            if (!IsValidEmail(clientProfile.Email))
-            {
-                return BadRequest("Invalid email format.");
-            }
-
-            _clientManagementRepository.Insert(clientProfile);
-            return CreatedAtAction(nameof(CreateClientProfile), new { id = clientProfile.Id }, "Client Profile Created Successfully");
-        }
-
-        private bool IsValidEmail(string email)
-        {
-            try
-            {
-                var emailAddress = new System.Net.Mail.MailAddress(email);
-                return emailAddress.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-    }
-}
-```
-
-### Test Cases
-
-Here are some test cases for the `CreateClientProfile` method:
-
-1. **Test Case: Valid Client Profile**
-   - **Input:** `{"FirstName": "John", "LastName": "Doe", "Email": "john.doe@example.com", "PhoneNumber": "1234567890", "DateOfBirth": "1990-01-01"}`
-   - **Expected Output:** HTTP 201 Created with message "Client Profile Created Successfully".
-
-2. **Test Case: Null Client Profile**
-   - **Input:** `null`
-   - **Expected Output:** HTTP 400 Bad Request with message "Client Profile cannot be null."
-
-3. **Test Case: Missing Required Fields**
-   - **Input:** `{"FirstName": "", "LastName": "Doe", "Email": "john.doe@example.com"}`
-   - **Expected Output:** HTTP 400 Bad Request with message "First Name, Last Name, and Email are required."
-
-4. **Test Case: Invalid Email Format**
-   - **Input:** `{"FirstName": "John", "LastName": "Doe", "Email": "john.doe", "PhoneNumber": "1234567890"}`
-   - **Expected Output:** HTTP 400 Bad Request with message "Invalid email format."
-
-5. **Test Case: Successful Insertion**
-   - **Input:** A valid `ClientProfile` object.
-   - **Expected Output:** Verify that the `Insert` method in `_clientManagementRepository` is called once with the correct parameters.
-
-### Conclusion
-
-This implementation provides a robust way to handle client profile creation in an ASP.NET Core Web API. It includes validation for required fields and proper handling of null values. The test cases ensure the API behaves as expected under various input conditions.
+### Notes
+- Duplicate check functionality for the client profile will be implemented and tested as part of a separate user story (User Story ID: 1194).
