@@ -1,0 +1,48 @@
+### Test Case Title: S27_Client Profile_Create_Verify the New Client Profile page navigation from Add New Inquiry page
+
+#### Test Case ID: TC_S27_001
+
+#### Description:
+This test case verifies the successful navigation to the 'New Client Profile' page after a client access coordinator (CAC) has filled out all mandatory fields in the Add New Inquiry page and clicks on the 'Create Client Profile' button.
+
+#### Preconditions:
+1. The user must have valid login credentials for the IntakeApp.
+2. The user must be on the 'Add New Inquiry' page.
+3. All mandatory inquiry field details required for profile creation must be filled out.
+
+#### Test Steps:
+1. **Login into IntakeApp**
+   - **Step 1.1**: Launch the IntakeApp URL.
+     - **Expected Result**: The application should launch, and the Sign-in screen should be displayed.
+   - **Step 1.2**: Enter the username and click the Next button.
+     - **Expected Result**: After clicking the Next button, the screen should navigate to the Enter Password screen.
+   - **Step 1.3**: Enter the Password and click the Sign-in button.
+     - **Expected Result**: Sign-in should be successful, and the system will display the dashboard screen as per the roles configured for the logged-in user.
+
+2. **Navigate to 'Add New Inquiry' page**
+   - **Step 2**: Ensure that the user is on the 'Add New Inquiry' page and has filled all mandatory inquiry field details.
+     - **Expected Result**: All mandatory details for profile creation should be filled out correctly on the inquiry form.
+
+3. **Create Client Profile**
+   - **Step 3**: Click on the 'Create Client Profile' button.
+     - **Expected Result**: The user should be navigated to the 'New Client Profile' page.
+
+4. **Verify Navigation**
+   - **Step 4**: Verify that the user is on the 'New Client Profile' page.
+     - **Expected Result**: The 'New Client Profile' page should be displayed, confirming the successful navigation from the Add New Inquiry page.
+
+#### Postconditions:
+- The user is on the 'New Client Profile' page ready to input additional client information.
+
+#### Business Rules:
+- The CAC must ensure that all mandatory fields are completed to proceed with the creation of a client profile.
+
+#### Assumptions:
+- The system correctly maps the unique Profile ID created for the client in both the product and the EMR.
+
+#### Dependencies:
+- Accurate and complete information must be provided in the inquiry form to successfully create the client profile.
+
+### Notes:
+- Ensure that duplicate check functionality has been tested separately as per User Story 1194: Duplicate check - Create Client profile.
+- This test case should be executed in a testing environment that mirrors the production environment closely to ensure accurate results.
