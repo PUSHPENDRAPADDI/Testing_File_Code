@@ -1,0 +1,142 @@
+To create a data access layer (DAL) for performing CRUD (Create, Read, Update, Delete) operations on client profiles, we will need to design a simple application. Below is a comprehensive example using Python along with SQLAlchemy for ORM (Object-Relational Mapping) and SQLite as the database. 
+
+### User Story
+As a user, I want to be able to manage client profiles, so I can create new profiles, retrieve existing profiles, update profiles, and delete profiles as needed.
+
+### Test Cases
+1. **Create Client Profile**
+   - Given valid client details, when I create a client profile, then the profile should be saved in the database.
+
+2. **Read Client Profile**
+   - Given a valid client ID, when I retrieve a client profile, then the correct profile should be returned.
+
+3. **Update Client Profile**
+   - Given a valid client ID and updated details, when I update the client profile, then the profile should be updated in the database.
+
+4. **Delete Client Profile**
+   - Given a valid client ID, when I delete a client profile, then the profile should be removed from the database.
+
+### Code Implementation
+
+#### 1. Setting Up the Environment
+You need to install SQLAlchemy if you haven't already:
+
+```bash
+pip install SQLAlchemy
+```
+
+#### 2. Data Access Layer Code
+
+```python
+# dal.py
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
+
+# Define the database connection
+DATABASE_URL = "sqlite:///client_profiles.db"
+engine = create_engine(DATABASE_URL)
+Base = declarative_base()
+
+# Define the ClientProfile model
+class ClientProfile(Base):
+    __tablename__ = 'client_profiles'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    phone = Column(String, nullable=True)
+
+# Create the database table
+Base.metadata.create_all(engine)
+
+# Data access layer class
+class ClientProfileDAL:
+    def __init__(self):
+        self.Session = sessionmaker(bind=engine)
+
+    def create_client(self, name: str, email: str, phone: str) -> ClientProfile:
+        session: Session = self.Session()
+        new_client = ClientProfile(name=name, email=email, phone=phone)
+        session.add(new_client)
+        session.commit()
+        session.refresh(new_client)
+        session.close()
+        return new_client
+
+    def get_client(self, client_id: int) -> ClientProfile:
+        session: Session = self.Session()
+        client = session.query(ClientProfile).filter(ClientProfile.id == client_id).first()
+        session.close()
+        return client
+
+    def update_client(self, client_id: int, name: str = None, email: str = None, phone: str = None) -> bool:
+        session: Session = self.Session()
+        client = session.query(ClientProfile).filter(ClientProfile.id == client_id).first()
+        if client:
+            if name:
+                client.name = name
+            if email:
+                client.email = email
+            if phone:
+                client.phone = phone
+            session.commit()
+            session.close()
+            return True
+        session.close()
+        return False
+
+    def delete_client(self, client_id: int) -> bool:
+        session: Session = self.Session()
+        client = session.query(ClientProfile).filter(ClientProfile.id == client_id).first()
+        if client:
+            session.delete(client)
+            session.commit()
+            session.close()
+            return True
+        session.close()
+        return False
+```
+
+### Example Usage
+
+You can create a simple test script to validate the functionality of the DAL.
+
+```python
+# test_dal.py
+from dal import ClientProfileDAL
+
+def main():
+    dal = ClientProfileDAL()
+    
+    # Create a new client
+    new_client = dal.create_client(name="John Doe", email="john@example.com", phone="1234567890")
+    print(f"Created Client: {new_client.id}, {new_client.name}")
+
+    # Read the client
+    retrieved_client = dal.get_client(new_client.id)
+    print(f"Retrieved Client: {retrieved_client.id}, {retrieved_client.name}")
+
+    # Update the client
+    update_success = dal.update_client(new_client.id, phone="0987654321")
+    if update_success:
+        print("Client updated successfully.")
+        
+    # Read updated client
+    updated_client = dal.get_client(new_client.id)
+    print(f"Updated Client: {updated_client.id}, {updated_client.phone}")
+
+    # Delete the client
+    delete_success = dal.delete_client(new_client.id)
+    if delete_success:
+        print("Client deleted successfully.")
+
+if __name__ == "__main__":
+    main()
+```
+
+### Running the Code
+- Save the `dal.py` and `test_dal.py` in the same directory.
+- Run the `test_dal.py` script using Python.
+
+This will give you a complete data access layer for managing client profiles with the ability to perform CRUD operations as specified in the user story and test cases.
