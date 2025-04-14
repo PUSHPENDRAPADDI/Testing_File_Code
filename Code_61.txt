@@ -1,0 +1,132 @@
+To provide you with a detailed code artifact for managing client profiles, I'll need to create a hypothetical user story and some test cases, as well as the corresponding code. Let's assume the artifact is a simple class in Python that manages client profiles in a system.
+
+### User Story
+**Title**: Manage Client Profiles
+
+**As a** business administrator,  
+**I want to** manage client profiles,  
+**So that** I can keep track of client information and update it as necessary.
+
+#### Acceptance Criteria
+1. **Create Client Profile**: Ability to create a new client profile with required fields: `name`, `email`, and `phone`.
+2. **Update Client Profile**: Ability to update existing client profiles.
+3. **Delete Client Profile**: Ability to delete a client profile.
+4. **Retrieve Client Profile**: Ability to retrieve a client profile by ID.
+5. **List All Client Profiles**: Ability to list all client profiles.
+
+### Test Cases
+1. **Test case for creating a client profile**: Ensure that a new client profile is created successfully.
+2. **Test case for updating a client profile**: Ensure that an existing client profile is updated successfully.
+3. **Test case for deleting a client profile**: Ensure that a client profile is deleted successfully.
+4. **Test case for retrieving a client profile**: Ensure that a client profile is retrieved successfully by ID.
+5. **Test case for listing all client profiles**: Ensure that all client profiles are listed correctly.
+
+### Code Artifact: `client_profile_manager.py`
+
+```python
+class ClientProfile:
+    def __init__(self, client_id, name, email, phone):
+        self.client_id = client_id
+        self.name = name
+        self.email = email
+        self.phone = phone
+
+    def __repr__(self):
+        return f"ClientProfile(client_id={self.client_id}, name='{self.name}', email='{self.email}', phone='{self.phone}')"
+
+
+class ClientProfileManager:
+    def __init__(self):
+        self.profiles = {}
+        self.next_id = 1
+
+    def create_profile(self, name, email, phone):
+        client_id = self.next_id
+        self.profiles[client_id] = ClientProfile(client_id, name, email, phone)
+        self.next_id += 1
+        return client_id
+
+    def update_profile(self, client_id, name=None, email=None, phone=None):
+        if client_id not in self.profiles:
+            raise ValueError("Client ID not found.")
+        
+        profile = self.profiles[client_id]
+        if name:
+            profile.name = name
+        if email:
+            profile.email = email
+        if phone:
+            profile.phone = phone
+
+    def delete_profile(self, client_id):
+        if client_id not in self.profiles:
+            raise ValueError("Client ID not found.")
+        del self.profiles[client_id]
+
+    def retrieve_profile(self, client_id):
+        if client_id not in self.profiles:
+            raise ValueError("Client ID not found.")
+        return self.profiles[client_id]
+
+    def list_all_profiles(self):
+        return list(self.profiles.values())
+
+
+# Example usage
+if __name__ == "__main__":
+    manager = ClientProfileManager()
+    client_id = manager.create_profile("John Doe", "john@example.com", "123-456-7890")
+    print(manager.retrieve_profile(client_id))  # Retrieve client profile
+    manager.update_profile(client_id, phone="098-765-4321")  # Update phone number
+    print(manager.list_all_profiles())  # List all profiles
+    manager.delete_profile(client_id)  # Delete profile
+```
+
+### Explanation
+- **ClientProfile Class**: Represents a client profile with attributes for ID, name, email, and phone.
+- **ClientProfileManager Class**: Contains methods for managing client profiles, including creating, updating, deleting, and retrieving profiles.
+- **Usage Example**: Demonstrates how to create, update, retrieve, list, and delete client profiles.
+
+### Test Cases Implementation (Using `unittest`)
+You can implement the test cases using Python's `unittest` framework as follows:
+
+```python
+import unittest
+
+class TestClientProfileManager(unittest.TestCase):
+    def setUp(self):
+        self.manager = ClientProfileManager()
+
+    def test_create_profile(self):
+        client_id = self.manager.create_profile("Jane Doe", "jane@example.com", "123-456-7890")
+        self.assertEqual(len(self.manager.profiles), 1)
+        self.assertIn(client_id, self.manager.profiles)
+
+    def test_update_profile(self):
+        client_id = self.manager.create_profile("Jane Doe", "jane@example.com", "123-456-7890")
+        self.manager.update_profile(client_id, phone="098-765-4321")
+        profile = self.manager.retrieve_profile(client_id)
+        self.assertEqual(profile.phone, "098-765-4321")
+
+    def test_delete_profile(self):
+        client_id = self.manager.create_profile("Jane Doe", "jane@example.com", "123-456-7890")
+        self.manager.delete_profile(client_id)
+        self.assertNotIn(client_id, self.manager.profiles)
+
+    def test_retrieve_profile(self):
+        client_id = self.manager.create_profile("Jane Doe", "jane@example.com", "123-456-7890")
+        profile = self.manager.retrieve_profile(client_id)
+        self.assertEqual(profile.name, "Jane Doe")
+
+    def test_list_all_profiles(self):
+        self.manager.create_profile("Jane Doe", "jane@example.com", "123-456-7890")
+        self.manager.create_profile("John Smith", "john@example.com", "987-654-3210")
+        profiles = self.manager.list_all_profiles()
+        self.assertEqual(len(profiles), 2)
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+### Conclusion
+This example demonstrates a simple implementation of a client profile management system, complete with user stories, test cases, and the necessary code to manage client profiles. You can adapt this code to suit more complex requirements or integrate it into a larger application as needed.
