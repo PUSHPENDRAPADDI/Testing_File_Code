@@ -1,0 +1,59 @@
+Certainly! Below is a detailed test case based on the provided title "S27_Client Profile_Create_Verify the status changes from In-process to Complete" along with the user story.
+
+### Test Case: S27_Client Profile_Create_Verify the status changes from In-process to Complete
+
+**Test Case ID:** TC_S27_001  
+**Test Case Title:** Verify the status changes from In-process to Complete for Active Intake  
+**Related User Story:** As a user, I want to create a client profile so that I can manage client information and track the status of the intake process.
+
+---
+
+**Preconditions:**
+1. The user must have the necessary permissions to access the client profile creation feature.
+2. The application should be in a working state with access to the required database.
+3. No existing client profile with the same identifier should exist in the system.
+
+---
+
+**Test Steps:**
+
+| Step No. | Action | Expected Outcome |
+|----------|--------|------------------|
+| 1        | Log in to the application using valid credentials. | User should be successfully logged in and redirected to the dashboard. |
+| 2        | Navigate to the "Client Profiles" section. | The user should see a list of existing client profiles. |
+| 3        | Click on the "Create New Client Profile" button. | A new client profile creation form should open. |
+| 4        | Fill in the required fields (e.g., Name, Contact Information, etc.). | The fields should be filled correctly without any errors. |
+| 5        | Submit the client profile creation form. | The system should process the request and show a status message indicating that the profile is being created (In-process). |
+| 6        | Wait for the profile creation process to complete. | The status of the client profile should transition from In-process to Complete. |
+| 7        | Navigate back to the "Client Profiles" section. | The user should see the updated list of client profiles. |
+| 8        | Locate the newly created client profile in the list. | The client profile should be listed with a status of Complete. |
+| 9        | Verify that the status of the new client profile is Complete. | The status displayed should match "Complete". |
+
+---
+
+**Postconditions:**
+1. The new client profile is successfully created and is listed with the status "Complete".
+2. No errors should occur during the creation and status update process.
+
+---
+
+**Expected Results:**
+- After submitting the client profile creation form, the status should initially show as "In-process".
+- Once the process is completed, the status should change to "Complete" without any manual intervention.
+
+---
+
+**Notes:**
+- If the status does not change from In-process to Complete, capture the error message, if any, for further investigation.
+- Ensure to test with various input values, including edge cases, to validate robustness.
+
+---
+
+**Test Data:**
+- Client Name: John Doe
+- Contact Information: johndoe@example.com, 123-456-7890
+- Any other required fields based on application specifications.
+
+---
+
+This test case provides a comprehensive guide on how to validate the status change of a client profile from "In-process" to "Complete" during the creation process, ensuring that all necessary conditions and outcomes are clearly defined.
