@@ -1,0 +1,57 @@
+### Test Case Title: S27_Client Profile_Create_Verify the New Client Profile page navigation from Add New Inquiry page
+
+#### Test Case ID: TC_S27_CP_001
+#### Priority: High
+#### Author: [Your Name]
+#### Date: [Current Date]
+#### Version: 1.0
+
+---
+
+### Pre-Conditions:
+1. User has valid credentials to log into the IntakeApp.
+2. User has access to the Add New Inquiry page.
+3. User has filled in all mandatory Inquiry field details required for Profile creation.
+
+### Test Steps:
+
+| Step No. | Action | Expected Result |
+|----------|--------|-----------------|
+| 1        | Launch the IntakeApp URL. | Application should launch and display the Sign In screen. |
+| 2        | Enter the username and click the Next button. | Screen should navigate to Enter Password screen. |
+| 3        | Enter the Password and click the Sign In button. | Sign in should be successful, and the system will display the dashboard screen as per the roles configured for the logged-in user. |
+| 4        | Navigate to the Add New Inquiry page. | User is on the Add New Inquiry page. |
+| 5        | Fill in all mandatory Inquiry field details for profile creation. | All mandatory details for profile creation should be filled in the Inquiry form. |
+| 6        | Click on the 'Create Client Profile' button. | User is navigated to the 'New Client Profile' page. |
+| 7        | Verify that the 'New Client Profile' page is displayed. | User is on the 'New Client Profile' page. The page should contain fields as per the data specifications outlined in the User Story. |
+
+### Post-Conditions:
+- User is on the 'New Client Profile' page with all required fields available for data entry.
+
+### Expected Results:
+- The system navigates the user from the Add New Inquiry page to the New Client Profile page without errors.
+- All necessary components and fields for creating a new client profile are displayed on the New Client Profile page.
+
+### Notes:
+- Ensure that the duplicate check functionality for client profile will be implemented and tested as part of a separate User Story (1194: Duplicate check - Create Client profile).
+- Verify that all mandatory fields are displayed and functioning as expected on the New Client Profile page.
+
+### Dependencies:
+- The information added to the inquiry form must be accurate and available to complete the client profile form.
+
+### Assumptions:
+- A unique Profile ID is created for the client in the product and in the EMR to be mapped together.
+- The CAC might receive this information from clients across multiple days and be able to save or update the form accordingly.
+
+### Business Rules:
+- Only three payors can be added to the client profile.
+- The CAC must select a Disposition Reason if the profile is marked as abandoned.
+
+### Test Data:
+- Username: [Valid Username]
+- Password: [Valid Password]
+- Inquiry Form Data: [Complete set of mandatory fields filled]
+
+---
+
+This is a detailed test case based on the provided user story, ensuring that the navigation and functionality of the New Client Profile page is thoroughly tested following the steps outlined. Adjust the usernames, passwords, and any specific data as needed for your testing environment.
