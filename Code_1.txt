@@ -1,0 +1,64 @@
+### Test Case: S27_Client Profile_Create_Verify the New Client Profile page navigation from Add New Inquiry page
+
+#### Test Case ID:
+S27_Client Profile_Create
+
+#### Test Case Title:
+Verify the New Client Profile page navigation from Add New Inquiry page
+
+#### Preconditions:
+1. User must have valid credentials to access the IntakeApp.
+2. User must be on the Add New Inquiry page.
+3. User must have filled all mandatory Inquiry field details required for Profile creation.
+
+#### Test Steps:
+
+1. **Login into IntakeApp**
+   - **Step Action:** Launch the IntakeApp URL.
+   - **Expected Result:** Application should be launched and the Sign in screen should be displayed.
+
+2. **Enter Credentials**
+   - **Step Action:** 
+     - Enter the username.
+     - Click on the Next button.
+   - **Expected Result:** Once clicked at the Next button, the screen should navigate to the Enter Password screen.
+
+3. **Sign In**
+   - **Step Action:** 
+     - Enter the Password.
+     - Click on the Sign in button.
+   - **Expected Result:**
+     - Sign in should be successful.
+     - The system will display the dashboard screen as per the roles configured for the logged-in user.
+
+4. **Navigate to Add New Inquiry Page**
+   - **Step Action:** 
+     - Ensure that the user is on the Add New Inquiry page.
+   - **Expected Result:** All mandatory details for profile creation must be filled on the Inquiry form.
+
+5. **Create Client Profile**
+   - **Step Action:** Click on the 'Create Client Profile' button.
+   - **Expected Result:** 
+     - User is navigated to the 'New Client Profile' Page.
+     - Note: Duplicate check functionality for client profile will be implemented and tested as part of a separate User Story (1194: Duplicate check - Create Client profile).
+
+6. **Verify the New Client Profile Page**
+   - **Step Action:** 
+     - Check the elements present on the New Client Profile page.
+   - **Expected Result:** 
+     - User is on the 'New Client Profile' page, and all necessary fields are displayed as per the specifications.
+     - The page should display sections for entering client information, including mandatory fields as per the data specifications.
+
+#### Postconditions:
+- The user should be successfully on the New Client Profile page, ready to enter client information.
+
+#### Business Rules:
+- Ensure that all mandatory fields on the New Client Profile page are clearly indicated.
+- The system should prevent the creation of duplicate profiles (to be verified in a separate test case).
+
+#### Notes:
+- Ensure that the application is functioning properly before executing the test case.
+- Verify that any error messages for incomplete fields are clear and user-friendly.
+
+#### Dependencies:
+- The information added to the inquiry form must be accurate and available for the client profile form completion.
