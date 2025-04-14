@@ -1,0 +1,46 @@
+Sure! Below is a detailed test case for the title "S27_Client Profile_Create_Verify the Client Profile contains all mandatory fields." I will follow a structured format similar to a typical test case specification.
+
+---
+
+### Test Case ID: S27_Client Profile_Create_Verify Mandatory Fields
+
+**Test Case Title:** Verify the Client Profile contains all mandatory fields
+
+**Related User Story:** As a user, I want to create a client profile that includes all mandatory fields so that the system captures necessary information for processing.
+
+**Preconditions:**
+- The user must be logged into the application.
+- The user has the necessary permissions to create a client profile.
+- The application is in a stable state and accessible.
+
+**Test Data:** 
+- N/A (The test will verify the presence of fields rather than specific values.)
+
+**Test Steps:**
+
+1. Navigate to the "Client Profile" creation page.
+2. Observe the layout of the client profile creation form.
+3. Identify all fields that are labeled as mandatory (these should typically be marked with an asterisk (*) or similar indication).
+4. Record the names and types of all mandatory fields expected in the client profile.
+5. Attempt to submit the form without filling out any mandatory fields.
+6. Verify that the system prompts the user with an error message for each mandatory field that was left blank.
+7. Capture screenshots of the form displaying mandatory fields and error messages for documentation purposes.
+
+**Expected Results:**
+- All mandatory fields should be clearly indicated on the client profile creation form.
+- The system should prevent form submission and display appropriate error messages when mandatory fields are not filled in.
+- The error messages should clearly state which fields are required.
+
+**Postconditions:**
+- The user remains on the client profile creation page.
+- No new client profile should be created.
+
+**Status:** [Pass/Fail] (To be filled in after execution)
+
+**Comments:**
+- Ensure that the design of the form adheres to UI/UX best practices regarding the visibility of mandatory fields.
+- Validate that the error messages are user-friendly and provide clear guidance for correction.
+
+---
+
+Feel free to adjust any details as necessary to suit the specific requirements of your project or testing framework!
