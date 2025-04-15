@@ -1,0 +1,280 @@
+Based on the provided user story and test cases, I'll provide an outline of the code structure needed to implement the client profile creation functionality in a .NET application. This will include a controller, service layer, repository layer, models, and migrations. 
+
+### 1. Models
+
+We'll start by defining the entities involved in the client profile creation process.
+
+```csharp
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer.Models
+{
+    public class ClientProfile : BaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Gender { get; set; }
+        public string RaceEthnicity { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string AssignedTo { get; set; }
+        public string Status { get; set; } // In-process, Complete-Active, Complete-Discharged, Abandoned
+        public DateTime InquiryDate { get; set; }
+    }
+
+    public class ParentGuardian
+    {
+        public string GuardianFirstName { get; set; }
+        public string GuardianLastName { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        public string PrimaryPhone { get; set; }
+        public string SecondaryPhone { get; set; }
+        public string Email { get; set; }
+    }
+
+    public class InquiryForm
+    {
+        public string Source { get; set; }
+        public string Notes { get; set; }
+        // Additional properties as necessary
+    }
+}
+```
+
+### 2. DbContext
+
+This class will represent the database context.
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace DomainLayer.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<ClientProfile> ClientProfiles { get; set; }
+        public DbSet<ParentGuardian> ParentGuardians { get; set; }
+        public DbSet<InquiryForm> InquiryForms { get; set; }
+    }
+}
+```
+
+### 3. Repository Layer
+
+This layer will handle the data access logic.
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : IRepository<ClientProfile>
+    {
+        private readonly ApplicationDbContext _context;
+
+        public ClientProfileRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public void Insert(ClientProfile entity)
+        {
+            _context.ClientProfiles.Add(entity);
+            _context.SaveChanges();
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _context.ClientProfiles.FirstOrDefault(c => c.Id == id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _context.ClientProfiles.ToList();
+        }
+
+        public void Update(ClientProfile entity)
+        {
+            _context.ClientProfiles.Update(entity);
+            _context.SaveChanges();
+        }
+
+        public void Delete(ClientProfile entity)
+        {
+            _context.ClientProfiles.Remove(entity);
+            _context.SaveChanges();
+        }
+    }
+}
+```
+
+### 4. Service Layer
+
+This layer will contain business logic.
+
+```csharp
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using ServiceLayer.ICustomServices;
+
+namespace ServiceLayer.CustomServices
+{
+    public class ClientProfileService : ICustomService<ClientProfile>
+    {
+        private readonly IRepository<ClientProfile> _repository;
+
+        public ClientProfileService(IRepository<ClientProfile> repository)
+        {
+            _repository = repository;
+        }
+
+        public void Insert(ClientProfile entity)
+        {
+            _repository.Insert(entity);
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _repository.Get(id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
+        public void Update(ClientProfile entity)
+        {
+            _repository.Update(entity);
+        }
+
+        public void Delete(ClientProfile entity)
+        {
+            _repository.Delete(entity);
+        }
+    }
+}
+```
+
+### 5. Controller
+
+This controller will handle HTTP requests related to client profiles.
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ICustomServices;
+
+namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientProfileController : ControllerBase
+    {
+        private readonly ICustomService<ClientProfile> _service;
+
+        public ClientProfileController(ICustomService<ClientProfile> service)
+        {
+            _service = service;
+        }
+
+        [HttpPost("create")]
+        public IActionResult CreateProfile([FromBody] ClientProfile clientProfile)
+        {
+            if (clientProfile == null)
+            {
+                return BadRequest("Client profile is null.");
+            }
+
+            _service.Insert(clientProfile);
+            return CreatedAtAction("GetProfile", new { id = clientProfile.Id }, clientProfile);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetProfile(int id)
+        {
+            var profile = _service.Get(id);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+            return Ok(profile);
+        }
+
+        [HttpGet]
+        public IActionResult GetAllProfiles()
+        {
+            return Ok(_service.GetAll());
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateProfile(int id, [FromBody] ClientProfile clientProfile)
+        {
+            if (clientProfile == null || clientProfile.Id != id)
+            {
+                return BadRequest();
+            }
+
+            _service.Update(clientProfile);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProfile(int id)
+        {
+            var profile = _service.Get(id);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            _service.Delete(profile);
+            return NoContent();
+        }
+    }
+}
+```
+
+### 6. Migrations
+
+Create migrations to set up the database schema based on the models defined. You would run the following commands in the Package Manager Console:
+
+```bash
+Add-Migration InitialCreate
+Update-Database
+```
+
+### 7. Dependency Injection Configuration
+
+In your `Startup.cs` or `Program.cs` file, add the following to register your services.
+
+```csharp
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IRepository<ClientProfile>, ClientProfileRepository>();
+builder.Services.AddScoped<ICustomService<ClientProfile>, ClientProfileService>();
+```
+
+### 8. Testing
+
+You can implement unit tests based on the acceptance criteria and test cases provided. For example, using xUnit or NUnit, you can create test cases for each endpoint in the controller.
+
+### Final Note
+
+This is a basic implementation outline. You will need to adjust the code based on your specific requirements, especially regarding validation, error handling, and additional functionalities.
