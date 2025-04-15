@@ -1,0 +1,254 @@
+Based on the user story and test cases provided for creating a client profile, here's a detailed code implementation for the `Product` model along with a `ClientProfile` model that aligns with the functionalities outlined in your requirements:
+
+### 1. ClientProfile Model
+
+We'll create a new model called `ClientProfile` that captures all the necessary details required based on your user story and acceptance criteria. 
+
+```csharp
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer.Models
+{
+    public class ClientProfile : BaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+
+        public string FirstName { get; set; }
+        
+        public string LastName { get; set; }
+
+        public string Gender { get; set; }
+        
+        public string RaceEthnicity { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
+        public string AssignedTo { get; set; } // CAC User who created the profile
+        
+        public string ParentGuardianFirstName { get; set; }
+
+        public string ParentGuardianLastName { get; set; }
+
+        public string ParentGuardianAddressLine1 { get; set; }
+
+        public string ParentGuardianAddressLine2 { get; set; }
+
+        public string HomeCity { get; set; }
+
+        public string HomeState { get; set; }
+
+        public string HomeZipCode { get; set; }
+
+        public string PrimaryPhone { get; set; }
+
+        public string SecondaryPhone { get; set; }
+
+        public string Email { get; set; }
+
+        public bool IsGuardianSameAsEmergencyContact { get; set; }
+
+        public string EmergencyContactFirstName { get; set; }
+
+        public string EmergencyContactLastName { get; set; }
+
+        public string EmergencyContactPhone { get; set; }
+
+        public string HowDidYouHearAboutMosaic { get; set; }
+
+        public string ServicePreferences { get; set; }
+
+        public string InsuranceInformation { get; set; }
+
+        public string PCPFirstName { get; set; }
+
+        public string PCPLastName { get; set; }
+
+        public string PCPPhone { get; set; }
+
+        public string PCPFax { get; set; }
+
+        public string ReferringProvider { get; set; }
+
+        public DateTime? ReferralReceivedDate { get; set; }
+
+        public string ReferralCoordinatorName { get; set; }
+
+        public string Status { get; set; } // In-process, Complete - Active intake, Complete - Active client, Complete - Discharged, Abandoned
+    }
+}
+```
+
+### 2. Update Product Controller for ClientProfile
+
+You will need to modify the controller to handle CRUD operations for the new `ClientProfile` model.
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ICustomServices;
+
+namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientProfileController : ControllerBase
+    {
+        private readonly ICustomService<ClientProfile> _customService;
+
+        public ClientProfileController(ICustomService<ClientProfile> customService)
+        {
+            _customService = customService;
+        }
+
+        [HttpGet(nameof(GetProfileById))]
+        public IActionResult GetProfileById(int Id)
+        {
+            var profile = _customService.Get(Id);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+            return Ok(profile);
+        }
+
+        [HttpGet(nameof(GetAllProfiles))]
+        public IActionResult GetAllProfiles()
+        {
+            var profiles = _customService.GetAll();
+            return Ok(profiles);
+        }
+
+        [HttpPost(nameof(CreateProfile))]
+        public IActionResult CreateProfile(ClientProfile clientProfile)
+        {
+            if (clientProfile != null)
+            {
+                _customService.Insert(clientProfile);
+                return Ok("Profile created successfully.");
+            }
+            return BadRequest("Invalid client profile data.");
+        }
+
+        [HttpPut(nameof(UpdateProfile))]
+        public IActionResult UpdateProfile(ClientProfile clientProfile)
+        {
+            if (clientProfile != null)
+            {
+                _customService.Update(clientProfile);
+                return Ok("Profile updated successfully.");
+            }
+            return BadRequest("Invalid client profile data.");
+        }
+
+        [HttpDelete(nameof(DeleteProfile))]
+        public IActionResult DeleteProfile(int Id)
+        {
+            var profile = _customService.Get(Id);
+            if (profile != null)
+            {
+                _customService.Delete(profile);
+                return Ok("Profile deleted successfully.");
+            }
+            return NotFound("Profile not found.");
+        }
+    }
+}
+```
+
+### 3. Update the Service Layer
+
+You will need to create a service specifically for `ClientProfile`.
+
+```csharp
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using ServiceLayer.ICustomServices;
+
+namespace ServiceLayer.CustomServices
+{
+    public class ClientProfileService : ICustomService<ClientProfile>
+    {
+        private readonly IRepository<ClientProfile> _repository;
+
+        public ClientProfileService(IRepository<ClientProfile> repository)
+        {
+            _repository = repository;
+        }
+
+        public void Delete(ClientProfile entity)
+        {
+            if (entity != null)
+            {
+                _repository.Delete(entity);
+                _repository.SaveChanges();
+            }
+        }
+
+        public ClientProfile Get(int Id)
+        {
+            return _repository.Get(Id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
+        public void Insert(ClientProfile entity)
+        {
+            if (entity != null)
+            {
+                _repository.Insert(entity);
+                _repository.SaveChanges();
+            }
+        }
+
+        public void Update(ClientProfile entity)
+        {
+            if (entity != null)
+            {
+                _repository.Update(entity);
+                _repository.SaveChanges();
+            }
+        }
+    }
+}
+```
+
+### 4. Update the Repository Layer
+
+You will need to create a repository specifically for `ClientProfile`.
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : Repository<ClientProfile>, IRepository<ClientProfile>
+    {
+        public ClientProfileRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
+        {
+        }
+    }
+}
+```
+
+### 5. Update Dependency Injection in Startup
+
+You need to register the new services and repository in your DI container.
+
+```csharp
+// In Startup.cs or Program.cs as per your ASP.NET Core version
+
+builder.Services.AddScoped<ICustomService<ClientProfile>, ClientProfileService>();
+builder.Services.AddScoped<IRepository<ClientProfile>, ClientProfileRepository>();
+```
+
+### Summary
+
+This implementation creates a `ClientProfile` model that matches your user story and test cases. The controller, service, and repository layers are set up to handle CRUD operations for this model. Adjustments may be necessary depending on your application's specific structure or requirements.
