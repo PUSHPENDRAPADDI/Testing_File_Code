@@ -1,0 +1,123 @@
+To provide you with a detailed implementation of business logic for managing products, I'll assume you're looking for a product management service in a language like Python. Below is an example of a `ProductService` class that implements CRUD operations and handles exceptions. 
+
+### User Story
+As a user, I want to manage products in the system so that I can add, update, retrieve, and delete products.
+
+### Test Cases
+1. **Add Product**
+   - Input: Product data (name, price, quantity)
+   - Expected: Product is added successfully.
+
+2. **Get Product**
+   - Input: Product ID
+   - Expected: Return product details.
+
+3. **Update Product**
+   - Input: Product ID and updated data
+   - Expected: Product is updated successfully.
+
+4. **Delete Product**
+   - Input: Product ID
+   - Expected: Product is deleted successfully.
+
+5. **Handle Exception for Non-existent Product**
+   - Input: Non-existing Product ID
+   - Expected: Raise NotFoundException.
+
+### Python Code Implementation
+
+```python
+class Product:
+    def __init__(self, product_id, name, price, quantity):
+        self.product_id = product_id
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
+
+class NotFoundException(Exception):
+    pass
+
+
+class ProductService:
+    def __init__(self):
+        self.products = {}
+        self.current_id = 1
+
+    def add_product(self, name, price, quantity):
+        product = Product(self.current_id, name, price, quantity)
+        self.products[self.current_id] = product
+        self.current_id += 1
+        return product
+
+    def get_product(self, product_id):
+        if product_id not in self.products:
+            raise NotFoundException(f"Product with ID {product_id} not found.")
+        return self.products[product_id]
+
+    def update_product(self, product_id, name=None, price=None, quantity=None):
+        if product_id not in self.products:
+            raise NotFoundException(f"Product with ID {product_id} not found.")
+        product = self.products[product_id]
+        if name is not None:
+            product.name = name
+        if price is not None:
+            product.price = price
+        if quantity is not None:
+            product.quantity = quantity
+        return product
+
+    def delete_product(self, product_id):
+        if product_id not in self.products:
+            raise NotFoundException(f"Product with ID {product_id} not found.")
+        del self.products[product_id]
+
+# Example usage
+if __name__ == "__main__":
+    service = ProductService()
+
+    # Test adding a product
+    product1 = service.add_product("Laptop", 1200.00, 10)
+    print(f"Added Product: {product1.__dict__}")
+
+    # Test retrieving a product
+    try:
+        product = service.get_product(product1.product_id)
+        print(f"Retrieved Product: {product.__dict__}")
+    except NotFoundException as e:
+        print(e)
+
+    # Test updating a product
+    try:
+        updated_product = service.update_product(product1.product_id, price=1100.00)
+        print(f"Updated Product: {updated_product.__dict__}")
+    except NotFoundException as e:
+        print(e)
+
+    # Test deleting a product
+    try:
+        service.delete_product(product1.product_id)
+        print(f"Deleted Product with ID: {product1.product_id}")
+    except NotFoundException as e:
+        print(e)
+
+    # Test retrieving a non-existent product
+    try:
+        service.get_product(product1.product_id)
+    except NotFoundException as e:
+        print(e)
+```
+
+### Explanation
+- **Classes**: `Product` represents a product entity, while `ProductService` contains methods for managing products.
+- **CRUD Operations**: 
+  - `add_product`: Adds a new product.
+  - `get_product`: Retrieves a product by ID, raises an exception if not found.
+  - `update_product`: Updates product details, raises an exception if not found.
+  - `delete_product`: Deletes a product, raises an exception if not found.
+- **Exception Handling**: The `NotFoundException` is raised when trying to access or manipulate a non-existent product.
+
+### Usage
+You can run the script, and it will execute the test cases for adding, retrieving, updating, and deleting products. The exception handling will also demonstrate managing cases where a product is not found. 
+
+You can further expand this code by adding more features like validation, logging, and persistence to a database based on your requirements.
