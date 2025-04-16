@@ -1,0 +1,140 @@
+Sure! Let's build a detailed code artifact for the `ClientProfileController` in C# based on your existing code structure and the context you've provided. Below, I'll include a user story, test cases, and the complete implementation of the `ClientProfileController`, along with additional methods for updating and deleting client profiles, as well as a method for listing all profiles.
+
+### User Story
+As a user of the system, I want to be able to create, retrieve, update, and delete client profiles so that I can manage client information effectively.
+
+### Test Cases
+1. **Create Client Profile**
+   - **Input:** Valid `ClientProfile` object
+   - **Expected Output:** Status 200 OK with message "Client Profile Created Successfully"
+   
+2. **Create Client Profile with Invalid Data**
+   - **Input:** Null `ClientProfile` object
+   - **Expected Output:** Status 400 Bad Request with message "Invalid Client Profile Data"
+
+3. **Get Client Profile by ID**
+   - **Input:** Valid client profile ID
+   - **Expected Output:** Status 200 OK with the `ClientProfile` object
+
+4. **Get Client Profile by Non-Existent ID**
+   - **Input:** Invalid client profile ID
+   - **Expected Output:** Status 404 Not Found
+   
+5. **Update Client Profile**
+   - **Input:** Valid `ClientProfile` object with an existing ID
+   - **Expected Output:** Status 200 OK with message "Client Profile Updated Successfully"
+
+6. **Update Non-Existent Client Profile**
+   - **Input:** `ClientProfile` object with a non-existent ID
+   - **Expected Output:** Status 404 Not Found
+
+7. **Delete Client Profile**
+   - **Input:** Valid client profile ID
+   - **Expected Output:** Status 200 OK with message "Client Profile Deleted Successfully"
+
+8. **Delete Non-Existent Client Profile**
+   - **Input:** Invalid client profile ID
+   - **Expected Output:** Status 404 Not Found
+
+9. **Get All Client Profiles**
+   - **Expected Output:** Status 200 OK with a list of all `ClientProfile` objects
+
+### Implementation of `ClientProfileController`
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ICustomServices;
+using System.Collections.Generic;
+
+namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientProfileController : ControllerBase
+    {
+        private readonly ICustomService<ClientProfile> _customService;
+        private readonly ApplicationDbContext _applicationDbContext;
+
+        public ClientProfileController(ICustomService<ClientProfile> customService, ApplicationDbContext applicationDbContext)
+        {
+            _customService = customService;
+            _applicationDbContext = applicationDbContext;
+        }
+
+        [HttpPost(nameof(CreateClientProfile))]
+        public IActionResult CreateClientProfile(ClientProfile clientProfile)
+        {
+            if (clientProfile == null)
+            {
+                return BadRequest("Invalid Client Profile Data");
+            }
+
+            _customService.Insert(clientProfile);
+            return Ok("Client Profile Created Successfully");
+        }
+
+        [HttpGet(nameof(GetClientProfileById))]
+        public IActionResult GetClientProfileById(int id)
+        {
+            var profile = _customService.Get(id);
+            if (profile == null)
+            {
+                return NotFound();
+            }
+            return Ok(profile);
+        }
+
+        [HttpPut(nameof(UpdateClientProfile))]
+        public IActionResult UpdateClientProfile(int id, ClientProfile clientProfile)
+        {
+            if (clientProfile == null || clientProfile.Id != id)
+            {
+                return BadRequest("Invalid Client Profile Data");
+            }
+
+            var existingProfile = _customService.Get(id);
+            if (existingProfile == null)
+            {
+                return NotFound();
+            }
+
+            _customService.Update(clientProfile);
+            return Ok("Client Profile Updated Successfully");
+        }
+
+        [HttpDelete(nameof(DeleteClientProfile))]
+        public IActionResult DeleteClientProfile(int id)
+        {
+            var existingProfile = _customService.Get(id);
+            if (existingProfile == null)
+            {
+                return NotFound();
+            }
+
+            _customService.Delete(id);
+            return Ok("Client Profile Deleted Successfully");
+        }
+
+        [HttpGet(nameof(GetAllClientProfiles))]
+        public IActionResult GetAllClientProfiles()
+        {
+            var profiles = _customService.GetAll();
+            return Ok(profiles);
+        }
+    }
+}
+```
+
+### Explanation of the Implementation
+- **Dependency Injection:** The `ClientProfileController` uses dependency injection to get instances of `ICustomService<ClientProfile>` and `ApplicationDbContext`.
+- **CRUD Operations:**
+  - **CreateClientProfile:** Inserts a new client profile into the database.
+  - **GetClientProfileById:** Retrieves a client profile by ID.
+  - **UpdateClientProfile:** Updates an existing client profile.
+  - **DeleteClientProfile:** Deletes a client profile by ID.
+  - **GetAllClientProfiles:** Retrieves all client profiles from the database.
+- **Error Handling:** The controller checks for null values and non-existent profiles, returning appropriate HTTP status codes and messages as specified in the test cases.
+
+You can modify the code or add further methods as per your requirements.
