@@ -1,0 +1,306 @@
+Based on the user story and detailed specifications you've provided, I will create a simplified version of the code artifact that represents a client profile management feature. This will be in C# using ASP.NET Core with a structure similar to the one provided in your example.
+
+### Project Structure
+
+- **Controllers**
+- **DomainLayer**
+  - Models
+- **RepositoryLayer**
+  - IRepository
+  - Repository
+- **ServiceLayer**
+  - ICustomService
+  - CustomService
+- **Data**
+  - ApplicationDbContext
+
+### 1. Models Creation
+
+**DomainLayer/Models/ClientProfile.cs**
+```csharp
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer.Models
+{
+    public class ClientProfile
+    {
+        [Key]
+        public int Id { get; set; }
+        public string PatientFirstName { get; set; }
+        public string PatientLastName { get; set; }
+        public string Gender { get; set; }
+        public List<string> RaceEthnicity { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string AssignedTo { get; set; }
+        public string ParentGuardianFirstName { get; set; }
+        public string ParentGuardianLastName { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public string PrimaryPhone { get; set; }
+        public string SecondaryPhone { get; set; }
+        public string Email { get; set; }
+        public bool IsGuardianSameAsEmergencyContact { get; set; }
+        public string EmergencyContactFirstName { get; set; }
+        public string EmergencyContactLastName { get; set; }
+        public string EmergencyContactPhone { get; set; }
+        public List<string> PreferredClinics { get; set; }
+        public string ServicePreferences { get; set; }
+        public string AvailabilityForSessions { get; set; }
+        public string InsuranceInfo { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
+    }
+}
+```
+
+### 2. Repository Interface and Implementation
+
+**RepositoryLayer/IRepository/IClientProfileRepository.cs**
+```csharp
+using System.Collections.Generic;
+
+namespace RepositoryLayer.IRepository
+{
+    public interface IClientProfileRepository
+    {
+        void Insert(ClientProfile profile);
+        void Update(ClientProfile profile);
+        ClientProfile Get(int id);
+        IEnumerable<ClientProfile> GetAll();
+        void Delete(ClientProfile profile);
+    }
+}
+```
+
+**RepositoryLayer/Repository/ClientProfileRepository.cs**
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using System.Collections.Generic;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : IClientProfileRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public ClientProfileRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public void Insert(ClientProfile profile)
+        {
+            _context.ClientProfiles.Add(profile);
+            _context.SaveChanges();
+        }
+
+        public void Update(ClientProfile profile)
+        {
+            _context.ClientProfiles.Update(profile);
+            _context.SaveChanges();
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _context.ClientProfiles.Find(id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _context.ClientProfiles;
+        }
+
+        public void Delete(ClientProfile profile)
+        {
+            _context.ClientProfiles.Remove(profile);
+            _context.SaveChanges();
+        }
+    }
+}
+```
+
+### 3. Service Interface and Implementation
+
+**ServiceLayer/ICustomService/IClientProfileService.cs**
+```csharp
+using DomainLayer.Models;
+using System.Collections.Generic;
+
+namespace ServiceLayer.ICustomServices
+{
+    public interface IClientProfileService
+    {
+        void Insert(ClientProfile profile);
+        void Update(ClientProfile profile);
+        ClientProfile Get(int id);
+        IEnumerable<ClientProfile> GetAll();
+        void Delete(ClientProfile profile);
+    }
+}
+```
+
+**ServiceLayer/CustomServices/ClientProfileService.cs**
+```csharp
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using ServiceLayer.ICustomServices;
+using System.Collections.Generic;
+
+namespace ServiceLayer.CustomServices
+{
+    public class ClientProfileService : IClientProfileService
+    {
+        private readonly IClientProfileRepository _clientProfileRepository;
+
+        public ClientProfileService(IClientProfileRepository clientProfileRepository)
+        {
+            _clientProfileRepository = clientProfileRepository;
+        }
+
+        public void Insert(ClientProfile profile)
+        {
+            _clientProfileRepository.Insert(profile);
+        }
+
+        public void Update(ClientProfile profile)
+        {
+            _clientProfileRepository.Update(profile);
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _clientProfileRepository.Get(id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _clientProfileRepository.GetAll();
+        }
+
+        public void Delete(ClientProfile profile)
+        {
+            _clientProfileRepository.Delete(profile);
+        }
+    }
+}
+```
+
+### 4. Controller
+
+**Controllers/ClientProfileController.cs**
+```csharp
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ICustomServices;
+using System.Collections.Generic;
+
+namespace Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientProfileController : ControllerBase
+    {
+        private readonly IClientProfileService _clientProfileService;
+
+        public ClientProfileController(IClientProfileService clientProfileService)
+        {
+            _clientProfileService = clientProfileService;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<ClientProfile> Get(int id)
+        {
+            var profile = _clientProfileService.Get(id);
+            if (profile == null) return NotFound();
+            return Ok(profile);
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<ClientProfile>> GetAll()
+        {
+            return Ok(_clientProfileService.GetAll());
+        }
+
+        [HttpPost]
+        public ActionResult Create(ClientProfile profile)
+        {
+            _clientProfileService.Insert(profile);
+            return CreatedAtAction(nameof(Get), new { id = profile.Id }, profile);
+        }
+
+        [HttpPut("{id}")]
+        public ActionResult Update(int id, ClientProfile profile)
+        {
+            if (id != profile.Id) return BadRequest();
+            _clientProfileService.Update(profile);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var profile = _clientProfileService.Get(id);
+            if (profile == null) return NotFound();
+            _clientProfileService.Delete(profile);
+            return NoContent();
+        }
+    }
+}
+```
+
+### 5. DbContext
+
+**DomainLayer/Data/ApplicationDbContext.cs**
+```csharp
+using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace DomainLayer.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public DbSet<ClientProfile> ClientProfiles { get; set; }
+    }
+}
+```
+
+### 6. Startup Configuration
+
+In your `Startup.cs` file, configure the services and repositories.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDbContext<ApplicationDbContext>(options => 
+        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+    
+    services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
+    services.AddScoped<IClientProfileService, ClientProfileService>();
+    
+    services.AddControllers();
+}
+```
+
+### 7. Migrations
+
+Make sure to run Entity Framework Core migrations to create the database structure based on the `ClientProfile` model.
+
+```bash
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+```
+
+### Conclusion
+
+This code provides a basic setup for the client profile management system based on the specifications provided. It covers CRUD operations through a RESTful API using ASP.NET Core, following a structured approach with a clear separation of concerns between controllers, services, and repositories. 
+
+You can expand this base code with additional features such as validation, authentication, error handling, and logging as needed.
