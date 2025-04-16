@@ -1,0 +1,83 @@
+It seems you provided an existing implementation of a `ClientProfileRepository` class along with its methods for inserting and retrieving client profiles. However, I notice that you mentioned “artifact ${fileName}” without specifying what the artifact should be based on a user story and test cases. 
+
+To provide you with a detailed code implementation, I will need more context regarding:
+
+1. **User Story**: What functionality or feature should the new code implement?
+2. **Test Cases**: What specific scenarios do you want to test? 
+
+Assuming you want to enhance the `ClientProfileRepository` with additional functionalities based on common requirements for a repository pattern (like updating and deleting records), I can provide an extended version of the `ClientProfileRepository`. Below is an example:
+
+### Extended ClientProfileRepository Code
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
+using RepositoryLayer.IRepository;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : IRepository<ClientProfile>
+    {
+        private readonly ApplicationDbContext _applicationDbContext;
+        private DbSet<ClientProfile> entities;
+
+        public ClientProfileRepository(ApplicationDbContext applicationDbContext)
+        {
+            _applicationDbContext = applicationDbContext;
+            entities = _applicationDbContext.Set<ClientProfile>();
+        }
+
+        public void Insert(ClientProfile entity)
+        {
+            entities.Add(entity);
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return entities.SingleOrDefault(e => e.Id == id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return entities.ToList();
+        }
+
+        public void Update(ClientProfile entity)
+        {
+            // Attach the entity to the context and mark it as modified
+            entities.Attach(entity);
+            _applicationDbContext.Entry(entity).State = EntityState.Modified;
+        }
+
+        public void Delete(int id)
+        {
+            var entity = Get(id);
+            if(entity != null)
+            {
+                entities.Remove(entity);
+            }
+        }
+
+        public void SaveChanges()
+        {
+            _applicationDbContext.SaveChanges();
+        }
+    }
+}
+```
+
+### Explanation of Added Methods:
+
+1. **GetAll**: This method retrieves all client profiles from the database.
+2. **Update**: This method updates an existing client profile. It attaches the entity to the context and marks it as modified.
+3. **Delete**: This method deletes a client profile by its ID. 
+
+### Next Steps:
+
+1. **User Story**: Please provide a specific user story that describes the desired functionality.
+2. **Test Cases**: Specify any test cases that you need to validate the functionality of this repository.
+
+With that information, I can further refine the code or add specific unit tests based on your requirements.
