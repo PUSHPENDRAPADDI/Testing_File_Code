@@ -1,96 +1,153 @@
-To provide a detailed code artifact for client profile operations such as creation, update, and retrieval, we'll use Python as the language of implementation. Below is a sample structure of such a module, including the business logic for client profile management along with a user story and test case examples.
+Certainly! Based on the provided code for the `ClientProfileService` class, I will expand the implementation by adding methods for updating and deleting a `ClientProfile`, as well as providing a user story and test cases for these functionalities.
 
 ### User Story
-As a user, I want to be able to create, update, and retrieve client profiles so that I can manage client information effectively.
 
-### Test Cases
-1. **Test Case 1: Create a new client profile**
-   - Input: Client data (name, email, phone)
-   - Expected Output: Success message and the created client profile.
+**Title**: Client Profile Management
 
-2. **Test Case 2: Update an existing client profile**
-   - Input: Client ID and updated data
-   - Expected Output: Success message and the updated client profile.
+**As a** user of the application,  
+**I want to** manage client profiles,  
+**So that** I can create, read, update, and delete client information efficiently.
 
-3. **Test Case 3: Retrieve a client profile by ID**
-   - Input: Client ID
-   - Expected Output: The client profile data.
+### Acceptance Criteria
 
-4. **Test Case 4: Handle non-existent client profile retrieval**
-   - Input: Non-existent Client ID
-   - Expected Output: Error message indicating the client was not found.
+1. **Insert a Client Profile**: I can add a new client profile.
+2. **Get a Client Profile**: I can retrieve a client profile by its ID.
+3. **Update a Client Profile**: I can update an existing client profile.
+4. **Delete a Client Profile**: I can delete a client profile by its ID.
 
 ### Code Implementation
 
-```python
-# client_profile_manager.py
+Here’s the complete code for the `ClientProfileService` class including the new methods for updating and deleting:
 
-class ClientProfile:
-    def __init__(self, client_id, name, email, phone):
-        self.client_id = client_id
-        self.name = name
-        self.email = email
-        self.phone = phone
+```csharp
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using ServiceLayer.ICustomServices;
 
-    def __repr__(self):
-        return f"ClientProfile(client_id={self.client_id}, name={self.name}, email={self.email}, phone={self.phone})"
+namespace ServiceLayer.CustomServices
+{
+    public class ClientProfileService : ICustomService<ClientProfile>
+    {
+        private readonly IRepository<ClientProfile> _clientProfileRepository;
 
+        public ClientProfileService(IRepository<ClientProfile> clientProfileRepository)
+        {
+            _clientProfileRepository = clientProfileRepository;
+        }
 
-class ClientProfileManager:
-    def __init__(self):
-        self.client_profiles = {}
-        self.current_id = 1
+        public void Insert(ClientProfile entity)
+        {
+            _clientProfileRepository.Insert(entity);
+            _clientProfileRepository.SaveChanges();
+        }
 
-    def create_client_profile(self, name, email, phone):
-        client_profile = ClientProfile(self.current_id, name, email, phone)
-        self.client_profiles[self.current_id] = client_profile
-        self.current_id += 1
-        return {"message": "Client profile created successfully", "profile": client_profile}
+        public ClientProfile Get(int id)
+        {
+            return _clientProfileRepository.Get(id);
+        }
 
-    def update_client_profile(self, client_id, name=None, email=None, phone=None):
-        if client_id not in self.client_profiles:
-            return {"error": "Client profile not found"}
-        
-        profile = self.client_profiles[client_id]
-        if name:
-            profile.name = name
-        if email:
-            profile.email = email
-        if phone:
-            profile.phone = phone
-        
-        return {"message": "Client profile updated successfully", "profile": profile}
+        public void Update(ClientProfile entity)
+        {
+            _clientProfileRepository.Update(entity);
+            _clientProfileRepository.SaveChanges();
+        }
 
-    def get_client_profile(self, client_id):
-        if client_id not in self.client_profiles:
-            return {"error": "Client profile not found"}
-        
-        return {"profile": self.client_profiles[client_id]}
+        public void Delete(int id)
+        {
+            var clientProfile = _clientProfileRepository.Get(id);
+            if (clientProfile != null)
+            {
+                _clientProfileRepository.Delete(clientProfile);
+                _clientProfileRepository.SaveChanges();
+            }
+        }
 
+        // Additional methods can be added as needed
+    }
+}
+```
 
-# Example usage
-if __name__ == "__main__":
-    manager = ClientProfileManager()
+### Test Cases
 
-    # Test Case 1: Create a new client profile
-    print(manager.create_client_profile("John Doe", "john@example.com", "123-456-7890"))
+Here are some example test cases that could be written to verify the functionality of the `ClientProfileService` class:
 
-    # Test Case 2: Update an existing client profile
-    print(manager.update_client_profile(1, email="john.doe@example.com"))
+```csharp
+using Moq;
+using Xunit;
 
-    # Test Case 3: Retrieve a client profile by ID
-    print(manager.get_client_profile(1))
+public class ClientProfileServiceTests
+{
+    private readonly Mock<IRepository<ClientProfile>> _mockRepository;
+    private readonly ClientProfileService _service;
 
-    # Test Case 4: Handle non-existent client profile retrieval
-    print(manager.get_client_profile(99))
+    public ClientProfileServiceTests()
+    {
+        _mockRepository = new Mock<IRepository<ClientProfile>>();
+        _service = new ClientProfileService(_mockRepository.Object);
+    }
+
+    [Fact]
+    public void Insert_ShouldCallInsertAndSaveChanges()
+    {
+        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
+
+        _service.Insert(clientProfile);
+
+        _mockRepository.Verify(repo => repo.Insert(clientProfile), Times.Once);
+        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Once);
+    }
+
+    [Fact]
+    public void Get_ShouldReturnClientProfileById()
+    {
+        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
+        _mockRepository.Setup(repo => repo.Get(1)).Returns(clientProfile);
+
+        var result = _service.Get(1);
+
+        Assert.Equal(clientProfile, result);
+    }
+
+    [Fact]
+    public void Update_ShouldCallUpdateAndSaveChanges()
+    {
+        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
+
+        _service.Update(clientProfile);
+
+        _mockRepository.Verify(repo => repo.Update(clientProfile), Times.Once);
+        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Once);
+    }
+
+    [Fact]
+    public void Delete_ShouldCallDeleteAndSaveChanges()
+    {
+        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
+        _mockRepository.Setup(repo => repo.Get(1)).Returns(clientProfile);
+
+        _service.Delete(1);
+
+        _mockRepository.Verify(repo => repo.Delete(clientProfile), Times.Once);
+        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Once);
+    }
+
+    [Fact]
+    public void Delete_ShouldNotCallDeleteIfClientProfileNotFound()
+    {
+        _mockRepository.Setup(repo => repo.Get(1)).Returns((ClientProfile)null);
+
+        _service.Delete(1);
+
+        _mockRepository.Verify(repo => repo.Delete(It.IsAny<ClientProfile>()), Times.Never);
+        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Never);
+    }
+}
 ```
 
 ### Explanation
-1. **ClientProfile Class**: Represents a client profile with attributes such as `client_id`, `name`, `email`, and `phone`.
-2. **ClientProfileManager Class**: Contains methods for creating, updating, and retrieving client profiles.
-   - `create_client_profile`: Creates a new client profile and assigns a unique ID.
-   - `update_client_profile`: Updates an existing client profile based on the provided `client_id`.
-   - `get_client_profile`: Retrieves a client profile by its ID and handles cases where the profile does not exist.
-3. **Example Usage**: Demonstrates how to use the `ClientProfileManager` class with test cases outlined in the user story.
 
-This code can be expanded based on additional requirements, such as input validation, error handling, and persistence (e.g., saving data to a database).
+- The `ClientProfileService` class provides methods to manage client profiles, including insertion, retrieval, updating, and deletion.
+- The test cases use Moq to create a mock of the `IRepository<ClientProfile>` interface and verify that the appropriate methods are called on the repository when actions are performed on the service.
+- Each test method checks a specific functionality, ensuring that the service behaves as expected.
+
+This implementation and testing framework should help you manage client profiles effectively while ensuring that your code is reliable and maintainable.
