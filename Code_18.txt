@@ -1,0 +1,69 @@
+Certainly! To create a detailed migration file similar to the one you provided, we first need to establish the user story and test cases. For the purpose of this example, let's assume the user story is about creating a `ClientProfile` entity for a healthcare application to store patient information. 
+
+### User Story
+As a healthcare administrator, I want to create a `ClientProfile` table to store patient information, so that I can manage patient records effectively.
+
+### Test Cases
+1. **Test Case 1:** Verify that the `ClientProfiles` table is created successfully with all required columns.
+2. **Test Case 2:** Check that the `Id` column is an auto-incrementing primary key.
+3. **Test Case 3:** Ensure that `PatientFirstName` and `PatientLastName` are required fields.
+4. **Test Case 4:** Validate that `BirthDate` cannot be null and must be in the past.
+5. **Test Case 5:** Ensure that the `CreatedOn` field is populated with the current date and time when a new `ClientProfile` is created.
+
+### Migration Code
+Below is the detailed migration code based on the above user story and test cases, aligned with the provided format:
+
+```csharp
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace DomainLayer.Migrations
+{
+    public partial class AddClientProfile : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "ClientProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PatientFirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PatientLastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AssignedTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PrimaryPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecondaryPhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AddressLine1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"), // Default to current date
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientProfiles", x => x.Id);
+                });
+
+            // Optionally, you can add indexes or constraints here, if necessary.
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(name: "ClientProfiles");
+        }
+    }
+}
+```
+
+### Explanation of the Code
+- **Table Creation:** The migration creates a table named `ClientProfiles` with various columns to store patient information.
+- **Primary Key:** The `Id` column is defined as the primary key and is set to auto-increment with `SqlServer:Identity`.
+- **Required Fields:** The `PatientFirstName` and `PatientLastName` fields are marked as required (`nullable: false`).
+- **Default Value for CreatedOn:** The `CreatedOn` field is set to automatically populate with the current date and time using `defaultValueSql: "GETDATE()"`.
+- **Nullable Fields:** Other fields are marked as nullable, allowing them to be optional.
+
+This migration should satisfy the user story and pass the outlined test cases.
