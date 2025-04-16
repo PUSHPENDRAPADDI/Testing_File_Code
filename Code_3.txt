@@ -1,0 +1,308 @@
+Creating a detailed code for the specified artifact based on the user story and test cases provided requires a structured approach. Below, I've synthesized the key components into a C# ASP.NET Core application, utilizing a layered architecture similar to your sample. This includes a controller, service, repository, model, and database context.
+
+### 1. Models
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer.Models
+{
+    public class ClientProfile : BaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+        
+        public string PatientFirstName { get; set; }
+        public string PatientLastName { get; set; }
+        public string Gender { get; set; }
+        public string RaceEthnicity { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string AssignedTo { get; set; }
+
+        public string GuardianFirstName { get; set; }
+        public string GuardianLastName { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        public string PrimaryPhone { get; set; }
+        public string SecondaryPhone { get; set; }
+        public string Email { get; set; }
+
+        public bool IsGuardianSameAsEmergencyContact { get; set; }
+        public string EmergencyContactFirstName { get; set; }
+        public string EmergencyContactLastName { get; set; }
+        public string EmergencyContactPhone { get; set; }
+
+        public string ServicePreferences { get; set; }
+        public string AvailabilityForSessions { get; set; }
+        public string FirstPreferredClinic { get; set; }
+        public string SecondPreferredClinic { get; set; }
+        public string Conflicts { get; set; }
+
+        public List<InsuranceInformation> InsuranceInformations { get; set; }
+        public List<PCPInformation> PCPInformations { get; set; }
+        public List<ReferringProviderInformation> ReferringProviders { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+        public string Status { get; set; }
+    }
+
+    public class InsuranceInformation
+    {
+        public string Payor { get; set; }
+        public string Status { get; set; }
+        public DateTime? CoverageEndDate { get; set; }
+        public string SubscriberFirstName { get; set; }
+        public string SubscriberLastName { get; set; }
+        public DateTime? SubscriberDoB { get; set; }
+        public string SubscriberRelationToPatient { get; set; }
+        public string SubscriberID { get; set; }
+        public string GroupID { get; set; }
+        public bool FrontBackCardReceived { get; set; }
+    }
+
+    public class PCPInformation
+    {
+        public string PCPFirstName { get; set; }
+        public string PCPLastName { get; set; }
+        public string PCPPhoneNumber { get; set; }
+        public string PCPFax { get; set; }
+    }
+
+    public class ReferringProviderInformation
+    {
+        public DateTime ReferralReceivedDate { get; set; }
+        public string ReferringProvider { get; set; }
+        public string ReferralCoordinatorName { get; set; }
+    }
+}
+```
+
+### 2. DbContext
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace DomainLayer.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public DbSet<ClientProfile> ClientProfiles { get; set; }
+        public DbSet<InsuranceInformation> InsuranceInformations { get; set; }
+        public DbSet<PCPInformation> PCPInformations { get; set; }
+        public DbSet<ReferringProviderInformation> ReferringProviders { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+    }
+}
+```
+
+### 3. Repository
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : IRepository<ClientProfile>
+    {
+        private readonly ApplicationDbContext _context;
+
+        public ClientProfileRepository(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public void Delete(ClientProfile entity)
+        {
+            _context.ClientProfiles.Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _context.ClientProfiles.SingleOrDefault(c => c.Id == id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _context.ClientProfiles.ToList();
+        }
+
+        public void Insert(ClientProfile entity)
+        {
+            _context.ClientProfiles.Add(entity);
+            _context.SaveChanges();
+        }
+
+        public void Update(ClientProfile entity)
+        {
+            _context.ClientProfiles.Update(entity);
+            _context.SaveChanges();
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+    }
+}
+```
+
+### 4. Service
+
+```csharp
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using ServiceLayer.ICustomServices;
+using System.Collections.Generic;
+
+namespace ServiceLayer.CustomServices
+{
+    public class ClientProfileService : ICustomService<ClientProfile>
+    {
+        private readonly IRepository<ClientProfile> _clientProfileRepository;
+
+        public ClientProfileService(IRepository<ClientProfile> clientProfileRepository)
+        {
+            _clientProfileRepository = clientProfileRepository;
+        }
+
+        public void Delete(ClientProfile entity)
+        {
+            _clientProfileRepository.Delete(entity);
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _clientProfileRepository.Get(id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _clientProfileRepository.GetAll();
+        }
+
+        public void Insert(ClientProfile entity)
+        {
+            _clientProfileRepository.Insert(entity);
+        }
+
+        public void Update(ClientProfile entity)
+        {
+            _clientProfileRepository.Update(entity);
+        }
+    }
+}
+```
+
+### 5. Controller
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ICustomServices;
+
+namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientProfileController : ControllerBase
+    {
+        private readonly ICustomService<ClientProfile> _clientProfileService;
+
+        public ClientProfileController(ICustomService<ClientProfile> clientProfileService)
+        {
+            _clientProfileService = clientProfileService;
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetClientProfileById(int id)
+        {
+            var clientProfile = _clientProfileService.Get(id);
+            if (clientProfile == null)
+            {
+                return NotFound();
+            }
+            return Ok(clientProfile);
+        }
+
+        [HttpGet]
+        public IActionResult GetAllClientProfiles()
+        {
+            var clientProfiles = _clientProfileService.GetAll();
+            return Ok(clientProfiles);
+        }
+
+        [HttpPost]
+        public IActionResult CreateClientProfile([FromBody] ClientProfile clientProfile)
+        {
+            if (clientProfile == null)
+            {
+                return BadRequest("Client profile is null.");
+            }
+            _clientProfileService.Insert(clientProfile);
+            return CreatedAtAction(nameof(GetClientProfileById), new { id = clientProfile.Id }, clientProfile);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateClientProfile(int id, [FromBody] ClientProfile clientProfile)
+        {
+            if (clientProfile == null || clientProfile.Id != id)
+            {
+                return BadRequest("Client profile is null or ID mismatch.");
+            }
+            _clientProfileService.Update(clientProfile);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteClientProfile(int id)
+        {
+            var clientProfile = _clientProfileService.Get(id);
+            if (clientProfile == null)
+            {
+                return NotFound();
+            }
+            _clientProfileService.Delete(clientProfile);
+            return NoContent();
+        }
+    }
+}
+```
+
+### 6. Dependency Injection Configuration
+
+```csharp
+// In Startup.cs or Program.cs
+builder.Services.AddScoped<ICustomService<ClientProfile>, ClientProfileService>();
+builder.Services.AddScoped<IRepository<ClientProfile>, ClientProfileRepository>();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+```
+
+### 7. Migrations
+
+To create the database schema, you would run the following commands in the Package Manager Console or your terminal:
+
+```sh
+Add-Migration InitialCreate
+Update-Database
+```
+
+### Note
+This example is a basic implementation of the user story and should be expanded with further validation, error handling, and additional features as required by your specific project needs. The provided code structure follows the layered architecture pattern for maintainability and separation of concerns.
