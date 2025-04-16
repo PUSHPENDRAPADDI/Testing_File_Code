@@ -1,0 +1,227 @@
+Based on the user story and requirements provided, here is a detailed implementation of the `ClientProfile` artifact, following the architecture and coding style of the sample code you provided. This will include a controller, service, repository, model, and data context. Note that due to the extensive nature of the provided requirements, we will focus on building out the necessary components for the `ClientProfile` creation functionality.
+
+### Models
+
+```csharp
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer.Models
+{
+    public class ClientProfile : BaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Gender { get; set; }
+        public string RaceEthnicity { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string AssignedTo { get; set; }
+        public string ParentGuardianFirstName { get; set; }
+        public string ParentGuardianLastName { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        public string PrimaryPhone { get; set; }
+        public string SecondaryPhone { get; set; }
+        public string Email { get; set; }
+        public bool IsGuardianSameAsEmergencyContact { get; set; }
+        public string EmergencyContactFirstName { get; set; }
+        public string EmergencyContactLastName { get; set; }
+        public string EmergencyContactPhone { get; set; }
+        public string ServicePreferences { get; set; }
+        public string AvailabilityForSessions { get; set; }
+        public string FirstPreferredClinic { get; set; }
+        public string SecondPreferredClinic { get; set; }
+        public string InsurancePayor { get; set; }
+        public string InsuranceStatus { get; set; }
+        public DateTime? CoverageEndDate { get; set; }
+        public string SubscriberFirstName { get; set; }
+        public string SubscriberLastName { get; set; }
+        public DateTime? SubscriberDOB { get; set; }
+        public string SubscriberRelationToClient { get; set; }
+        public string SubscriberID { get; set; }
+        public string GroupID { get; set; }
+        public bool FrontBackInsuranceCardReceived { get; set; }
+        public string PCPFirstName { get; set; }
+        public string PCPLastName { get; set; }
+        public string PCPPhoneNo { get; set; }
+        public string PCPFax { get; set; }
+        public string ReferringProvider { get; set; }
+        public string ReferralReceivedDate { get; set; }
+        public string ReferralCoordinatorName { get; set; }
+        public string HistoryOfIllness { get; set; }
+        public string EMRID { get; set; }
+        public DateTime DateCreated { get; set; }
+        public string Status { get; set; } // e.g., In-process, Complete
+    }
+}
+```
+
+### Repository Interface
+
+```csharp
+using DomainLayer.Models;
+
+namespace RepositoryLayer.IRepository
+{
+    public interface IClientProfileRepository : IRepository<ClientProfile>
+    {
+        ClientProfile GetProfileByEMRID(string emrId);
+    }
+}
+```
+
+### Repository Implementation
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : Repository<ClientProfile>, IClientProfileRepository
+    {
+        public ClientProfileRepository(ApplicationDbContext dbContext) : base(dbContext) { }
+
+        public ClientProfile GetProfileByEMRID(string emrId)
+        {
+            return _applicationDbContext.Set<ClientProfile>().FirstOrDefault(x => x.EMRID == emrId);
+        }
+    }
+}
+```
+
+### Service Interface
+
+```csharp
+using DomainLayer.Models;
+
+namespace ServiceLayer.ICustomServices
+{
+    public interface IClientProfileService : ICustomService<ClientProfile>
+    {
+        ClientProfile GetProfileByEMRID(string emrId);
+    }
+}
+```
+
+### Service Implementation
+
+```csharp
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using ServiceLayer.ICustomServices;
+
+namespace ServiceLayer.CustomServices
+{
+    public class ClientProfileService : IClientProfileService
+    {
+        private readonly IClientProfileRepository _clientProfileRepository;
+
+        public ClientProfileService(IClientProfileRepository clientProfileRepository)
+        {
+            _clientProfileRepository = clientProfileRepository;
+        }
+
+        public void Delete(ClientProfile entity) => _clientProfileRepository.Delete(entity);
+        public ClientProfile Get(int id) => _clientProfileRepository.Get(id);
+        public IEnumerable<ClientProfile> GetAll() => _clientProfileRepository.GetAll();
+        public void Insert(ClientProfile entity) => _clientProfileRepository.Insert(entity);
+        public void Update(ClientProfile entity) => _clientProfileRepository.Update(entity);
+        public ClientProfile GetProfileByEMRID(string emrId) => _clientProfileRepository.GetProfileByEMRID(emrId);
+    }
+}
+```
+
+### Controller
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ICustomServices;
+
+namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientProfileController : ControllerBase
+    {
+        private readonly IClientProfileService _clientProfileService;
+
+        public ClientProfileController(IClientProfileService clientProfileService)
+        {
+            _clientProfileService = clientProfileService;
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetProfileById(int id)
+        {
+            var profile = _clientProfileService.Get(id);
+            if (profile == null) return NotFound();
+            return Ok(profile);
+        }
+
+        [HttpPost]
+        public IActionResult CreateProfile(ClientProfile profile)
+        {
+            if (profile == null) return BadRequest("Profile cannot be null.");
+            _clientProfileService.Insert(profile);
+            return CreatedAtAction(nameof(GetProfileById), new { id = profile.Id }, profile);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateProfile(int id, ClientProfile profile)
+        {
+            if (id != profile.Id) return BadRequest("Profile ID mismatch.");
+            _clientProfileService.Update(profile);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProfile(int id)
+        {
+            var profile = _clientProfileService.Get(id);
+            if (profile == null) return NotFound();
+            _clientProfileService.Delete(profile);
+            return NoContent();
+        }
+    }
+}
+```
+
+### DbContext
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace DomainLayer.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public DbSet<ClientProfile> ClientProfiles { get; set; }
+    }
+}
+```
+
+### Dependency Injection Configuration
+
+In your `Startup.cs` or wherever you configure your services, make sure to add the repository and service to the DI container:
+
+```csharp
+builder.Services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
+builder.Services.AddScoped<IClientProfileService, ClientProfileService>();
+```
+
+### Summary
+
+The code provided above creates a basic structure for managing `ClientProfile` entities, allowing for CRUD operations as defined in the user story. The models, repositories, services, and controllers follow the architecture you provided as a reference. You can expand on this base code by adding additional validations, methods, and business logic as needed based on the requirements and test cases provided.
