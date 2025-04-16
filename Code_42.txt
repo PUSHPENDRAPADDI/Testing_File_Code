@@ -1,0 +1,338 @@
+Based on the detailed requirements and user story provided, here's a structured code implementation for the client profile creation feature, following the layered architecture pattern (Controller, Service, Repository).
+
+### 1. Domain Layer
+
+**Domain Models:**
+
+```csharp
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace DomainLayer.Models
+{
+    public class ClientProfile : BaseEntity
+    {
+        [Key]
+        public int Id { get; set; }
+        public string PatientFirstName { get; set; }
+        public string PatientLastName { get; set; }
+        public string Gender { get; set; }
+        public string RaceEthnicity { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string AssignedTo { get; set; }
+        public string ParentGuardianFirstName { get; set; }
+        public string ParentGuardianLastName { get; set; }
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string ZipCode { get; set; }
+        public string PrimaryPhone { get; set; }
+        public string SecondaryPhone { get; set; }
+        public string Email { get; set; }
+        public bool IsGuardianSameAsEmergencyContact { get; set; }
+        public string EmergencyContactFirstName { get; set; }
+        public string EmergencyContactLastName { get; set; }
+        public string EmergencyContactPhone { get; set; }
+        public string ServicePreferences { get; set; }
+        public string AvailabilityForSessions { get; set; }
+        public string FirstPreferredClinic { get; set; }
+        public string SecondPreferredClinic { get; set; }
+        public string Conflicts { get; set; }
+        public string InsurancePayor { get; set; }
+        public string InsuranceStatus { get; set; }
+        public DateTime? CoverageEndDate { get; set; }
+        public string SubscriberFirstName { get; set; }
+        public string SubscriberLastName { get; set; }
+        public DateTime? SubscriberDOB { get; set; }
+        public string SubscriberRelationToClient { get; set; }
+        public string SubscriberID { get; set; }
+        public string GroupID { get; set; }
+        public bool FrontBackInsuranceCardReceived { get; set; }
+        public string PCPFirstName { get; set; }
+        public string PCPLastName { get; set; }
+        public string PCPPhone { get; set; }
+        public string PCPFax { get; set; }
+        public string ReferringProviderName { get; set; }
+        public DateTime? ReferralReceivedDate { get; set; }
+        public string ReferralCoordinatorName { get; set; }
+        public string MedicalHistory { get; set; }
+        public string EMRId { get; set; }
+        public string PatientID { get; set; }
+        public DateTime DateCreated { get; set; }
+        public string Status { get; set; } // E.g., Not Started, In Process, Complete
+    }
+}
+```
+
+### 2. Repository Layer
+
+**Repository Interface:**
+
+```csharp
+using DomainLayer.Models;
+using System.Collections.Generic;
+
+namespace RepositoryLayer.IRepository
+{
+    public interface IClientProfileRepository
+    {
+        ClientProfile Get(int id);
+        IEnumerable<ClientProfile> GetAll();
+        void Insert(ClientProfile clientProfile);
+        void Update(ClientProfile clientProfile);
+        void Delete(ClientProfile clientProfile);
+        void SaveChanges();
+    }
+}
+```
+
+**Repository Implementation:**
+
+```csharp
+using DomainLayer.Data;
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RepositoryLayer.Repository
+{
+    public class ClientProfileRepository : IClientProfileRepository
+    {
+        private readonly ApplicationDbContext _context;
+        private DbSet<ClientProfile> _entities;
+
+        public ClientProfileRepository(ApplicationDbContext context)
+        {
+            _context = context;
+            _entities = _context.Set<ClientProfile>();
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _entities.SingleOrDefault(c => c.Id == id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _entities.AsEnumerable();
+        }
+
+        public void Insert(ClientProfile clientProfile)
+        {
+            _entities.Add(clientProfile);
+            _context.SaveChanges();
+        }
+
+        public void Update(ClientProfile clientProfile)
+        {
+            _entities.Update(clientProfile);
+            _context.SaveChanges();
+        }
+
+        public void Delete(ClientProfile clientProfile)
+        {
+            _entities.Remove(clientProfile);
+            _context.SaveChanges();
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+    }
+}
+```
+
+### 3. Service Layer
+
+**Service Interface:**
+
+```csharp
+using DomainLayer.Models;
+using System.Collections.Generic;
+
+namespace ServiceLayer.ICustomServices
+{
+    public interface IClientProfileService
+    {
+        ClientProfile Get(int id);
+        IEnumerable<ClientProfile> GetAll();
+        void Create(ClientProfile clientProfile);
+        void Update(ClientProfile clientProfile);
+        void Delete(int id);
+    }
+}
+```
+
+**Service Implementation:**
+
+```csharp
+using DomainLayer.Models;
+using RepositoryLayer.IRepository;
+using ServiceLayer.ICustomServices;
+using System.Collections.Generic;
+
+namespace ServiceLayer.CustomServices
+{
+    public class ClientProfileService : IClientProfileService
+    {
+        private readonly IClientProfileRepository _repository;
+
+        public ClientProfileService(IClientProfileRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public ClientProfile Get(int id)
+        {
+            return _repository.Get(id);
+        }
+
+        public IEnumerable<ClientProfile> GetAll()
+        {
+            return _repository.GetAll();
+        }
+
+        public void Create(ClientProfile clientProfile)
+        {
+            _repository.Insert(clientProfile);
+        }
+
+        public void Update(ClientProfile clientProfile)
+        {
+            _repository.Update(clientProfile);
+        }
+
+        public void Delete(int id)
+        {
+            var clientProfile = _repository.Get(id);
+            if (clientProfile != null)
+            {
+                _repository.Delete(clientProfile);
+            }
+        }
+    }
+}
+```
+
+### 4. Controller Layer
+
+**Controller Implementation:**
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.AspNetCore.Mvc;
+using ServiceLayer.ICustomServices;
+
+namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientProfileController : ControllerBase
+    {
+        private readonly IClientProfileService _service;
+
+        public ClientProfileController(IClientProfileService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetClientProfile(int id)
+        {
+            var clientProfile = _service.Get(id);
+            if (clientProfile == null)
+            {
+                return NotFound();
+            }
+            return Ok(clientProfile);
+        }
+
+        [HttpGet]
+        public IActionResult GetAllClientProfiles()
+        {
+            var clientProfiles = _service.GetAll();
+            return Ok(clientProfiles);
+        }
+
+        [HttpPost]
+        public IActionResult CreateClientProfile([FromBody] ClientProfile clientProfile)
+        {
+            if (clientProfile == null)
+            {
+                return BadRequest("Client profile data is null.");
+            }
+            _service.Create(clientProfile);
+            return CreatedAtAction(nameof(GetClientProfile), new { id = clientProfile.Id }, clientProfile);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateClientProfile(int id, [FromBody] ClientProfile clientProfile)
+        {
+            if (clientProfile == null || clientProfile.Id != id)
+            {
+                return BadRequest("Client profile data is invalid.");
+            }
+            _service.Update(clientProfile);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteClientProfile(int id)
+        {
+            _service.Delete(id);
+            return NoContent();
+        }
+    }
+}
+```
+
+### 5. DbContext Configuration
+
+**DbContext Implementation:**
+
+```csharp
+using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace DomainLayer.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<ClientProfile> ClientProfiles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+        }
+    }
+}
+```
+
+### 6. Dependency Injection Configuration
+
+In your `Startup.cs` or `Program.cs` file (depending on ASP.NET Core version):
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDbContext<ApplicationDbContext>(options => 
+        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        
+    services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
+    services.AddScoped<IClientProfileService, ClientProfileService>();
+    
+    services.AddControllers();
+}
+```
+
+### Conclusion
+
+This code provides a comprehensive implementation of the client profile creation feature based on the user story and test cases you provided. The architecture follows a clean separation of concerns, with distinct layers for the domain, repository, service, and controller. This structure allows for easier maintenance, testing, and scalability in the future.
