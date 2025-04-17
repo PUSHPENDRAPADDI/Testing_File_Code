@@ -1,0 +1,182 @@
+Based on the provided user story and specifications, here's a comprehensive Angular template (`component.html`) for the "New Client Profile" feature. This template includes form controls for all specified fields, using Angular Reactive Forms for validation and handling.
+
+### `client-profile-form.component.html`
+
+```html
+<form [formGroup]="clientProfileForm" (ngSubmit)="onSubmit()">
+  <h2>Create New Client Profile</h2>
+
+  <div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" formControlName="firstName" class="form-control" required>
+    <div *ngIf="clientProfileForm.get('firstName').invalid && (clientProfileForm.get('firstName').dirty || clientProfileForm.get('firstName').touched)">
+      <small class="text-danger" *ngIf="clientProfileForm.get('firstName').errors.required">First Name is required.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" formControlName="lastName" class="form-control" required>
+    <div *ngIf="clientProfileForm.get('lastName').invalid && (clientProfileForm.get('lastName').dirty || clientProfileForm.get('lastName').touched)">
+      <small class="text-danger" *ngIf="clientProfileForm.get('lastName').errors.required">Last Name is required.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="gender">Gender</label>
+    <select id="gender" formControlName="gender" class="form-control">
+      <option value="">Select Gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Transgender">Transgender</option>
+      <option value="Non-binary">Non-binary</option>
+      <option value="Other">Other</option>
+      <option value="Prefer not to answer">Prefer not to answer</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="race">Race/Ethnicity</label>
+    <select id="race" formControlName="race" multiple class="form-control">
+      <option value="White">White</option>
+      <option value="Black or African">Black or African</option>
+      <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
+      <option value="Asian">Asian</option>
+      <option value="Native Hawaiian or other Pacific Islander">Native Hawaiian or other Pacific Islander</option>
+      <option value="Hispanic or Latino">Hispanic or Latino</option>
+      <option value="Prefer not to answer">Prefer not to answer</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="birthDate">Birth Date</label>
+    <input type="date" id="birthDate" formControlName="birthDate" class="form-control" required>
+    <div *ngIf="clientProfileForm.get('birthDate').invalid && (clientProfileForm.get('birthDate').dirty || clientProfileForm.get('birthDate').touched)">
+      <small class="text-danger" *ngIf="clientProfileForm.get('birthDate').errors.required">Birth Date is required.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="assignedTo">Assigned To</label>
+    <input type="text" id="assignedTo" formControlName="assignedTo" class="form-control" readonly>
+  </div>
+
+  <div class="form-group">
+    <label for="guardianFirstName">Parent/Guardian First Name</label>
+    <input type="text" id="guardianFirstName" formControlName="guardianFirstName" class="form-control" *ngIf="isGuardianRequired()">
+  </div>
+
+  <div class="form-group">
+    <label for="guardianLastName">Parent/Guardian Last Name</label>
+    <input type="text" id="guardianLastName" formControlName="guardianLastName" class="form-control" *ngIf="isGuardianRequired()">
+  </div>
+
+  <div class="form-group">
+    <label for="addressLine1">Address - Line 1</label>
+    <input type="text" id="addressLine1" formControlName="addressLine1" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="addressLine2">Address - Line 2</label>
+    <input type="text" id="addressLine2" formControlName="addressLine2" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="city">City</label>
+    <input type="text" id="city" formControlName="city" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="state">State</label>
+    <select id="state" formControlName="state" class="form-control">
+      <option value="">Select State</option>
+      <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="zip">Zip/Postal Code</label>
+    <input type="text" id="zip" formControlName="zip" class="form-control" maxlength="10">
+  </div>
+
+  <div class="form-group">
+    <label for="primaryPhone">Primary Phone</label>
+    <input type="tel" id="primaryPhone" formControlName="primaryPhone" class="form-control" required>
+    <div *ngIf="clientProfileForm.get('primaryPhone').invalid && (clientProfileForm.get('primaryPhone').dirty || clientProfileForm.get('primaryPhone').touched)">
+      <small class="text-danger" *ngIf="clientProfileForm.get('primaryPhone').errors.required">Primary Phone is required.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email">E-mail</label>
+    <input type="email" id="email" formControlName="email" class="form-control" required>
+    <div *ngIf="clientProfileForm.get('email').invalid && (clientProfileForm.get('email').dirty || clientProfileForm.get('email').touched)">
+      <small class="text-danger" *ngIf="clientProfileForm.get('email').errors.required">Email is required.</small>
+      <small class="text-danger" *ngIf="clientProfileForm.get('email').errors.email">Invalid email format.</small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="emergencyContactSame">Is guardian same as emergency contact?</label>
+    <select id="emergencyContactSame" formControlName="emergencyContactSame" (change)="toggleEmergencyContact()" class="form-control">
+      <option value="No">No</option>
+      <option value="Yes">Yes</option>
+    </select>
+  </div>
+
+  <div class="form-group" *ngIf="showEmergencyContact">
+    <label for="emergencyContactFirstName">Emergency Contact First Name</label>
+    <input type="text" id="emergencyContactFirstName" formControlName="emergencyContactFirstName" class="form-control">
+  </div>
+
+  <div class="form-group" *ngIf="showEmergencyContact">
+    <label for="emergencyContactLastName">Emergency Contact Last Name</label>
+    <input type="text" id="emergencyContactLastName" formControlName="emergencyContactLastName" class="form-control">
+  </div>
+
+  <div class="form-group" *ngIf="showEmergencyContact">
+    <label for="emergencyContactPhone">Emergency Contact Phone</label>
+    <input type="tel" id="emergencyContactPhone" formControlName="emergencyContactPhone" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="servicePreferences">Service Preferences</label>
+    <select id="servicePreferences" formControlName="servicePreferences" class="form-control">
+      <option value="Home">Home</option>
+      <option value="Clinic">Clinic</option>
+      <option value="Hospital">Hospital</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="availabilityForTreatment">Availability for Treatment</label>
+    <input type="text" id="availabilityForTreatment" formControlName="availabilityForTreatment" class="form-control">
+  </div>
+
+  <div class="form-group">
+    <label for="insuranceInfo">Insurance Information</label>
+    <h4>Payor</h4>
+    <select id="payor" formControlName="payor" class="form-control">
+      <option *ngFor="let payor of payors" [value]="payor">{{ payor }}</option>
+    </select>
+    <h4>Subscriber Information</h4>
+    <input type="text" id="subscriberFirstName" formControlName="subscriberFirstName" placeholder="Subscriber First Name" class="form-control">
+    <input type="text" id="subscriberLastName" formControlName="subscriberLastName" placeholder="Subscriber Last Name" class="form-control">
+  </div>
+
+  <button type="submit" class="btn btn-primary" [disabled]="clientProfileForm.invalid">Save Profile</button>
+</form>
+```
+
+### Key Features of the Template:
+
+- **Reactive Forms**: The form uses Angular's Reactive Forms for handling user input and validation.
+- **Validation Messages**: Displays validation messages for required fields that are not filled.
+- **Dynamic Fields**: The template conditionally shows fields based on user selections (e.g., emergency contact info).
+- **Form Controls**: All specified fields from the user story are represented in the form, with appropriate types and attributes.
+- **Dropdowns**: Uses `select` elements for fields that require a picklist, dynamically populated where applicable.
+
+### Next Steps
+
+You would need to implement the corresponding TypeScript logic in the component file (`client-profile-form.component.ts`) to handle form initialization, validation, submission, and any additional logic related to managing the dynamic fields.
