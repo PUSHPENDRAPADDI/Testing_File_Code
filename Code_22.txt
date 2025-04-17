@@ -1,188 +1,84 @@
-To create an Angular input form that captures all the specified inputs for the user story, we will define a component that includes an HTML template and a TypeScript file.
+Certainly! Below is a comprehensive Angular component code (`client-profile-form.component.ts`) that aligns with your user story and data specifications. This code assumes that you have the necessary services and models set up for handling client profile data.
 
-### 1. Angular Component Structure
-
-**1.1 Create the Component**
-
-You can create a new Angular component named `client-profile-form` using the Angular CLI:
-
-```bash
-ng generate component client-profile-form
-```
-
-This will generate a folder named `client-profile-form` with the following files:
-
-- `client-profile-form.component.ts`
-- `client-profile-form.component.html`
-- `client-profile-form.component.css`
-
-### 2. HTML Template (`client-profile-form.component.html`)
-
-Here is the HTML code for the form based on the specifications you provided:
-
-```html
-<form #clientProfileForm="ngForm" (ngSubmit)="onSubmit(clientProfileForm)">
-  <h2>Client Profile Form</h2>
-
-  <!-- Patient Information -->
-  <div>
-    <label for="firstName">First Name:</label>
-    <input type="text" id="firstName" name="firstName" ngModel required>
-  </div>
-
-  <div>
-    <label for="lastName">Last Name:</label>
-    <input type="text" id="lastName" name="lastName" ngModel required>
-  </div>
-
-  <div>
-    <label for="gender">Gender:</label>
-    <select id="gender" name="gender" ngModel>
-      <option value="">Select Gender</option>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-      <option value="Transgender">Transgender</option>
-      <option value="Non-binary">Non-binary</option>
-      <option value="Other">Other</option>
-      <option value="Prefer not to answer">Prefer not to answer</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="race">Race/Ethnicity:</label>
-    <select id="race" name="race" ngModel multiple>
-      <option value="White">White</option>
-      <option value="Black or African">Black or African</option>
-      <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
-      <option value="Asian">Asian</option>
-      <option value="Native Hawaiian or other Pacific Islander">Native Hawaiian or other Pacific Islander</option>
-      <option value="Hispanic or Latino">Hispanic or Latino</option>
-      <option value="Prefer not to answer">Prefer not to answer</option>
-      <option value="Other">Other</option>
-    </select>
-  </div>
-
-  <div>
-    <label for="birthDate">Birth Date:</label>
-    <input type="date" id="birthDate" name="birthDate" ngModel required>
-  </div>
-
-  <!-- Contact Information -->
-  <div>
-    <label for="primaryPhone">Primary Phone:</label>
-    <input type="tel" id="primaryPhone" name="primaryPhone" ngModel required pattern="^\d{3}-\d{3}-\d{4}$">
-  </div>
-
-  <div>
-    <label for="email">E-mail:</label>
-    <input type="email" id="email" name="email" ngModel required>
-  </div>
-
-  <div>
-    <label for="addressLine1">Address Line 1:</label>
-    <input type="text" id="addressLine1" name="addressLine1" ngModel>
-  </div>
-
-  <div>
-    <label for="city">City:</label>
-    <input type="text" id="city" name="city" ngModel>
-  </div>
-
-  <div>
-    <label for="state">State:</label>
-    <select id="state" name="state" ngModel>
-      <option value="">Select State</option>
-      <!-- Populate with all 50 states -->
-      <option value="AL">Alabama</option>
-      <option value="AK">Alaska</option>
-      <option value="AZ">Arizona</option>
-      <!-- Add other states -->
-    </select>
-  </div>
-
-  <div>
-    <label for="zip">Zip/Postal Code:</label>
-    <input type="text" id="zip" name="zip" ngModel pattern="^\d{5}(-\d{4})?$">
-  </div>
-
-  <!-- Emergency Contact Information -->
-  <div>
-    <label for="emergencyContactFirstName">Emergency Contact First Name:</label>
-    <input type="text" id="emergencyContactFirstName" name="emergencyContactFirstName" ngModel>
-  </div>
-
-  <div>
-    <label for="emergencyContactLastName">Emergency Contact Last Name:</label>
-    <input type="text" id="emergencyContactLastName" name="emergencyContactLastName" ngModel>
-  </div>
-
-  <div>
-    <label for="emergencyContactPhone">Emergency Contact Phone:</label>
-    <input type="tel" id="emergencyContactPhone" name="emergencyContactPhone" ngModel pattern="^\d{3}-\d{3}-\d{4}$">
-  </div>
-
-  <!-- Submit Button -->
-  <button type="submit" [disabled]="!clientProfileForm.form.valid">Submit</button>
-</form>
-```
-
-### 3. TypeScript Component (`client-profile-form.component.ts`)
-
-Here is the TypeScript file that corresponds to the HTML:
+### `client-profile-form.component.ts`
 
 ```typescript
-import { Component } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ClientProfileService } from './client-profile.service';
+import { ClientProfile } from './client-profile.model'; // Assume you have a model for ClientProfile
 
 @Component({
   selector: 'app-client-profile-form',
   templateUrl: './client-profile-form.component.html',
   styleUrls: ['./client-profile-form.component.css']
 })
-export class ClientProfileFormComponent {
-  
-  onSubmit(form: NgForm) {
-    if (form.valid) {
-      console.log('Form Submitted!', form.value);
-      // Here you can handle the form submission, e.g., send the data to a service
+export class ClientProfileFormComponent implements OnInit {
+
+  clientProfileForm: FormGroup;
+  isSubmitting: boolean = false;
+
+  // Assuming you have predefined lists for dropdowns
+  genders = ['Male', 'Female', 'Transgender', 'Non-binary', 'Other', 'Prefer not to answer'];
+  races = ['White', 'Black or African', 'American Indian or Alaska Native', 'Asian', 'Native Hawaiian or other Pacific Islander', 'Hispanic or Latino', 'Prefer not to answer', 'Other'];
+  states = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'];
+
+  constructor(private fb: FormBuilder, private clientProfileService: ClientProfileService) {
+    this.clientProfileForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
+      gender: [''],
+      race: [[]],
+      birthDate: ['', [Validators.required]],
+      assignedTo: [{ value: '', disabled: true }], // System Generated
+      // More fields based on your specifications
+      primaryPhone: ['', [Validators.required, Validators.pattern('^\\d{3}-\\d{3}-\\d{4}$')]],
+      email: ['', [Validators.required, Validators.email]],
+      // Add other fields accordingly...
+    });
+  }
+
+  ngOnInit(): void {
+    // Any initialization logic if necessary
+  }
+
+  onSubmit(): void {
+    if (this.clientProfileForm.valid) {
+      this.isSubmitting = true;
+      const clientProfile: ClientProfile = this.clientProfileForm.value;
+      // Call the service to save the client profile
+      this.clientProfileService.createProfile(clientProfile).subscribe({
+        next: (response) => {
+          console.log('Profile created successfully:', response);
+          this.isSubmitting = false;
+          // Optionally reset the form or navigate to another route
+        },
+        error: (error) => {
+          console.error('Error creating profile:', error);
+          this.isSubmitting = false;
+        }
+      });
     } else {
-      console.error('Form is not valid');
+      // Handle validation errors
+      console.log('Form is invalid');
     }
   }
+
+  // Additional methods for handling dynamic fields, validations, etc.
 }
 ```
 
-### 4. Styles (Optional)
+### Key Points:
+- **FormGroup**: We use Angular's reactive forms to manage form state and validation.
+- **Validators**: Each input has validation rules based on your specifications.
+- **Service Integration**: The `ClientProfileService` is used to handle API calls to save the client profile.
+- **Dynamic Dropdowns**: Dropdown values for gender and race are hard-coded here but can be populated dynamically from a service as required.
+- **Form Submission**: When the form is submitted, it checks if the form is valid, and if so, calls the service to create a new profile.
+- **System Generated Fields**: The `assignedTo` field is set to disabled since it's generated by the system.
 
-You can add any necessary styles in the `client-profile-form.component.css` file.
+### Additional Considerations:
+- **Error Handling**: More robust error handling can be added based on your application's requirements.
+- **Dynamic Field Logic**: You may need to implement logic for handling dynamic fields based on user selections (e.g., auto-filling the emergency contact if the guardian is the same).
+- **Styling**: Ensure the associated `client-profile-form.component.css` file styles the form appropriately.
 
-### 5. Module Setup
-
-Don't forget to import the `FormsModule` in your Angular module (usually `app.module.ts`) to use `ngModel`:
-
-```typescript
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-
-import { AppComponent } from './app.component';
-import { ClientProfileFormComponent } from './client-profile-form/client-profile-form.component';
-
-@NgModule({
-  declarations: [
-    AppComponent,
-    ClientProfileFormComponent
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule // Add FormsModule here
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
-```
-
-### Summary
-
-This code provides a basic Angular form capturing the inputs specified in your user story. You may want to further enhance validation, error handling, and styling based on your application requirements. Be sure to test the form and adjust it as necessary to ensure all business rules are satisfied.
+This code serves as a foundational structure. You may need to extend it based on the additional specifications and requirements from your user story.
