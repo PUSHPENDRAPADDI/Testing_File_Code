@@ -1,0 +1,117 @@
+Certainly! Below is a comprehensive Angular code snippet for the `client-profile-form.component.ts` file based on the provided user story and specifications. This code includes form handling, validation, and some basic service integration. Please note that this example assumes you have Angular Reactive Forms set up and a service for handling API requests.
+
+### Angular Component Code (`client-profile-form.component.ts`)
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ClientProfileService } from './client-profile.service';
+
+@Component({
+  selector: 'app-client-profile-form',
+  templateUrl: './client-profile-form.component.html',
+  styleUrls: ['./client-profile-form.component.css']
+})
+export class ClientProfileFormComponent implements OnInit {
+  clientProfileForm: FormGroup;
+  submitted = false;
+
+  constructor(private formBuilder: FormBuilder, private clientProfileService: ClientProfileService) {
+    this.clientProfileForm = this.formBuilder.group({
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
+      gender: [''],
+      race: [[]],
+      birthDate: ['', Validators.required],
+      assignedTo: [{ value: '', disabled: true }],
+      parentGuardianFirstName: [''],
+      parentGuardianLastName: [''],
+      addressLine1: [''],
+      addressLine2: [''],
+      city: [''],
+      state: [''],
+      zipCode: [''],
+      primaryPhone: ['', [Validators.required, Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)]],
+      secondaryPhone: [''],
+      email: ['', [Validators.required, Validators.email]],
+      emergencyContactFirstName: [''],
+      emergencyContactLastName: [''],
+      emergencyContactPhone: ['', Validators.pattern(/^\d{3}-\d{3}-\d{4}$/)],
+      // Additional fields can be added here
+    });
+  }
+
+  ngOnInit(): void {
+    // Pre-fill data if available (e.g., from an inquiry form)
+    this.populateFormData();
+  }
+
+  populateFormData() {
+    // Logic to fetch and populate data from the inquiry form if needed
+  }
+
+  get f() {
+    return this.clientProfileForm.controls;
+  }
+
+  onSubmit() {
+    this.submitted = true;
+
+    // Stop here if the form is invalid
+    if (this.clientProfileForm.invalid) {
+      return;
+    }
+
+    // Prepare the form data for submission
+    const profileData = {
+      ...this.clientProfileForm.value,
+      assignedTo: this.getLoggedInUser(), // Assuming a method to get the logged-in user
+      // Other transformations can be done here, if needed
+    };
+
+    // Call the service to save the data
+    this.clientProfileService.createClientProfile(profileData).subscribe(
+      response => {
+        // Handle successful response
+        console.log('Profile created successfully', response);
+        // Navigate or show success message
+      },
+      error => {
+        console.error('Error creating profile', error);
+        // Handle error (e.g., show error message)
+      }
+    );
+  }
+
+  getLoggedInUser() {
+    // Logic to get the currently logged-in user
+    return 'system-generated-user-id'; // Placeholder
+  }
+
+  onReset() {
+    this.submitted = false;
+    this.clientProfileForm.reset();
+  }
+}
+```
+
+### Explanation of the Code
+
+1. **Imports**: The component imports necessary modules such as `Component`, `OnInit`, `FormBuilder`, `FormGroup`, and `Validators`.
+
+2. **Component Decorator**: The `@Component` decorator defines the selector, template, and style associated with this component.
+
+3. **Form Initialization**: The form is created using `FormBuilder` with various controls based on the provided specifications. Each control has its validations according to the requirements.
+
+4. **ngOnInit Lifecycle Hook**: The `ngOnInit` method is where you can pre-fill the form data if necessary, possibly from an inquiry form.
+
+5. **Form Submission**: The `onSubmit` method handles the form submission. It checks for validity, prepares the form data, and calls the service method to create a new client profile.
+
+6. **Service Call**: The `ClientProfileService` is assumed to handle the API call for creating a client profile. The response is logged, and error handling is provided.
+
+7. **Form Reset**: The `onReset` method resets the form state.
+
+### Additional Notes
+- You will need to create the `ClientProfileService` to handle the API requests.
+- This code assumes that the HTML template (`client-profile-form.component.html`) is structured to bind to the form controls.
+- You may need to adjust the service URL and any additional logic for handling default values, dropdowns, and multi-select functionalities as per your application requirements.
