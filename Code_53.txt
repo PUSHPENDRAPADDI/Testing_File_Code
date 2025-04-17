@@ -1,73 +1,111 @@
-Based on the provided Angular component code and the user story description, I will create an Angular template (HTML) for the `InquiryComponent`. The template will consist of a tabbed layout that allows users to switch between "Inquiries," "Client Profiles," and "Medical Necessity" sections. Each tab will display a corresponding data grid using a generic list component.
+To create a comprehensive Angular unit test file (`component.spec.ts`) for the user story you provided, we will first set up the necessary test environment and then write test cases based on the requirements stated in the user story, acceptance criteria, and UI input specifications.
 
-Here's the comprehensive Angular HTML code for `inquiry.component.html`:
+Let's assume you have an Angular component named `ClientProfileFormComponent`. Below is a sample `component.spec.ts` file that includes various test cases:
 
-```html
-<app-list-banner [pageType]="pageType" (filterDue)="filterDue($event)"></app-list-banner>
+```typescript
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { ClientProfileFormComponent } from './client-profile-form.component';
+import { ClientProfileService } from '../services/client-profile.service';
+import { of, throwError } from 'rxjs';
 
-<div class="container">
-    <div fxLayout="row" fxLayoutGap="8px">
-        <div fxLayout="column" fxFlex="100">
-            <mat-tab-group class="tab-group-position" #tabgroup [(selectedIndex)]="selectedtabIndex"
-                (selectedIndexChange)="tabClick(tabgroup, $event)">
-                <mat-tab #tab0 [label]="inquiries"></mat-tab>
-                <mat-tab #tab1 [label]="clientProfiles"></mat-tab>
-                <mat-tab #tab2 [label]="medicalNecessity"></mat-tab>
-            </mat-tab-group>
+describe('ClientProfileFormComponent', () => {
+  let component: ClientProfileFormComponent;
+  let fixture: ComponentFixture<ClientProfileFormComponent>;
+  let mockService: jasmine.SpyObj<ClientProfileService>;
 
-            <!-- Inquiries Tab -->
-            <div [ngStyle]="{'display': selectedtabIndex === 0 ? 'block' : 'none' }">
-                <ng-container *ngIf="isLoadedInq">
-                    <app-generic-list [model]="modelInq" 
-                                      [griddata]="griddataInq" 
-                                      [gridDataSource]="gridDataSourceInq"
-                                      [roundTop]="false" 
-                                      (itemChange)="itemChangesInq($event)"
-                                      (showAllChange)="showAllChanges($event, selectedtabIndex)" 
-                                      [isShowAllShowcase]="true">
-                    </app-generic-list>
-                </ng-container>
-                <ng-container *ngIf="!isLoadedInq">Loading inquiries...</ng-container>
-            </div>
+  beforeEach(async () => {
+    mockService = jasmine.createSpyObj('ClientProfileService', ['createProfile']);
+    
+    await TestBed.configureTestingModule({
+      imports: [FormsModule],
+      declarations: [ClientProfileFormComponent],
+      providers: [
+        { provide: ClientProfileService, useValue: mockService }
+      ]
+    }).compileComponents();
 
-            <!-- Client Profiles Tab -->
-            <div [ngStyle]="{'display': selectedtabIndex === 1 ? 'block' : 'none' }">
-                <ng-container *ngIf="isLoadedClnt">
-                    <app-generic-list [model]="modelClnt" 
-                                      [griddata]="griddataClnt" 
-                                      [gridDataSource]="gridDataSourceClnt"
-                                      [roundTop]="false" 
-                                      (itemChange)="itemChangesClnt($event)"
-                                      (showAllChange)="showAllChanges($event, selectedtabIndex)" 
-                                      [isShowAllShowcase]="true">
-                    </app-generic-list>
-                </ng-container>
-                <ng-container *ngIf="!isLoadedClnt">Loading client profiles...</ng-container>
-            </div>
+    fixture = TestBed.createComponent(ClientProfileFormComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-            <!-- Medical Necessity Tab -->
-            <div [ngStyle]="{'display': selectedtabIndex === 2 ? 'block' : 'none' }">
-                <ng-container *ngIf="isLoadedMedicalNecessity">
-                    <app-generic-list [model]="modelMedicalNecessity" 
-                                      [griddata]="griddataMedicalNecessity"
-                                      [roundTop]="false" 
-                                      [gridDataSource]="gridDataSourceMedicalNecessity"
-                                      (showAllChange)="showAllChanges($event, selectedtabIndex)" 
-                                      [isShowAllShowcase]="true">
-                    </app-generic-list>
-                </ng-container>
-                <ng-container *ngIf="!isLoadedMedicalNecessity">Loading medical necessity data...</ng-container>
-            </div>
-        </div>
-    </div>
-</div>
+  describe('Initialization', () => {
+    it('should create the component', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should initialize form fields correctly', () => {
+      expect(component.clientProfileForm.controls['firstName']).toBeDefined();
+      expect(component.clientProfileForm.controls['lastName']).toBeDefined();
+    });
+  });
+
+  describe('Form Submission', () => {
+    beforeEach(() => {
+      component.clientProfileForm.controls['firstName'].setValue('John');
+      component.clientProfileForm.controls['lastName'].setValue('Doe');
+      component.clientProfileForm.controls['birthDate'].setValue('01/01/1990');
+      component.clientProfileForm.controls['gender'].setValue('Male');
+      component.clientProfileForm.controls['email'].setValue('john.doe@example.com');
+      // ... set other necessary fields
+    });
+
+    it('should create a client profile with valid data', () => {
+      mockService.createProfile.and.returnValue(of({ id: 1 }));
+      component.onSubmit();
+      expect(mockService.createProfile).toHaveBeenCalledWith(component.clientProfileForm.value);
+    });
+
+    it('should set error message on failed submission', () => {
+      mockService.createProfile.and.returnValue(throwError('Error'));
+      component.onSubmit();
+      expect(component.errorMessage).toBe('Error');
+    });
+  });
+
+  describe('Validation', () => {
+    it('should mark first name as invalid if empty', () => {
+      const firstNameControl = component.clientProfileForm.controls['firstName'];
+      firstNameControl.setValue('');
+      expect(firstNameControl.valid).toBeFalsy();
+    });
+
+    it('should mark email as invalid if format is incorrect', () => {
+      const emailControl = component.clientProfileForm.controls['email'];
+      emailControl.setValue('invalid-email');
+      expect(emailControl.valid).toBeFalsy();
+    });
+
+    // Add more validation tests as per your form fields
+  });
+
+  describe('UI Interactions', () => {
+    it('should navigate to New Client Profile screen when Create Client Profile is clicked', () => {
+      // Assuming you have a method to handle the navigation
+      spyOn(component, 'navigateToNewClientProfile');
+      component.onCreateClientProfile();
+      expect(component.navigateToNewClientProfile).toHaveBeenCalled();
+    });
+
+    // Add more interaction tests as needed
+  });
+});
 ```
 
-### Explanation of the Template:
-1. **List Banner**: The component starts with an `app-list-banner` component that displays a banner and allows filtering based on the user story.
-2. **Tab Group**: A Material tab group is used to create three tabs for "Inquiries," "Client Profiles," and "Medical Necessity." The `selectedIndex` binding allows switching between tabs.
-3. **Dynamic Content**: Each tab has a corresponding `<div>` that renders conditionally based on the selected tab index.
-4. **Generic List Component**: Inside each tab's `<div>`, an `app-generic-list` component is used to display data. It receives various input properties, including the model and grid data. The component handles item changes and shows/hides all data based on user interaction.
-5. **Loading Indicators**: Simple loading messages are displayed while data is being fetched for each section.
+### Explanation:
+1. **Imports**: The required Angular testing modules and the component are imported. A mock service (`ClientProfileService`) is created to simulate the backend interactions.
 
-This HTML structure is designed to match the provided TypeScript functionality in the `InquiryComponent`, ensuring a consistent user experience.
+2. **Setup**: The `beforeEach` function sets up the testing environment, creating the component and initializing the service.
+
+3. **Initialization Tests**: Basic tests to check if the component is created and if the form controls are initialized.
+
+4. **Form Submission Tests**: Tests to check the form submission functionality, including successful and failed submissions.
+
+5. **Validation Tests**: Tests to check the validation rules for form fields.
+
+6. **UI Interaction Tests**: Tests for user interactions, such as clicking buttons to navigate screens.
+
+### Note:
+- You should adapt the test cases according to the actual structure and methods of your `ClientProfileFormComponent`.
+- Make sure to implement the actual methods and form controls in your component to match the tests.
