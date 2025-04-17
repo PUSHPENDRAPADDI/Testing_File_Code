@@ -1,306 +1,178 @@
-Based on the user story and detailed specifications you've provided, I will create a simplified version of the code artifact that represents a client profile management feature. This will be in C# using ASP.NET Core with a structure similar to the one provided in your example.
+Based on the user story and description you provided, I've constructed a comprehensive Angular stylesheet (`component.scss`) that aligns with the requirements specified for the client profile creation. This stylesheet is designed to style the various components and elements that will be part of the client profile creation interface. 
 
-### Project Structure
+Here’s a sample `component.scss`:
 
-- **Controllers**
-- **DomainLayer**
-  - Models
-- **RepositoryLayer**
-  - IRepository
-  - Repository
-- **ServiceLayer**
-  - ICustomService
-  - CustomService
-- **Data**
-  - ApplicationDbContext
+```scss
+// Define color variables for theme consistency
+$primary-color: #4591D3;
+$secondary-color: #e5e5e5;
+$border-color: #dcdcdc;
+$text-color: #333;
 
-### 1. Models Creation
+// General styles
+.container {
+    padding: 16px;
+}
 
-**DomainLayer/Models/ClientProfile.cs**
-```csharp
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+.label {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
 
-namespace DomainLayer.Models
-{
-    public class ClientProfile
-    {
-        [Key]
-        public int Id { get; set; }
-        public string PatientFirstName { get; set; }
-        public string PatientLastName { get; set; }
-        public string Gender { get; set; }
-        public List<string> RaceEthnicity { get; set; }
-        public DateTime BirthDate { get; set; }
-        public string AssignedTo { get; set; }
-        public string ParentGuardianFirstName { get; set; }
-        public string ParentGuardianLastName { get; set; }
-        public string AddressLine1 { get; set; }
-        public string AddressLine2 { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
-        public string Zip { get; set; }
-        public string PrimaryPhone { get; set; }
-        public string SecondaryPhone { get; set; }
-        public string Email { get; set; }
-        public bool IsGuardianSameAsEmergencyContact { get; set; }
-        public string EmergencyContactFirstName { get; set; }
-        public string EmergencyContactLastName { get; set; }
-        public string EmergencyContactPhone { get; set; }
-        public List<string> PreferredClinics { get; set; }
-        public string ServicePreferences { get; set; }
-        public string AvailabilityForSessions { get; set; }
-        public string InsuranceInfo { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime ModifiedDate { get; set; }
+.main-mat-card .mat-content {
+    padding-top: 32px !important;
+    margin-bottom: 0 !important;
+}
+
+.mat-content {
+    min-height: 728px;
+}
+
+.mat-mdc-card-content {
+    padding: 0 24px;
+}
+
+.mdc-card__actions {
+    padding: 16px 24px;
+}
+
+.m-b-32 {
+    margin-bottom: 32px;
+}
+
+.border-design {
+    border: 1px solid $border-color;
+}
+
+// Checkbox styles for better visibility
+:host ::ng-deep .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:focus:checked~.mdc-checkbox__background {
+    background-color: $primary-color;
+    border-color: $primary-color;
+}
+
+.m-t-8 {
+    margin-top: 8px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.user-layout {
+    height: 56px;
+    position: relative;
+}
+
+.vertical-align {
+    position: relative;
+    top: 8px;
+}
+
+// Styles for tabs
+.tab-group-position {
+    position: absolute;
+    top: 126px;
+    left: 86px;
+}
+
+:host ::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
+    height: 59px;
+}
+
+// Styles for input fields
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: $primary-color;
+    outline: none;
+}
+
+// Styles for buttons
+.btn-primary {
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: darken($primary-color, 10%);
     }
 }
-```
 
-### 2. Repository Interface and Implementation
+.btn-secondary {
+    background-color: $secondary-color;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
 
-**RepositoryLayer/IRepository/IClientProfileRepository.cs**
-```csharp
-using System.Collections.Generic;
-
-namespace RepositoryLayer.IRepository
-{
-    public interface IClientProfileRepository
-    {
-        void Insert(ClientProfile profile);
-        void Update(ClientProfile profile);
-        ClientProfile Get(int id);
-        IEnumerable<ClientProfile> GetAll();
-        void Delete(ClientProfile profile);
+    &:hover {
+        background-color: lighten($secondary-color, 10%);
     }
 }
-```
 
-**RepositoryLayer/Repository/ClientProfileRepository.cs**
-```csharp
-using DomainLayer.Data;
-using DomainLayer.Models;
-using RepositoryLayer.IRepository;
-using System.Collections.Generic;
+// Progress Bar Styles
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background-color: $secondary-color;
+    border-radius: 4px;
+    overflow: hidden;
 
-namespace RepositoryLayer.Repository
-{
-    public class ClientProfileRepository : IClientProfileRepository
-    {
-        private readonly ApplicationDbContext _context;
-
-        public ClientProfileRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public void Insert(ClientProfile profile)
-        {
-            _context.ClientProfiles.Add(profile);
-            _context.SaveChanges();
-        }
-
-        public void Update(ClientProfile profile)
-        {
-            _context.ClientProfiles.Update(profile);
-            _context.SaveChanges();
-        }
-
-        public ClientProfile Get(int id)
-        {
-            return _context.ClientProfiles.Find(id);
-        }
-
-        public IEnumerable<ClientProfile> GetAll()
-        {
-            return _context.ClientProfiles;
-        }
-
-        public void Delete(ClientProfile profile)
-        {
-            _context.ClientProfiles.Remove(profile);
-            _context.SaveChanges();
-        }
+    .progress {
+        height: 100%;
+        background-color: $primary-color;
+        transition: width 0.3s ease;
     }
 }
-```
 
-### 3. Service Interface and Implementation
+// Error message styles
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: -8px;
+    margin-bottom: 16px;
+}
 
-**ServiceLayer/ICustomService/IClientProfileService.cs**
-```csharp
-using DomainLayer.Models;
-using System.Collections.Generic;
-
-namespace ServiceLayer.ICustomServices
-{
-    public interface IClientProfileService
-    {
-        void Insert(ClientProfile profile);
-        void Update(ClientProfile profile);
-        ClientProfile Get(int id);
-        IEnumerable<ClientProfile> GetAll();
-        void Delete(ClientProfile profile);
-    }
+// Success message styles
+.success-message {
+    color: green;
+    font-size: 14px;
+    margin-top: -8px;
+    margin-bottom: 16px;
 }
 ```
 
-**ServiceLayer/CustomServices/ClientProfileService.cs**
-```csharp
-using DomainLayer.Models;
-using RepositoryLayer.IRepository;
-using ServiceLayer.ICustomServices;
-using System.Collections.Generic;
+### Explanation of the Styles:
+1. **Color Variables:** Defined primary and secondary colors for consistent theming throughout the application.
+2. **General Layout:** Styles for the main container, card content, and margins to ensure proper spacing.
+3. **Checkboxes and Inputs:** Enhanced visibility for checkboxes and styled text input fields for better user interaction.
+4. **Buttons:** Styled primary and secondary buttons for actions related to submitting forms or navigating.
+5. **Progress Bar:** Visual representation of form completion, useful for showing how much data has been entered.
+6. **Error and Success Messages:** Clear styles for displaying feedback to the user.
 
-namespace ServiceLayer.CustomServices
-{
-    public class ClientProfileService : IClientProfileService
-    {
-        private readonly IClientProfileRepository _clientProfileRepository;
-
-        public ClientProfileService(IClientProfileRepository clientProfileRepository)
-        {
-            _clientProfileRepository = clientProfileRepository;
-        }
-
-        public void Insert(ClientProfile profile)
-        {
-            _clientProfileRepository.Insert(profile);
-        }
-
-        public void Update(ClientProfile profile)
-        {
-            _clientProfileRepository.Update(profile);
-        }
-
-        public ClientProfile Get(int id)
-        {
-            return _clientProfileRepository.Get(id);
-        }
-
-        public IEnumerable<ClientProfile> GetAll()
-        {
-            return _clientProfileRepository.GetAll();
-        }
-
-        public void Delete(ClientProfile profile)
-        {
-            _clientProfileRepository.Delete(profile);
-        }
-    }
-}
-```
-
-### 4. Controller
-
-**Controllers/ClientProfileController.cs**
-```csharp
-using DomainLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.ICustomServices;
-using System.Collections.Generic;
-
-namespace Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClientProfileController : ControllerBase
-    {
-        private readonly IClientProfileService _clientProfileService;
-
-        public ClientProfileController(IClientProfileService clientProfileService)
-        {
-            _clientProfileService = clientProfileService;
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<ClientProfile> Get(int id)
-        {
-            var profile = _clientProfileService.Get(id);
-            if (profile == null) return NotFound();
-            return Ok(profile);
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<ClientProfile>> GetAll()
-        {
-            return Ok(_clientProfileService.GetAll());
-        }
-
-        [HttpPost]
-        public ActionResult Create(ClientProfile profile)
-        {
-            _clientProfileService.Insert(profile);
-            return CreatedAtAction(nameof(Get), new { id = profile.Id }, profile);
-        }
-
-        [HttpPut("{id}")]
-        public ActionResult Update(int id, ClientProfile profile)
-        {
-            if (id != profile.Id) return BadRequest();
-            _clientProfileService.Update(profile);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            var profile = _clientProfileService.Get(id);
-            if (profile == null) return NotFound();
-            _clientProfileService.Delete(profile);
-            return NoContent();
-        }
-    }
-}
-```
-
-### 5. DbContext
-
-**DomainLayer/Data/ApplicationDbContext.cs**
-```csharp
-using DomainLayer.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace DomainLayer.Data
-{
-    public class ApplicationDbContext : DbContext
-    {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
-        public DbSet<ClientProfile> ClientProfiles { get; set; }
-    }
-}
-```
-
-### 6. Startup Configuration
-
-In your `Startup.cs` file, configure the services and repositories.
-
-```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddDbContext<ApplicationDbContext>(options => 
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-    
-    services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
-    services.AddScoped<IClientProfileService, ClientProfileService>();
-    
-    services.AddControllers();
-}
-```
-
-### 7. Migrations
-
-Make sure to run Entity Framework Core migrations to create the database structure based on the `ClientProfile` model.
-
-```bash
-dotnet ef migrations add InitialCreate
-dotnet ef database update
-```
-
-### Conclusion
-
-This code provides a basic setup for the client profile management system based on the specifications provided. It covers CRUD operations through a RESTful API using ASP.NET Core, following a structured approach with a clear separation of concerns between controllers, services, and repositories. 
-
-You can expand this base code with additional features such as validation, authentication, error handling, and logging as needed.
+### Note:
+- Feel free to adjust the colors and styles as per your application's branding and design guidelines.
+- You may also need to add more specific styles based on the individual components you are using in your Angular application.
