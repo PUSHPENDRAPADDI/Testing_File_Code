@@ -1,0 +1,102 @@
+Certainly! Below is a comprehensive Angular HTML template for the component that aligns with the provided user story and data specifications. This template will require Angular's reactive forms to handle the input validations and form submissions.
+
+```html
+<!-- client-profile-form.component.html -->
+<div class="container">
+  <h2>Create Client Profile</h2>
+  <form [formGroup]="clientProfileForm" (ngSubmit)="onSubmit()">
+
+    <!-- Patient Information -->
+    <div class="form-group">
+      <label for="firstName">First Name *</label>
+      <input type="text" id="firstName" formControlName="firstName" class="form-control" maxlength="50" required>
+      <div *ngIf="clientProfileForm.get('firstName').invalid && (clientProfileForm.get('firstName').dirty || clientProfileForm.get('firstName').touched)">
+        <small class="text-danger">First Name is required.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Last Name *</label>
+      <input type="text" id="lastName" formControlName="lastName" class="form-control" maxlength="50" required>
+      <div *ngIf="clientProfileForm.get('lastName').invalid && (clientProfileForm.get('lastName').dirty || clientProfileForm.get('lastName').touched)">
+        <small class="text-danger">Last Name is required.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="gender">Gender</label>
+      <select id="gender" formControlName="gender" class="form-control">
+        <option value="">Select</option>
+        <option *ngFor="let item of genderOptions" [value]="item">{{ item }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="race">Race/Ethnicity</label>
+      <select id="race" formControlName="race" multiple class="form-control">
+        <option *ngFor="let item of raceOptions" [value]="item">{{ item }}</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="birthDate">Birth Date *</label>
+      <input type="date" id="birthDate" formControlName="birthDate" class="form-control" required>
+      <div *ngIf="clientProfileForm.get('birthDate').invalid && (clientProfileForm.get('birthDate').dirty || clientProfileForm.get('birthDate').touched)">
+        <small class="text-danger">Birth Date is required.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="primaryPhone">Primary Phone *</label>
+      <input type="text" id="primaryPhone" formControlName="primaryPhone" class="form-control" pattern="^\d{3}-\d{3}-\d{4}$" required>
+      <div *ngIf="clientProfileForm.get('primaryPhone').invalid && (clientProfileForm.get('primaryPhone').dirty || clientProfileForm.get('primaryPhone').touched)">
+        <small class="text-danger">Primary Phone is required and must be in XXX-XXX-XXXX format.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email *</label>
+      <input type="email" id="email" formControlName="email" class="form-control" required>
+      <div *ngIf="clientProfileForm.get('email').invalid && (clientProfileForm.get('email').dirty || clientProfileForm.get('email').touched)">
+        <small class="text-danger">A valid Email is required.</small>
+      </div>
+    </div>
+
+    <!-- Emergency Contact -->
+    <h4>Emergency Contact</h4>
+    <div class="form-group">
+      <label for="emergencyContactFirstName">Emergency Contact First Name</label>
+      <input type="text" id="emergencyContactFirstName" formControlName="emergencyContactFirstName" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="emergencyContactLastName">Emergency Contact Last Name</label>
+      <input type="text" id="emergencyContactLastName" formControlName="emergencyContactLastName" class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="emergencyContactPhone">Emergency Contact Phone</label>
+      <input type="text" id="emergencyContactPhone" formControlName="emergencyContactPhone" class="form-control" pattern="^\d{3}-\d{3}-\d{4}$">
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary" [disabled]="clientProfileForm.invalid">Create Profile</button>
+  </form>
+</div>
+```
+
+### Explanation:
+1. **Form Structure**: The form is structured to include fields for essential patient information, an emergency contact, and necessary validations.
+  
+2. **Reactive Forms**: This code assumes you are using Angular's Reactive Forms. Make sure you have imported `ReactiveFormsModule` in your module.
+
+3. **Validation Messages**: Each input field has validation messages that display if the input is invalid after the user interacts with it (`dirty` or `touched`).
+
+4. **Dropdown Options**: The `genderOptions` and `raceOptions` are assumed to be defined in the corresponding TypeScript component file as arrays.
+
+5. **Accessibility**: Each form field is associated with a label, making it easier for users to understand what information is required.
+
+6. **Emergency Contact Section**: A separate section is provided for emergency contact details, which are optional.
+
+### Note:
+You will need to implement the corresponding TypeScript logic in the component file to handle form initialization, submission, and to manage the state of dropdown options and other controls.
