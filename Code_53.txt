@@ -1,0 +1,73 @@
+Based on the provided Angular component code and the user story description, I will create an Angular template (HTML) for the `InquiryComponent`. The template will consist of a tabbed layout that allows users to switch between "Inquiries," "Client Profiles," and "Medical Necessity" sections. Each tab will display a corresponding data grid using a generic list component.
+
+Here's the comprehensive Angular HTML code for `inquiry.component.html`:
+
+```html
+<app-list-banner [pageType]="pageType" (filterDue)="filterDue($event)"></app-list-banner>
+
+<div class="container">
+    <div fxLayout="row" fxLayoutGap="8px">
+        <div fxLayout="column" fxFlex="100">
+            <mat-tab-group class="tab-group-position" #tabgroup [(selectedIndex)]="selectedtabIndex"
+                (selectedIndexChange)="tabClick(tabgroup, $event)">
+                <mat-tab #tab0 [label]="inquiries"></mat-tab>
+                <mat-tab #tab1 [label]="clientProfiles"></mat-tab>
+                <mat-tab #tab2 [label]="medicalNecessity"></mat-tab>
+            </mat-tab-group>
+
+            <!-- Inquiries Tab -->
+            <div [ngStyle]="{'display': selectedtabIndex === 0 ? 'block' : 'none' }">
+                <ng-container *ngIf="isLoadedInq">
+                    <app-generic-list [model]="modelInq" 
+                                      [griddata]="griddataInq" 
+                                      [gridDataSource]="gridDataSourceInq"
+                                      [roundTop]="false" 
+                                      (itemChange)="itemChangesInq($event)"
+                                      (showAllChange)="showAllChanges($event, selectedtabIndex)" 
+                                      [isShowAllShowcase]="true">
+                    </app-generic-list>
+                </ng-container>
+                <ng-container *ngIf="!isLoadedInq">Loading inquiries...</ng-container>
+            </div>
+
+            <!-- Client Profiles Tab -->
+            <div [ngStyle]="{'display': selectedtabIndex === 1 ? 'block' : 'none' }">
+                <ng-container *ngIf="isLoadedClnt">
+                    <app-generic-list [model]="modelClnt" 
+                                      [griddata]="griddataClnt" 
+                                      [gridDataSource]="gridDataSourceClnt"
+                                      [roundTop]="false" 
+                                      (itemChange)="itemChangesClnt($event)"
+                                      (showAllChange)="showAllChanges($event, selectedtabIndex)" 
+                                      [isShowAllShowcase]="true">
+                    </app-generic-list>
+                </ng-container>
+                <ng-container *ngIf="!isLoadedClnt">Loading client profiles...</ng-container>
+            </div>
+
+            <!-- Medical Necessity Tab -->
+            <div [ngStyle]="{'display': selectedtabIndex === 2 ? 'block' : 'none' }">
+                <ng-container *ngIf="isLoadedMedicalNecessity">
+                    <app-generic-list [model]="modelMedicalNecessity" 
+                                      [griddata]="griddataMedicalNecessity"
+                                      [roundTop]="false" 
+                                      [gridDataSource]="gridDataSourceMedicalNecessity"
+                                      (showAllChange)="showAllChanges($event, selectedtabIndex)" 
+                                      [isShowAllShowcase]="true">
+                    </app-generic-list>
+                </ng-container>
+                <ng-container *ngIf="!isLoadedMedicalNecessity">Loading medical necessity data...</ng-container>
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+### Explanation of the Template:
+1. **List Banner**: The component starts with an `app-list-banner` component that displays a banner and allows filtering based on the user story.
+2. **Tab Group**: A Material tab group is used to create three tabs for "Inquiries," "Client Profiles," and "Medical Necessity." The `selectedIndex` binding allows switching between tabs.
+3. **Dynamic Content**: Each tab has a corresponding `<div>` that renders conditionally based on the selected tab index.
+4. **Generic List Component**: Inside each tab's `<div>`, an `app-generic-list` component is used to display data. It receives various input properties, including the model and grid data. The component handles item changes and shows/hides all data based on user interaction.
+5. **Loading Indicators**: Simple loading messages are displayed while data is being fetched for each section.
+
+This HTML structure is designed to match the provided TypeScript functionality in the `InquiryComponent`, ensuring a consistent user experience.
