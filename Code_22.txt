@@ -1,330 +1,188 @@
-Based on the user story and the provided test cases, I will create a set of C# code artifacts that represent a simplified version of the client profile creation process. This will include a controller, service, repository, and data model, structured similarly to the example you shared. The code will be organized according to the Onion Architecture principles, separating concerns across layers.
+To create an Angular input form that captures all the specified inputs for the user story, we will define a component that includes an HTML template and a TypeScript file.
 
-### 1. Data Model
+### 1. Angular Component Structure
 
-```csharp
-using System;
-using System.ComponentModel.DataAnnotations;
+**1.1 Create the Component**
 
-namespace DomainLayer.Models
-{
-    public class ClientProfile : BaseEntity
-    {
-        [Key]
-        public int Id { get; set; }
-        
-        public string FirstName { get; set; }
-        
-        public string LastName { get; set; }
-        
-        public string Gender { get; set; } // Options: Male, Female, Transgender, Non-binary, Other, Prefer not to answer
-        
-        public string RaceEthnicity { get; set; } // Comma separated values
-        
-        public DateTime BirthDate { get; set; }
-        
-        public string AssignedTo { get; set; } // System generated
-        
-        public string ParentGuardianFirstName { get; set; }
-        
-        public string ParentGuardianLastName { get; set; }
-        
-        public string AddressLine1 { get; set; }
-        
-        public string AddressLine2 { get; set; }
-        
-        public string City { get; set; }
-        
-        public string State { get; set; }
-        
-        public string ZipCode { get; set; }
-        
-        public string PrimaryPhone { get; set; }
-        
-        public string SecondaryPhone { get; set; }
-        
-        public string Email { get; set; }
-        
-        public bool IsGuardianSameAsEmergencyContact { get; set; }
-        
-        public string EmergencyContactFirstName { get; set; }
-        
-        public string EmergencyContactLastName { get; set; }
-        
-        public string EmergencyContactPhone { get; set; }
-        
-        public string ServicePreferences { get; set; }
-        
-        public string AvailabilityForSessions { get; set; }
-        
-        public string FirstPreferredClinic { get; set; }
-        
-        public string SecondPreferredClinic { get; set; }
-        
-        public string ThirdPreferredClinic { get; set; }
-        
-        public string InsurancePayor { get; set; }
-        
-        public string InsuranceStatus { get; set; }
-        
-        public DateTime? CoverageEndDate { get; set; }
-        
-        public string SubscriberFirstName { get; set; }
-        
-        public string SubscriberLastName { get; set; }
-        
-        public DateTime? SubscriberDOB { get; set; }
-        
-        public string SubscriberRelationshipToClient { get; set; }
-        
-        public string SubscriberID { get; set; }
-        
-        public string GroupID { get; set; }
-        
-        public bool IsInsuranceCardReceived { get; set; }
-        
-        public string PCPFirstName { get; set; }
-        
-        public string PCPLastName { get; set; }
-        
-        public string PCPPhone { get; set; }
-        
-        public string PCPFax { get; set; }
-        
-        public string ReferringProvider { get; set; }
-        
-        public DateTime? ReferralReceivedDate { get; set; }
-        
-        public string ReferralCoordinatorName { get; set; }
-        
-        public string HistoryOfIllness { get; set; } // Summary of patient's medical history
-        
-        public string EMRId { get; set; } // ID from EMR
-        
-        public DateTime DateCreated { get; set; }
-        
-        // Other relevant fields based on your requirements
+You can create a new Angular component named `client-profile-form` using the Angular CLI:
+
+```bash
+ng generate component client-profile-form
+```
+
+This will generate a folder named `client-profile-form` with the following files:
+
+- `client-profile-form.component.ts`
+- `client-profile-form.component.html`
+- `client-profile-form.component.css`
+
+### 2. HTML Template (`client-profile-form.component.html`)
+
+Here is the HTML code for the form based on the specifications you provided:
+
+```html
+<form #clientProfileForm="ngForm" (ngSubmit)="onSubmit(clientProfileForm)">
+  <h2>Client Profile Form</h2>
+
+  <!-- Patient Information -->
+  <div>
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" ngModel required>
+  </div>
+
+  <div>
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" ngModel required>
+  </div>
+
+  <div>
+    <label for="gender">Gender:</label>
+    <select id="gender" name="gender" ngModel>
+      <option value="">Select Gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Transgender">Transgender</option>
+      <option value="Non-binary">Non-binary</option>
+      <option value="Other">Other</option>
+      <option value="Prefer not to answer">Prefer not to answer</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="race">Race/Ethnicity:</label>
+    <select id="race" name="race" ngModel multiple>
+      <option value="White">White</option>
+      <option value="Black or African">Black or African</option>
+      <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
+      <option value="Asian">Asian</option>
+      <option value="Native Hawaiian or other Pacific Islander">Native Hawaiian or other Pacific Islander</option>
+      <option value="Hispanic or Latino">Hispanic or Latino</option>
+      <option value="Prefer not to answer">Prefer not to answer</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="birthDate">Birth Date:</label>
+    <input type="date" id="birthDate" name="birthDate" ngModel required>
+  </div>
+
+  <!-- Contact Information -->
+  <div>
+    <label for="primaryPhone">Primary Phone:</label>
+    <input type="tel" id="primaryPhone" name="primaryPhone" ngModel required pattern="^\d{3}-\d{3}-\d{4}$">
+  </div>
+
+  <div>
+    <label for="email">E-mail:</label>
+    <input type="email" id="email" name="email" ngModel required>
+  </div>
+
+  <div>
+    <label for="addressLine1">Address Line 1:</label>
+    <input type="text" id="addressLine1" name="addressLine1" ngModel>
+  </div>
+
+  <div>
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" ngModel>
+  </div>
+
+  <div>
+    <label for="state">State:</label>
+    <select id="state" name="state" ngModel>
+      <option value="">Select State</option>
+      <!-- Populate with all 50 states -->
+      <option value="AL">Alabama</option>
+      <option value="AK">Alaska</option>
+      <option value="AZ">Arizona</option>
+      <!-- Add other states -->
+    </select>
+  </div>
+
+  <div>
+    <label for="zip">Zip/Postal Code:</label>
+    <input type="text" id="zip" name="zip" ngModel pattern="^\d{5}(-\d{4})?$">
+  </div>
+
+  <!-- Emergency Contact Information -->
+  <div>
+    <label for="emergencyContactFirstName">Emergency Contact First Name:</label>
+    <input type="text" id="emergencyContactFirstName" name="emergencyContactFirstName" ngModel>
+  </div>
+
+  <div>
+    <label for="emergencyContactLastName">Emergency Contact Last Name:</label>
+    <input type="text" id="emergencyContactLastName" name="emergencyContactLastName" ngModel>
+  </div>
+
+  <div>
+    <label for="emergencyContactPhone">Emergency Contact Phone:</label>
+    <input type="tel" id="emergencyContactPhone" name="emergencyContactPhone" ngModel pattern="^\d{3}-\d{3}-\d{4}$">
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" [disabled]="!clientProfileForm.form.valid">Submit</button>
+</form>
+```
+
+### 3. TypeScript Component (`client-profile-form.component.ts`)
+
+Here is the TypeScript file that corresponds to the HTML:
+
+```typescript
+import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
+
+@Component({
+  selector: 'app-client-profile-form',
+  templateUrl: './client-profile-form.component.html',
+  styleUrls: ['./client-profile-form.component.css']
+})
+export class ClientProfileFormComponent {
+  
+  onSubmit(form: NgForm) {
+    if (form.valid) {
+      console.log('Form Submitted!', form.value);
+      // Here you can handle the form submission, e.g., send the data to a service
+    } else {
+      console.error('Form is not valid');
     }
+  }
 }
 ```
 
-### 2. Repository Interface
+### 4. Styles (Optional)
 
-```csharp
-using DomainLayer.Models;
-using System.Collections.Generic;
+You can add any necessary styles in the `client-profile-form.component.css` file.
 
-namespace RepositoryLayer.IRepository
-{
-    public interface IClientProfileRepository : IRepository<ClientProfile>
-    {
-        ClientProfile GetByEMRId(string emrId); // Method to check for duplicates using EMR ID
-    }
-}
-```
+### 5. Module Setup
 
-### 3. Repository Implementation
+Don't forget to import the `FormsModule` in your Angular module (usually `app.module.ts`) to use `ngModel`:
 
-```csharp
-using DomainLayer.Data;
-using DomainLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using RepositoryLayer.IRepository;
-using System.Collections.Generic;
-using System.Linq;
+```typescript
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
 
-namespace RepositoryLayer.Repository
-{
-    public class ClientProfileRepository : Repository<ClientProfile>, IClientProfileRepository
-    {
-        private readonly ApplicationDbContext _context;
+import { AppComponent } from './app.component';
+import { ClientProfileFormComponent } from './client-profile-form/client-profile-form.component';
 
-        public ClientProfileRepository(ApplicationDbContext context) : base(context)
-        {
-            _context = context;
-        }
-
-        public ClientProfile GetByEMRId(string emrId)
-        {
-            return _context.ClientProfiles.FirstOrDefault(cp => cp.EMRId == emrId);
-        }
-    }
-}
-```
-
-### 4. Service Interface
-
-```csharp
-using DomainLayer.Models;
-using System.Collections.Generic;
-
-namespace ServiceLayer.ICustomServices
-{
-    public interface IClientProfileService : ICustomService<ClientProfile>
-    {
-        ClientProfile GetProfileByEMRId(string emrId);
-    }
-}
-```
-
-### 5. Service Implementation
-
-```csharp
-using DomainLayer.Models;
-using RepositoryLayer.IRepository;
-using ServiceLayer.ICustomServices;
-using System.Collections.Generic;
-
-namespace ServiceLayer.CustomServices
-{
-    public class ClientProfileService : IClientProfileService
-    {
-        private readonly IClientProfileRepository _clientProfileRepository;
-
-        public ClientProfileService(IClientProfileRepository clientProfileRepository)
-        {
-            _clientProfileRepository = clientProfileRepository;
-        }
-
-        public void Delete(ClientProfile entity)
-        {
-            _clientProfileRepository.Delete(entity);
-        }
-
-        public ClientProfile Get(int Id)
-        {
-            return _clientProfileRepository.Get(Id);
-        }
-
-        public IEnumerable<ClientProfile> GetAll()
-        {
-            return _clientProfileRepository.GetAll();
-        }
-
-        public void Insert(ClientProfile entity)
-        {
-            _clientProfileRepository.Insert(entity);
-        }
-
-        public void Update(ClientProfile entity)
-        {
-            _clientProfileRepository.Update(entity);
-        }
-
-        public ClientProfile GetProfileByEMRId(string emrId)
-        {
-            return _clientProfileRepository.GetByEMRId(emrId);
-        }
-    }
-}
-```
-
-### 6. Controller
-
-```csharp
-using DomainLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.ICustomServices;
-
-namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClientProfileController : ControllerBase
-    {
-        private readonly IClientProfileService _clientProfileService;
-
-        public ClientProfileController(IClientProfileService clientProfileService)
-        {
-            _clientProfileService = clientProfileService;
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetClientProfileById(int id)
-        {
-            var profile = _clientProfileService.Get(id);
-            if (profile == null)
-            {
-                return NotFound();
-            }
-            return Ok(profile);
-        }
-
-        [HttpPost]
-        public IActionResult CreateClientProfile([FromBody] ClientProfile clientProfile)
-        {
-            if (clientProfile == null)
-            {
-                return BadRequest("Client profile cannot be null.");
-            }
-            _clientProfileService.Insert(clientProfile);
-            return CreatedAtAction(nameof(GetClientProfileById), new { id = clientProfile.Id }, clientProfile);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult UpdateClientProfile(int id, [FromBody] ClientProfile clientProfile)
-        {
-            if (id != clientProfile.Id)
-            {
-                return BadRequest();
-            }
-            _clientProfileService.Update(clientProfile);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeleteClientProfile(int id)
-        {
-            var profile = _clientProfileService.Get(id);
-            if (profile == null)
-            {
-                return NotFound();
-            }
-            _clientProfileService.Delete(profile);
-            return NoContent();
-        }
-    }
-}
-```
-
-### 7. ApplicationDbContext
-
-```csharp
-using DomainLayer.Models;
-using Microsoft.EntityFrameworkCore;
-
-namespace DomainLayer.Data
-{
-    public class ApplicationDbContext : DbContext
-    {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
-
-        public DbSet<ClientProfile> ClientProfiles { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            // Additional configurations if needed
-        }
-    }
-}
-```
-
-### 8. Dependency Injection Configuration
-
-```csharp
-// In your Startup.cs or Program.cs (depending on ASP.NET Core version)
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddScoped<IClientProfileService, ClientProfileService>();
-    services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
-    
-    services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-}
+@NgModule({
+  declarations: [
+    AppComponent,
+    ClientProfileFormComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule // Add FormsModule here
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
 ```
 
 ### Summary
-This code provides a structure for a Client Profile management system, including creating, updating, retrieving, and deleting client profiles. It adheres to the Onion Architecture principles by separating concerns across data, repository, service, and controller layers. Each part is designed to interact cohesively, ensuring that the client profile can be managed effectively, as per the user story requirements and acceptance criteria.
+
+This code provides a basic Angular form capturing the inputs specified in your user story. You may want to further enhance validation, error handling, and styling based on your application requirements. Be sure to test the form and adjust it as necessary to ensure all business rules are satisfied.
