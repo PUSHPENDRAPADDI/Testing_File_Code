@@ -1,0 +1,166 @@
+To create a comprehensive Angular SCSS stylesheet (`component.scss`) for the user story provided, we should consider the various UI elements and their specifications, as outlined in the user story. Below is an example of how you might structure the SCSS file to style the client profile form based on the given specifications:
+
+```scss
+// component.scss
+
+// General styles
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$error-color: #dc3545;
+$warning-color: #ffc107;
+$background-color: #f8f9fa;
+$border-radius: 0.25rem;
+$padding: 1rem;
+$margin: 0.5rem;
+
+// Container styles
+.container {
+  background-color: $background-color;
+  border-radius: $border-radius;
+  padding: $padding;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+// Header styles
+header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $primary-color;
+  margin-bottom: 1rem;
+}
+
+// Form styles
+form {
+  display: flex;
+  flex-direction: column;
+  
+  .form-group {
+    margin-bottom: 1rem;
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: $secondary-color;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    input[type="email"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid $secondary-color;
+      border-radius: $border-radius;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+      }
+
+      &.is-invalid {
+        border-color: $error-color;
+      }
+    }
+
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid $secondary-color;
+      border-radius: $border-radius;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: $primary-color;
+        outline: none;
+      }
+    }
+  }
+
+  .form-check {
+    display: flex;
+    align-items: center;
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+
+    label {
+      margin-bottom: 0;
+    }
+  }
+
+  .btn {
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: $border-radius;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+    
+    &.btn-secondary {
+      background-color: $secondary-color;
+
+      &:hover {
+        background-color: darken($secondary-color, 10%);
+      }
+    }
+    
+    &.btn-danger {
+      background-color: $error-color;
+
+      &:hover {
+        background-color: darken($error-color, 10%);
+      }
+    }
+  }
+}
+
+// Error message styles
+.error-message {
+  color: $error-color;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+// Success message styles
+.success-message {
+  color: $success-color;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+
+  header {
+    font-size: 1.25rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}
+```
+
+### Explanation:
+
+1. **Variables**: The SCSS file begins with defining color and size variables for consistency across the styles.
+2. **Container Styles**: The `.container` class styles the overall form container with padding, background color, and shadow.
+3. **Form Styles**: Each form group is styled with margins and labels are bolded. Input fields have consistent styling with focus states and error states.
+4. **Button Styles**: The buttons have a primary style and additional secondary and danger styles.
+5. **Error and Success Messages**: Styles for error and success messages are defined for feedback.
+6. **Responsive Styles**: Media queries ensure the form is responsive on smaller devices.
+
+This SCSS file can then be imported into your Angular component to give it a visually appealing and user-friendly design. Adjust the color schemes and styles as needed to fit your application's overall theme.
