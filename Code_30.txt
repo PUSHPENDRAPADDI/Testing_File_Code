@@ -1,0 +1,306 @@
+Certainly! Below is a basic Angular component that captures the input for the patient profile as outlined in your data specifications. This will include HTML for the input form based on the specifications provided. 
+
+### Angular Component Code (TypeScript)
+
+```typescript
+// patient-profile.component.ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-patient-profile',
+  templateUrl: './patient-profile.component.html',
+  styleUrls: ['./patient-profile.component.css']
+})
+export class PatientProfileComponent {
+  patientProfile = {
+    firstName: '',
+    lastName: '',
+    gender: '',
+    race: [],
+    birthDate: '',
+    assignedTo: '', // System generated
+    guardianFirstName: '',
+    guardianLastName: '',
+    addressLine1: '',
+    addressLine2: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    primaryPhone: '',
+    secondaryPhone: '',
+    email: '',
+    isGuardianSameAsEmergency: '',
+    emergencyContactFirstName: '',
+    emergencyContactLastName: '',
+    emergencyContactPhone: '',
+    servicePreferences: '',
+    availabilityForTreatment: '',
+    firstPreferredClinic: '',
+    secondPreferredClinic: '',
+    conflicts: '',
+    insurance: {
+      payor: '',
+      status: '',
+      coverageEndDate: '',
+      subscriberFirstName: '',
+      subscriberLastName: '',
+      subscriberDoB: '',
+      subscriberRelation: '',
+      subscriberID: '',
+      groupID: '',
+      frontBackInsuranceReceived: '',
+    },
+    pcp: {
+      firstName: '',
+      lastName: '',
+      phoneNumber: '',
+      fax: ''
+    },
+    referringProvider: {
+      name: '',
+      referralReceivedDate: '',
+      practiceName: '',
+      referralCoordinator: ''
+    },
+    historyOfIllness: {
+      currentDiagnosis: '',
+      diagnosedAge: '',
+      treatmentHistory: '',
+      currentMedications: '',
+      medicationDetails: ''
+    },
+    emrID: '',
+    patientID: '', // System generated
+    dateCreated: '' // System generated
+  };
+
+  submitProfile() {
+    // Logic to handle form submission
+    console.log(this.patientProfile);
+  }
+}
+```
+
+### HTML Template Code
+
+```html
+<!-- patient-profile.component.html -->
+<form (ngSubmit)="submitProfile()">
+  <h2>Patient Profile</h2>
+
+  <label for="firstName">First Name:</label>
+  <input type="text" id="firstName" [(ngModel)]="patientProfile.firstName" name="firstName" required>
+
+  <label for="lastName">Last Name:</label>
+  <input type="text" id="lastName" [(ngModel)]="patientProfile.lastName" name="lastName" required>
+
+  <label for="gender">Gender:</label>
+  <select id="gender" [(ngModel)]="patientProfile.gender" name="gender">
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Transgender">Transgender</option>
+    <option value="Non-binary">Non-binary</option>
+    <option value="Other">Other</option>
+    <option value="Prefer not to answer">Prefer not to answer</option>
+  </select>
+
+  <label for="race">Race/Ethnicity:</label>
+  <select multiple id="race" [(ngModel)]="patientProfile.race" name="race">
+    <option value="White">White</option>
+    <option value="Black or African">Black or African</option>
+    <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
+    <option value="Asian">Asian</option>
+    <option value="Native Hawaiian or other Pacific Islander">Native Hawaiian or other Pacific Islander</option>
+    <option value="Hispanic or Latino">Hispanic or Latino</option>
+    <option value="Prefer not to answer">Prefer not to answer</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label for="birthDate">Birth Date:</label>
+  <input type="date" id="birthDate" [(ngModel)]="patientProfile.birthDate" name="birthDate" required>
+
+  <label for="guardianFirstName">Guardian First Name:</label>
+  <input type="text" id="guardianFirstName" [(ngModel)]="patientProfile.guardianFirstName" name="guardianFirstName">
+
+  <label for="guardianLastName">Guardian Last Name:</label>
+  <input type="text" id="guardianLastName" [(ngModel)]="patientProfile.guardianLastName" name="guardianLastName">
+
+  <label for="addressLine1">Address Line 1:</label>
+  <input type="text" id="addressLine1" [(ngModel)]="patientProfile.addressLine1" name="addressLine1">
+
+  <label for="addressLine2">Address Line 2:</label>
+  <input type="text" id="addressLine2" [(ngModel)]="patientProfile.addressLine2" name="addressLine2">
+
+  <label for="city">City:</label>
+  <input type="text" id="city" [(ngModel)]="patientProfile.city" name="city">
+
+  <label for="state">State:</label>
+  <select id="state" [(ngModel)]="patientProfile.state" name="state">
+    <option *ngFor="let state of ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', ...']">{{state}}</option>
+  </select>
+
+  <label for="zipCode">Zip/Postal Code:</label>
+  <input type="text" id="zipCode" [(ngModel)]="patientProfile.zipCode" name="zipCode">
+
+  <label for="primaryPhone">Primary Phone:</label>
+  <input type="text" id="primaryPhone" [(ngModel)]="patientProfile.primaryPhone" name="primaryPhone" required>
+
+  <label for="secondaryPhone">Secondary Phone:</label>
+  <input type="text" id="secondaryPhone" [(ngModel)]="patientProfile.secondaryPhone" name="secondaryPhone">
+
+  <label for="email">E-mail:</label>
+  <input type="email" id="email" [(ngModel)]="patientProfile.email" name="email" required>
+
+  <label for="isGuardianSameAsEmergency">Is guardian same as emergency contact?</label>
+  <select id="isGuardianSameAsEmergency" [(ngModel)]="patientProfile.isGuardianSameAsEmergency" name="isGuardianSameAsEmergency">
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+
+  <label for="emergencyContactFirstName">Emergency Contact First Name:</label>
+  <input type="text" id="emergencyContactFirstName" [(ngModel)]="patientProfile.emergencyContactFirstName" name="emergencyContactFirstName">
+
+  <label for="emergencyContactLastName">Emergency Contact Last Name:</label>
+  <input type="text" id="emergencyContactLastName" [(ngModel)]="patientProfile.emergencyContactLastName" name="emergencyContactLastName">
+
+  <label for="emergencyContactPhone">Emergency Contact Phone:</label>
+  <input type="text" id="emergencyContactPhone" [(ngModel)]="patientProfile.emergencyContactPhone" name="emergencyContactPhone">
+
+  <label for="servicePreferences">Service Preferences:</label>
+  <select id="servicePreferences" [(ngModel)]="patientProfile.servicePreferences" name="servicePreferences">
+    <option value="Home">Home</option>
+    <option value="Clinic">Clinic</option>
+    <option value="Hospital">Hospital</option>
+  </select>
+
+  <label for="availabilityForTreatment">Availability for Treatment:</label>
+  <textarea id="availabilityForTreatment" [(ngModel)]="patientProfile.availabilityForTreatment" name="availabilityForTreatment"></textarea>
+
+  <label for="firstPreferredClinic">First Preferred Clinic:</label>
+  <select id="firstPreferredClinic" [(ngModel)]="patientProfile.firstPreferredClinic" name="firstPreferredClinic">
+    <option *ngFor="let clinic of ['Clinic A', 'Clinic B', 'Clinic C']">{{clinic}}</option>
+  </select>
+
+  <label for="secondPreferredClinic">Second Preferred Clinic (If known):</label>
+  <select id="secondPreferredClinic" [(ngModel)]="patientProfile.secondPreferredClinic" name="secondPreferredClinic">
+    <option *ngFor="let clinic of ['Clinic A', 'Clinic B', 'Clinic C']">{{clinic}}</option>
+  </select>
+
+  <label for="conflicts">Do you have any conflicts for specific days of the week?</label>
+  <textarea id="conflicts" [(ngModel)]="patientProfile.conflicts" name="conflicts"></textarea>
+
+  <h3>Insurance Information</h3>
+  <label for="payor">Payor:</label>
+  <select id="payor" [(ngModel)]="patientProfile.insurance.payor" name="payor">
+    <option *ngFor="let payor of ['Payor A', 'Payor B', 'Payor C']">{{payor}}</option>
+  </select>
+
+  <label for="status">Status:</label>
+  <select id="status" [(ngModel)]="patientProfile.insurance.status" name="status">
+    <option value="Primary">Primary</option>
+    <option value="Secondary">Secondary</option>
+    <option value="Tertiary">Tertiary</option>
+    <option value="Inactive">Inactive</option>
+  </select>
+
+  <label for="subscriberFirstName">Subscriber First Name:</label>
+  <input type="text" id="subscriberFirstName" [(ngModel)]="patientProfile.insurance.subscriberFirstName" name="subscriberFirstName">
+
+  <label for="subscriberLastName">Subscriber Last Name:</label>
+  <input type="text" id="subscriberLastName" [(ngModel)]="patientProfile.insurance.subscriberLastName" name="subscriberLastName">
+
+  <label for="subscriberDoB">Subscriber Date of Birth:</label>
+  <input type="date" id="subscriberDoB" [(ngModel)]="patientProfile.insurance.subscriberDoB" name="subscriberDoB">
+
+  <label for="subscriberRelation">Subscriber Relation to Patient:</label>
+  <input type="text" id="subscriberRelation" [(ngModel)]="patientProfile.insurance.subscriberRelation" name="subscriberRelation">
+
+  <label for="subscriberID">Subscriber ID:</label>
+  <input type="text" id="subscriberID" [(ngModel)]="patientProfile.insurance.subscriberID" name="subscriberID">
+
+  <label for="groupID">Group ID:</label>
+  <input type="text" id="groupID" [(ngModel)]="patientProfile.insurance.groupID" name="groupID">
+
+  <label for="frontBackInsuranceReceived">Front and Back of Insurance Card Received?</label>
+  <select id="frontBackInsuranceReceived" [(ngModel)]="patientProfile.insurance.frontBackInsuranceReceived" name="frontBackInsuranceReceived">
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+
+  <h3>Primary Care Provider (PCP) Information</h3>
+  <label for="pcpFirstName">PCP First Name:</label>
+  <input type="text" id="pcpFirstName" [(ngModel)]="patientProfile.pcp.firstName" name="pcpFirstName">
+
+  <label for="pcpLastName">PCP Last Name:</label>
+  <input type="text" id="pcpLastName" [(ngModel)]="patientProfile.pcp.lastName" name="pcpLastName">
+
+  <label for="pcpPhoneNumber">PCP Phone Number:</label>
+  <input type="text" id="pcpPhoneNumber" [(ngModel)]="patientProfile.pcp.phoneNumber" name="pcpPhoneNumber">
+
+  <label for="pcpFax">PCP Fax:</label>
+  <input type="text" id="pcpFax" [(ngModel)]="patientProfile.pcp.fax" name="pcpFax">
+
+  <h3>Referring Provider Information</h3>
+  <label for="referringProviderName">Referring Provider Name:</label>
+  <input type="text" id="referringProviderName" [(ngModel)]="patientProfile.referringProvider.name" name="referringProviderName">
+
+  <label for="referralReceivedDate">Referral Received Date:</label>
+  <input type="date" id="referralReceivedDate" [(ngModel)]="patientProfile.referringProvider.referralReceivedDate" name="referralReceivedDate">
+
+  <label for="practiceName">Practice Name:</label>
+  <input type="text" id="practiceName" [(ngModel)]="patientProfile.referringProvider.practiceName" name="practiceName">
+
+  <label for="referralCoordinator">Referral Coordinator Name:</label>
+  <input type="text" id="referralCoordinator" [(ngModel)]="patientProfile.referringProvider.referralCoordinator" name="referralCoordinator">
+
+  <h3>History of Illness</h3>
+  <label for="currentDiagnosis">Does the patient have a current diagnosis of any disease?</label>
+  <select id="currentDiagnosis" [(ngModel)]="patientProfile.historyOfIllness.currentDiagnosis" name="currentDiagnosis">
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+
+  <label for="diagnosedAge">At what age was the patient diagnosed?</label>
+  <input type="number" id="diagnosedAge" [(ngModel)]="patientProfile.historyOfIllness.diagnosedAge" name="diagnosedAge">
+
+  <label for="treatmentHistory">Has the patient previously received treatment for this diagnosis?</label>
+  <select id="treatmentHistory" [(ngModel)]="patientProfile.historyOfIllness.treatmentHistory" name="treatmentHistory">
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+
+  <label for="currentMedications">Does the patient currently take any medications?</label>
+  <select id="currentMedications" [(ngModel)]="patientProfile.historyOfIllness.currentMedications" name="currentMedications">
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+  </select>
+
+  <label for="medicationDetails">If Yes, please enter Medication name and dosage:</label>
+  <input type="text" id="medicationDetails" [(ngModel)]="patientProfile.historyOfIllness.medicationDetails" name="medicationDetails">
+
+  <h3>EMR Information</h3>
+  <label for="emrID">EMR ID:</label>
+  <input type="text" id="emrID" [(ngModel)]="patientProfile.emrID" name="emrID" required>
+
+  <label for="patientID">Patient ID:</label>
+  <input type="text" id="patientID" [(ngModel)]="patientProfile.patientID" name="patientID" disabled>
+
+  <label for="dateCreated">Date Created:</label>
+  <input type="date" id="dateCreated" [(ngModel)]="patientProfile.dateCreated" name="dateCreated" disabled>
+
+  <button type="submit">Submit</button>
+</form>
+```
+
+### Notes:
+1. **Form Validation**: This is a basic form without detailed validation logic. You may want to add validation messages and error handling for a more robust implementation.
+  
+2. **Dynamic Options**: The dropdowns for clinics and payors are currently filled with static values for demonstration purposes. In a production application, you would likely fetch these values from a service.
+
+3. **Styling**: The CSS file (`patient-profile.component.css`) should be created to style the form as per your requirements.
+
+4. **Data Binding**: The `[(ngModel)]` directive is used for two-way data binding in Angular, allowing the form inputs to update the `patientProfile` object.
+
+5. **Submit Logic**: The `submitProfile` method is a placeholder for handling the form submission. You can implement your API call here.
+
+Make sure to include the necessary Angular modules in your app, such as `FormsModule`, to use `ngModel` for form handling.
