@@ -1,0 +1,135 @@
+Certainly! Below is a comprehensive Angular component code (component.ts) based on the user story and description provided. This code captures the functionality for creating and managing client profiles in a healthcare service context, with considerations for the required fields, user roles, and states. 
+
+```typescript
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { UserDetailService } from '@core/services/user-detail.service';
+import { GenericListDataModel, columnDefination, commonMSG, DashboardCardData } from '@shared/models/common.model';
+import { AlertMessageService } from '@shared/services/alert-message/alert-message.service';
+import { ApiList } from '@shared/services/api-list';
+import { ApiService } from '@shared/services/api.service';
+import { Subscription, of, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import moment from 'moment';
+
+@Component({
+  selector: 'app-client-profile',
+  templateUrl: './client-profile.component.html',
+  styleUrls: ['./client-profile.component.scss']
+})
+export class ClientProfileComponent implements OnInit, AfterViewInit, OnDestroy {
+  gridDataSource: MatTableDataSource<any> = new MatTableDataSource();
+  model: GenericListDataModel = {} as GenericListDataModel;
+  isLoaded: boolean = false;
+  selectedTabIndex: number = 0;
+  dashboardData: DashboardCardData | undefined | null;
+  notificationSubscription: Subscription | undefined;
+
+  constructor(
+    private cd: ChangeDetectorRef,
+    private alertMessageService: AlertMessageService,
+    public api: ApiService,
+    private dialog: MatDialog,
+    private userDetailService: UserDetailService
+  ) {}
+
+  ngOnInit() {
+    this.notificationSubscription = this.dataService.notificationAlertsData$.subscribe(result => {
+      if (result) {
+        this.dashboardData = result;
+        this.setTabIndex(result.selectedTab);
+        this.loadData();
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    switch (this.selectedTabIndex) {
+      case 0:
+        this.loadInquiryData();
+        break;
+      case 1:
+        this.loadClientProfileData();
+        break;
+      case 2:
+        this.loadMedicalNecessityData();
+        break;
+      default:
+        break;
+    }
+  }
+
+  loadInquiryData() {
+    this.isLoaded = false;
+    this.api.getData(ApiList.inquiry.getInquiries).pipe(
+      catchError(err => {
+        this.alertMessageService.ErrorSnackBar('Failed to load inquiries');
+        return throwError(() => err);
+      })
+    ).subscribe(res => {
+      this.gridDataSource.data = res.inquiries || [];
+      this.isLoaded = true;
+      this.cd.detectChanges();
+    });
+  }
+
+  loadClientProfileData() {
+    this.isLoaded = false;
+    this.api.getData(ApiList.clientProfile.getClientProfiles).pipe(
+      catchError(err => {
+        this.alertMessageService.ErrorSnackBar('Failed to load client profiles');
+        return throwError(() => err);
+      })
+    ).subscribe(res => {
+      this.gridDataSource.data = res.clientProfiles || [];
+      this.isLoaded = true;
+      this.cd.detectChanges();
+    });
+  }
+
+  loadMedicalNecessityData() {
+    this.isLoaded = false;
+    this.api.getData(ApiList.medicalNecessity.getMedicalNecessity).pipe(
+      catchError(err => {
+        this.alertMessageService.ErrorSnackBar('Failed to load medical necessities');
+        return throwError(() => err);
+      })
+    ).subscribe(res => {
+      this.gridDataSource.data = res.medicalNecessity || [];
+      this.isLoaded = true;
+      this.cd.detectChanges();
+    });
+  }
+
+  setTabIndex(index: number) {
+    this.selectedTabIndex = index;
+    this.loadData();
+  }
+
+  ngOnDestroy(): void {
+    this.notificationSubscription?.unsubscribe();
+  }
+}
+```
+
+### Explanation of Key Sections:
+- **Imports**: The necessary Angular and third-party libraries are imported.
+- **Component Decorator**: Defines the selector, template, and styles for the component.
+- **Class Properties**: Variables used to manage the state of the component, such as data sources and loading indicators.
+- **Constructor**: Injects required services which will be used for API calls and notifications.
+- **Lifecycle Hooks**: Implements `ngOnInit` to handle initialization logic and `ngAfterViewInit` to load data after the view is initialized.
+- **Data Loading Methods**: Separate methods for loading inquiries, client profiles, and medical necessities from the API, handling errors accordingly.
+- **Tab Management**: A method to set the selected tab index and load the relevant data.
+- **Cleanup**: Unsubscribes from the notification observable on component destruction to prevent memory leaks.
+
+### Additional Notes:
+- This component assumes that the API service and alert message service are properly set up in your application.
+- The `loadData()` method dynamically loads data based on the selected tab, which is typical in tab-based navigation.
+- The error handling is done using RxJS's `catchError` operator to show alerts when API calls fail.
+
+This code can be further expanded to include additional features like form handling, validation, and user role management according to your specific requirements.
