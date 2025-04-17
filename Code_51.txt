@@ -1,0 +1,132 @@
+Creating a comprehensive Angular `component.spec.ts` file for the user story and specifications you've provided involves writing unit tests that ensure the functionality of the `ClientProfileComponent` behaves as expected. Below is a sample implementation that covers the key functionalities based on the user story and the UI input specifications provided.
+
+### client-profile-form.component.spec.ts
+
+```typescript
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ClientProfileFormComponent } from './client-profile-form.component';
+import { FormsModule } from '@angular/forms';
+import { ClientProfileService } from '../services/client-profile.service';
+import { of, throwError } from 'rxjs';
+
+describe('ClientProfileFormComponent', () => {
+  let component: ClientProfileFormComponent;
+  let fixture: ComponentFixture<ClientProfileFormComponent>;
+  let clientProfileService: jasmine.SpyObj<ClientProfileService>;
+
+  beforeEach(async () => {
+    const clientProfileServiceSpy = jasmine.createSpyObj('ClientProfileService', ['createProfile', 'getPayors', 'getClinics']);
+
+    await TestBed.configureTestingModule({
+      declarations: [ClientProfileFormComponent],
+      imports: [FormsModule],
+      providers: [
+        { provide: ClientProfileService, useValue: clientProfileServiceSpy }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ClientProfileFormComponent);
+    component = fixture.componentInstance;
+    clientProfileService = TestBed.inject(ClientProfileService) as jasmine.SpyObj<ClientProfileService>;
+  });
+
+  beforeEach(() => {
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should navigate to New Client Profile on Create Client Profile button click', () => {
+    component.onCreateProfile();
+    expect(component.currentPage).toBe('New Client Profile');
+  });
+
+  it('should save profile and create unique client ID', () => {
+    const mockProfileData = {
+      firstName: 'John',
+      lastName: 'Doe',
+      gender: 'Male',
+      birthDate: '01/01/1990',
+      primaryPhone: '123-456-7890',
+      email: 'john.doe@example.com',
+      // Other fields...
+    };
+
+    clientProfileService.createProfile.and.returnValue(of({ clientId: '12345' }));
+    
+    component.profileForm.setValue(mockProfileData);
+    component.onSave();
+
+    expect(clientProfileService.createProfile).toHaveBeenCalledWith(mockProfileData);
+    expect(component.clientId).toBe('12345');
+  });
+
+  it('should show validation messages for mandatory fields', () => {
+    component.profileForm.get('firstName').setValue('');
+    component.profileForm.get('lastName').setValue('');
+
+    component.onSave();
+
+    expect(component.profileForm.valid).toBeFalse();
+    expect(component.profileForm.get('firstName').errors).toEqual({ required: true });
+    expect(component.profileForm.get('lastName').errors).toEqual({ required: true });
+  });
+
+  it('should auto-fill emergency contact fields when guardian is the emergency contact', () => {
+    component.profileForm.get('isGuardianSameAsEmergencyContact').setValue('Yes');
+    component.profileForm.get('guardianFirstName').setValue('Jane');
+    component.profileForm.get('guardianLastName').setValue('Doe');
+    component.profileForm.get('guardianPhone').setValue('987-654-3210');
+
+    component.onGuardianSameAsEmergencyContact();
+
+    expect(component.profileForm.get('emergencyContactFirstName').value).toBe('Jane');
+    expect(component.profileForm.get('emergencyContactLastName').value).toBe('Doe');
+    expect(component.profileForm.get('emergencyContactPhone').value).toBe('987-654-3210');
+  });
+
+  it('should handle errors when creating profile fails', () => {
+    const mockProfileData = { /* mock data */ };
+    
+    clientProfileService.createProfile.and.returnValue(throwError('Error creating profile'));
+
+    component.profileForm.setValue(mockProfileData);
+    component.onSave();
+
+    expect(component.errorMessage).toBe('Error creating profile');
+  });
+
+  it('should have a valid form when all required fields are populated', () => {
+    component.profileForm.get('firstName').setValue('John');
+    component.profileForm.get('lastName').setValue('Doe');
+    component.profileForm.get('birthDate').setValue('01/01/1990');
+    component.profileForm.get('primaryPhone').setValue('123-456-7890');
+    component.profileForm.get('email').setValue('john.doe@example.com');
+
+    expect(component.profileForm.valid).toBeTrue();
+  });
+
+  // Add more tests as necessary to cover all functionalities
+});
+```
+
+### Explanation of Key Points in the Code:
+
+1. **Imports**: The necessary Angular testing utilities, the component to be tested, and any services are imported.
+
+2. **Setup**: The `beforeEach` function sets up the testing module with the component and any necessary dependencies.
+
+3. **Tests**:
+   - **Creation**: A simple test to confirm the component is created successfully.
+   - **Navigation**: Tests that clicking a button correctly navigates to the "New Client Profile" screen.
+   - **Profile Saving**: Tests that the profile data can be saved and a unique client ID is generated.
+   - **Validation**: Ensures that validation messages appear when mandatory fields are empty.
+   - **Auto-fill**: Tests that emergency contact fields are populated correctly when the guardian is the emergency contact.
+   - **Error Handling**: Tests how the component handles errors from the service when creating a profile.
+   - **Form Validation**: Confirms the form is valid when all required fields are filled.
+
+4. **Mocking**: The service methods are mocked using Jasmine's `createSpyObj`, allowing the tests to simulate and assert interactions with the service.
+
+This is a basic structure for your test file. Depending on the additional logic and complexity of your `ClientProfileFormComponent`, you might need to expand this further to cover all edge cases and scenarios.
