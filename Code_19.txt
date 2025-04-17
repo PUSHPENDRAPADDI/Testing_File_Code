@@ -1,0 +1,186 @@
+Sure! Below is a comprehensive Angular unit test specification file (`component.spec.ts`) for the `InquiryComponent`. This file tests various functionalities of the component using Jasmine and Angular testing utilities. 
+
+```typescript
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { InquiryComponent } from './inquiry.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { ApiService } from '@shared/services/api.service';
+import { AlertMessageService } from '@shared/services/alert-message/alert-message.service';
+import { NotificationAlertService } from '@shared/services/event-bus.service';
+import { UserDetailService } from '@core/services/user-detail.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { of, throwError } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { ApiList } from '@shared/services/api-list';
+import { GenericListDataModel } from '@shared/models/common.model';
+import { commonMSG } from '@shared/models/common.model';
+import moment from 'moment';
+
+describe('InquiryComponent', () => {
+  let component: InquiryComponent;
+  let fixture: ComponentFixture<InquiryComponent>;
+  let apiService: jasmine.SpyObj<ApiService>;
+  let alertMessageService: jasmine.SpyObj<AlertMessageService>;
+  let notificationService: jasmine.SpyObj<NotificationAlertService>;
+  let userDetailService: jasmine.SpyObj<UserDetailService>;
+
+  beforeEach(() => {
+    const apiSpy = jasmine.createSpyObj('ApiService', ['getData', 'post', 'put']);
+    const alertSpy = jasmine.createSpyObj('AlertMessageService', ['SuccessSnackBar', 'ErrorSnackBar']);
+    const notificationSpy = jasmine.createSpyObj('NotificationAlertService', ['notificationAlertsData$']);
+    const userDetailSpy = jasmine.createSpyObj('UserDetailService', ['getLoginUserDetail']);
+
+    TestBed.configureTestingModule({
+      imports: [CommonModule, FormsModule],
+      declarations: [InquiryComponent],
+      providers: [
+        { provide: ApiService, useValue: apiSpy },
+        { provide: AlertMessageService, useValue: alertSpy },
+        { provide: NotificationAlertService, useValue: notificationSpy },
+        { provide: UserDetailService, useValue: userDetailSpy },
+        MatDialog
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(InquiryComponent);
+    component = fixture.componentInstance;
+    apiService = TestBed.inject(ApiService) as jasmine.SpyObj<ApiService>;
+    alertMessageService = TestBed.inject(AlertMessageService) as jasmine.SpyObj<AlertMessageService>;
+    notificationService = TestBed.inject(NotificationAlertService) as jasmine.SpyObj<NotificationAlertService>;
+    userDetailService = TestBed.inject(UserDetailService) as jasmine.SpyObj<UserDetailService>;
+
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize and subscribe to notifications on ngOnInit', () => {
+    spyOn(notificationService.notificationAlertsData$, 'subscribe').and.callFake(callback => {
+      callback({ selectedTab: 0 });
+      return { unsubscribe: () => {} };
+    });
+
+    component.ngOnInit();
+    expect(notificationService.notificationAlertsData$.subscribe).toHaveBeenCalled();
+  });
+
+  it('should load inquiry data on ngAfterViewInit', () => {
+    spyOn(component, 'load');
+    component.ngAfterViewInit();
+    expect(component.load).toHaveBeenCalled();
+  });
+
+  it('should correctly set tab index', () => {
+    const index = 1;
+    component.setTabIndex(index);
+    expect(component.selectedtabIndex).toEqual(index);
+  });
+
+  it('should load inquiry data when selected tab index is 0', () => {
+    component.selectedtabIndex = 0;
+    spyOn(component, 'loadInqData');
+    component.load();
+    expect(component.loadInqData).toHaveBeenCalled();
+  });
+
+  it('should load client data when selected tab index is 1', () => {
+    component.selectedtabIndex = 1;
+    spyOn(component, 'loadClientData');
+    component.load();
+    expect(component.loadClientData).toHaveBeenCalled();
+  });
+
+  it('should load medical necessity data when selected tab index is 2', () => {
+    component.selectedtabIndex = 2;
+    spyOn(component, 'loadMedicalNecesityData');
+    component.load();
+    expect(component.loadMedicalNecesityData).toHaveBeenCalled();
+  });
+
+  it('should handle error when loading inquiry data fails', () => {
+    const errorResponse = new Error('API error');
+    apiService.getData.and.returnValue(throwError(() => errorResponse));
+    spyOn(alertMessageService, 'ErrorSnackBar');
+
+    component.loadInqData();
+    expect(alertMessageService.ErrorSnackBar).toHaveBeenCalledWith('API error');
+  });
+
+  it('should successfully load inquiries and update grid data', () => {
+    const mockResponse = { inquiries: [{ inquirerFirstName: 'John', inquirerLastName: 'Doe' }] };
+    apiService.getData.and.returnValue(of(mockResponse));
+
+    component.loadInqData(true);
+    expect(component.griddataInq).toEqual(mockResponse.inquiries);
+    expect(component.isLoadedInq).toBeTrue();
+  });
+
+  it('should assign inquiry model correctly', () => {
+    const filterFlag = true;
+    const due = 0;
+    const field = null;
+
+    component.assignInqModel(filterFlag, due, field);
+    expect(component.modelInq.filterColumns[2].value).toEqual(moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
+  });
+
+  it('should call itemChangesInq and handle valid event', () => {
+    const event = { inquiryId: 1 };
+    spyOn(component, 'getInquiryMatchData').and.returnValue(of({ inquiries: [] }));
+    spyOn(component, 'InquiryMatch');
+
+    component.itemChangesInq(event);
+    expect(component.getInquiryMatchData).toHaveBeenCalledWith(event);
+  });
+
+  it('should not call getInquiryMatchData when event is null', () => {
+    const event = null;
+    spyOn(component, 'getInquiryMatchData');
+
+    component.itemChangesInq(event);
+    expect(component.getInquiryMatchData).not.toHaveBeenCalled();
+  });
+
+  it('should show all changes for Inquiry when showAllChanges is called', () => {
+    component.showAllChanges(true, 0);
+    expect(component.griddataInq).toEqual(component.OGgriddataInq);
+  });
+
+  it('should filter due based on the event type', () => {
+    const dueObject = { type: commonMSG.cardType.INQUIRIES, due: 0 };
+    spyOn(component, 'assignInqModel');
+
+    component.filterDue(dueObject);
+    expect(component.assignInqModel).toHaveBeenCalledWith(true, dueObject.due);
+    expect(component.selectedtabIndex).toBe(0);
+  });
+
+  // Add more tests depending on the methods you want to cover.
+
+  afterEach(() => {
+    fixture.destroy();
+  });
+});
+```
+
+### Explanation:
+1. **Imports and Setup**: The necessary Angular and service modules are imported. The `TestBed` is configured to include the `InquiryComponent` and its dependencies.
+
+2. **Component Initialization**: The `InquiryComponent` is created, and its dependencies are mocked using Jasmine's `createSpyObj`.
+
+3. **Tests**: Various tests are written to cover:
+   - Component creation.
+   - Initialization logic (`ngOnInit` and `ngAfterViewInit`).
+   - Data loading functionality (both successful and error scenarios).
+   - Interaction with child components and services.
+   - Methods that manipulate component state based on events or API responses.
+
+4. **Assertions**: Each test checks that the expected methods are called, and that the component state is updated correctly.
+
+5. **Cleanup**: After each test, the fixture is destroyed to prevent memory leaks.
+
+Feel free to add more test cases to cover additional functionalities based on your requirements.
