@@ -1,0 +1,122 @@
+Certainly! Below is the HTML and CSS code to replicate the design as described in the Figma metadata. The layout and styling have been carefully structured to match the specifications provided.
+
+### index.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #FFFFFF;
+        }
+        .container {
+            max-width: 1447px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 50px;
+            color: rgba(0.0307692, 0.0307692, 0.0307692, 1);
+            margin-top: 128px;
+        }
+        .breadcrumbs {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1);
+            margin-top: 50px;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: bold;
+            margin-top: 100px;
+            color: rgba(0, 0, 0, 1);
+        }
+        .sub-section-title {
+            font-size: 19px;
+            color: rgba(0.4653847, 0.4613572, 0.4613572, 1);
+            margin-top: 20px;
+        }
+        .input-field {
+            margin-top: 10px;
+            padding: 15px;
+            border: 1px solid rgba(0.8509804, 0.8509804, 0.8509804, 1);
+            border-radius: 4px;
+            width: 100%;
+            font-size: 19px;
+        }
+        .input-field:focus {
+            border-color: rgba(0.0606544, 0.0606544, 0.8884616, 1);
+            outline: none;
+        }
+        .rectangle {
+            background-color: rgba(0.8509804, 0.8509804, 0.8509804, 1);
+            height: 68px;
+            margin-top: 30px;
+        }
+        .button {
+            padding: 15px;
+            background-color: rgba(0.0606544, 0.0606544, 0.8884616, 1);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 19px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: rgba(0.0307692, 0.0307692, 0.0307692, 1);
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 19px;
+            color: rgba(0.4653847, 0.4613572, 0.4613572, 1);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Client Profile</h1>
+        <div class="breadcrumbs">Client Profile > Edit Client Profile</div>
+        <div class="section-title">Client Details</div>
+        <input type="text" class="input-field" placeholder="First Name">
+        <input type="text" class="input-field" placeholder="Last Name">
+        <input type="text" class="input-field" placeholder="Primary Phone">
+        <input type="text" class="input-field" placeholder="Secondary Phone">
+        <div class="section-title">Parent / Guardian Details</div>
+        <input type="text" class="input-field" placeholder="Emergency Contact First Name">
+        <input type="text" class="input-field" placeholder="Emergency Contact Phone">
+        <div class="rectangle"></div>
+        <button class="button">Save Changes</button>
+        <div class="footer">Does your child have current Diagnosis of ASD?</div>
+        <div>
+            <button class="button">YES</button>
+            <button class="button">NO</button>
+        </div>
+        <div class="footer">Does your child have any medical condition?</div>
+        <div>
+            <button class="button">YES</button>
+            <button class="button">NO</button>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+### Explanation
+
+- **Font**: The Inter font is imported from Google Fonts to match the design.
+- **Container**: The main container is centered with a maximum width of 1447px and margins for responsiveness.
+- **Text Elements**: Each text element is styled according to the provided specifications, including sizes, weights, and colors.
+- **Input Fields**: Input fields have a border and a focus effect to indicate interactivity.
+- **Buttons**: The buttons have hover effects for better user experience. 
+- **Sections**: Clear separation of sections using headers and spacing.
+
+This HTML and CSS code structure aims to provide a pixel-perfect representation of the Figma design as per the metadata provided. Feel free to use and modify it as needed!
