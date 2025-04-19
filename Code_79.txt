@@ -1,0 +1,133 @@
+Based on the provided JSON data structure and the user story for creating a form to capture user inputs, here is an Angular code for an input form. This form will contain text fields for the various attributes mentioned in the JSON, along with appropriate labels. 
+
+### Angular Code
+
+1. **Create a new Angular component** for the form.
+
+```bash
+ng generate component UserProfileForm
+```
+
+2. **Update the HTML file** of the created component (`user-profile-form.component.html`) with the following content:
+
+```html
+<form (ngSubmit)="onSubmit()" #userProfileForm="ngForm">
+  <h2>Edit Client Profile</h2>
+  
+  <div>
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" ngModel required>
+  </div>
+
+  <div>
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" name="lastName" ngModel required>
+  </div>
+
+  <div>
+    <label for="birthDate">Birth Date</label>
+    <input type="date" id="birthDate" name="birthDate" ngModel required>
+  </div>
+
+  <div>
+    <label for="raceEthnicity">Select Race/Ethnicity</label>
+    <select id="raceEthnicity" name="raceEthnicity" ngModel required>
+      <option value="" disabled selected>Select your option</option>
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+      <option value="option3">Option 3</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="guardianDetails">Parent / Guardian Details</label>
+    <input type="text" id="guardianDetails" name="guardianDetails" ngModel required>
+  </div>
+
+  <div>
+    <label for="primaryPhone">Primary Phone</label>
+    <input type="tel" id="primaryPhone" name="primaryPhone" ngModel required>
+  </div>
+
+  <div>
+    <label for="secondaryPhone">Secondary Phone</label>
+    <input type="tel" id="secondaryPhone" name="secondaryPhone" ngModel>
+  </div>
+
+  <div>
+    <label for="addressLine1">Address Line 1</label>
+    <input type="text" id="addressLine1" name="addressLine1" ngModel required>
+  </div>
+
+  <div>
+    <label for="addressLine2">Address Line 2</label>
+    <input type="text" id="addressLine2" name="addressLine2" ngModel>
+  </div>
+
+  <div>
+    <label for="homeZip">Home Zip Code</label>
+    <input type="text" id="homeZip" name="homeZip" ngModel required>
+  </div>
+
+  <div>
+    <label for="homeState">Home State</label>
+    <input type="text" id="homeState" name="homeState" ngModel required>
+  </div>
+
+  <div>
+    <label for="emergencyContact">Emergency Contact Name</label>
+    <input type="text" id="emergencyContact" name="emergencyContact" ngModel required>
+  </div>
+
+  <div>
+    <label for="emergencyContactPhone">Emergency Contact Phone</label>
+    <input type="tel" id="emergencyContactPhone" name="emergencyContactPhone" ngModel required>
+  </div>
+
+  <div>
+    <label for="hasDiagnosis">Does your child have current Diagnosis of ASD?</label>
+    <select id="hasDiagnosis" name="hasDiagnosis" ngModel required>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="hasMedicalCondition">Does your child have any medical condition?</label>
+    <select id="hasMedicalCondition" name="hasMedicalCondition" ngModel required>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+
+  <button type="submit" [disabled]="!userProfileForm.form.valid">Submit</button>
+</form>
+```
+
+3. **Update the TypeScript file** of the component (`user-profile-form.component.ts`) with the following content:
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-user-profile-form',
+  templateUrl: './user-profile-form.component.html',
+  styleUrls: ['./user-profile-form.component.css']
+})
+export class UserProfileFormComponent {
+  
+  onSubmit() {
+    // Handle form submission logic here
+    alert('Form submitted!');
+  }
+}
+```
+
+4. **Add necessary styles** to the component's CSS file (`user-profile-form.component.css`) if needed.
+
+### Summary
+- This form captures the necessary inputs based on the provided JSON data structure.
+- You will need to integrate this component into your Angular application by declaring it in the appropriate module.
+- Adjust the form fields and validation as per your requirements. The form is set to be reactive and utilizes Angular's template-driven forms approach. 
+
+This Angular code provides a structured input form for capturing user profile data based on the specifications mentioned in the JSON data.
