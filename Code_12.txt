@@ -1,0 +1,147 @@
+Certainly! Below is a simple HTML code snippet that reflects the metadata from the Figma design you provided, including inline CSS styles. You can copy this code and paste it into an `.html` file and then open it in a browser to see the design representation.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1447px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 50px;
+            color: #1F1F1F;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 34px;
+            color: #1F1F1F;
+            margin-bottom: 10px;
+        }
+        .section-title {
+            font-size: 31px;
+            color: #1F1F1F;
+            margin: 20px 0;
+        }
+        .text {
+            font-size: 31px;
+            color: #000000;
+            margin: 5px 0;
+        }
+        .text-muted {
+            font-size: 19px;
+            color: rgba(0, 0, 0, 0.6);
+        }
+        .input-field {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #D0D0D0;
+            border-radius: 4px;
+            width: calc(100% - 22px);
+        }
+        .button {
+            background-color: #3E74C6;
+            color: #FFFFFF;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #2A4E8C;
+        }
+        .form-section {
+            margin: 20px 0;
+        }
+        .divider {
+            height: 2px;
+            background-color: #E0E0E0;
+            margin: 20px 0;
+        }
+        .footer {
+            font-size: 19px;
+            color: #1F1F1F;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Client Profile</h1>
+        <h2>Client Profile > Edit Client Profile</h2>
+        <div class="divider"></div>
+        
+        <div class="form-section">
+            <h2 class="section-title">Client Details</h2>
+            <input type="text" class="input-field" placeholder="First Name" />
+            <input type="text" class="input-field" placeholder="Last Name" />
+            <input type="text" class="input-field" placeholder="Select Race/Ethnicity" />
+            <input type="text" class="input-field" placeholder="Birth Date (MM/DD/YYYY)" />
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+            <h2 class="section-title">Parent / Guardian Details</h2>
+            <input type="text" class="input-field" placeholder="First Name" />
+            <input type="text" class="input-field" placeholder="Last Name" />
+            <input type="text" class="input-field" placeholder="Primary Phone" />
+            <input type="text" class="input-field" placeholder="Secondary Phone" />
+            <input type="text" class="input-field" placeholder="Address Line 1" />
+            <input type="text" class="input-field" placeholder="Address Line 2" />
+            <input type="text" class="input-field" placeholder="Home State" />
+            <input type="text" class="input-field" placeholder="Home Zip Code" />
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-section">
+            <h2 class="section-title">Emergency Contact</h2>
+            <input type="text" class="input-field" placeholder="Emergency Contact First Name" />
+            <input type="text" class="input-field" placeholder="Emergency Contact Phone" />
+        </div>
+
+        <div class="divider"></div>
+
+        <h2 class="section-title">Clinical Information</h2>
+        <p class="text">Does your child have current Diagnosis of ASD?</p>
+        <button class="button">YES</button>
+        <button class="button">NO</button>
+
+        <div class="divider"></div>
+
+        <h2 class="section-title">Does your child have any medical condition?</h2>
+        <button class="button">YES</button>
+        <button class="button">NO</button>
+
+        <div class="footer">© 2025 Your Company</div>
+    </div>
+</body>
+</html>
+```
+
+### Instructions:
+1. Copy the entire code above.
+2. Open a text editor (like Notepad, Visual Studio Code, or any HTML editor).
+3. Paste the copied code into the editor.
+4. Save the file with a `.html` extension (for example, `login_screen.html`).
+5. Open the saved file in a web browser to view the result.
+
+Feel free to modify the content and styles as needed to better fit your design preferences.
