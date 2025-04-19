@@ -1,0 +1,227 @@
+To create an HTML structure based on the metadata provided for the "Login Screen" design in Figma, I'll generate a basic HTML and CSS template that includes input fields, buttons, and display text. Since the content is quite extensive, I'll break it into sections for clarity and ease of copying.
+
+### Part 1: Basic Structure and Styles
+
+Here's the initial part of the HTML code for the login screen. This will include the basic structure and styles.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFFF;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #FFFFFF;
+        }
+        h1, h2 {
+            color: #000000;
+        }
+        .text {
+            margin-bottom: 15px;
+            font-size: 31px;
+            color: #000000;
+        }
+        .input-field {
+            margin-bottom: 20px;
+        }
+        .input-field label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 19px;
+            color: #465384;
+        }
+        .input-field input {
+            width: 100%;
+            padding: 10px;
+            font-size: 19px;
+            border: 1px solid #CCCCCC;
+            border-radius: 5px;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 19px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .section-divider {
+            margin: 20px 0;
+            border-top: 1px solid #CCCCCC;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Client Profile</h1>
+        <p class="text">Client Profile > Edit Client Profile</p>
+        <div class="section-divider"></div>
+
+        <div class="input-field">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" placeholder="Enter First Name">
+        </div>
+
+        <div class="input-field">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" placeholder="Enter Last Name">
+        </div>
+
+        <div class="input-field">
+            <label for="birth-date">Birth Date</label>
+            <input type="date" id="birth-date">
+        </div>
+
+        <div class="input-field">
+            <label for="race-ethnicity">Select Race/Ethnicity</label>
+            <input type="text" id="race-ethnicity" placeholder="Enter Race/Ethnicity">
+        </div>
+
+        <div class="section-divider"></div>
+        
+        <h2>Client & Guardian Details</h2>
+        <div class="input-field">
+            <label for="guardian-first-name">Guardian First Name</label>
+            <input type="text" id="guardian-first-name" placeholder="Enter Guardian First Name">
+        </div>
+
+        <div class="input-field">
+            <label for="guardian-last-name">Guardian Last Name</label>
+            <input type="text" id="guardian-last-name" placeholder="Enter Guardian Last Name">
+        </div>
+
+        <div class="input-field">
+            <label for="guardian-phone">Guardian Phone</label>
+            <input type="text" id="guardian-phone" placeholder="Enter Guardian Phone">
+        </div>
+
+        <div class="input-field">
+            <label for="guardian-address">Guardian Address</label>
+            <input type="text" id="guardian-address" placeholder="Enter Guardian Address">
+        </div>
+
+        <div class="input-field">
+            <label for="guardian-address-line2">Address Line 2</label>
+            <input type="text" id="guardian-address-line2" placeholder="Enter Address Line 2">
+        </div>
+
+        <div class="section-divider"></div>
+
+        <button class="button">Submit</button>
+    </div>
+</body>
+</html>
+```
+
+### Part 2: Additional Input Fields and Sections
+
+This second part will include sections for the clinical information and emergency contact details, continuing from where we left off.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen - Additional Information</title>
+    <style>
+        /* Include the same styles as in Part 1 */
+        /* ... (styles from Part 1) ... */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Clinical Information</h2>
+        <div class="input-field">
+            <label for="as-diagnosis">Does your child have current Diagnosis of ASD?</label>
+            <input type="text" id="as-diagnosis" placeholder="Yes / No">
+        </div>
+        
+        <div class="input-field">
+            <label for="medical-condition">Does your child have any medical condition?</label>
+            <input type="text" id="medical-condition" placeholder="Yes / No">
+        </div>
+
+        <div class="section-divider"></div>
+
+        <h2>Emergency Contact</h2>
+        <div class="input-field">
+            <label for="emergency-contact-name">Emergency Contact Name</label>
+            <input type="text" id="emergency-contact-name" placeholder="Enter Emergency Contact Name">
+        </div>
+
+        <div class="input-field">
+            <label for="emergency-contact-phone">Emergency Contact Phone</label>
+            <input type="text" id="emergency-contact-phone" placeholder="Enter Emergency Contact Phone">
+        </div>
+
+        <div class="section-divider"></div>
+
+        <button class="button">Submit</button>
+    </div>
+</body>
+</html>
+```
+
+### Part 3: Final Touches and Additional Elements
+
+This part can include any additional elements and final touches to your design.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Touches</title>
+    <style>
+        /* Include the same styles as in Part 1 */
+        /* ... (styles from Part 1) ... */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Additional Options</h2>
+        <div class="input-field">
+            <label for="additional-info">Any Additional Information</label>
+            <textarea id="additional-info" rows="4" placeholder="Enter any additional information here..."></textarea>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <button class="button">Submit</button>
+    </div>
+</body>
+</html>
+```
+
+### Instructions
+
+1. **Copy and Paste Each Part**: Copy each part into separate HTML files (e.g., `index.html`, `additional.html`, `final.html`).
+2. **Merge If Necessary**: If you want to combine all parts into a single file, simply copy the contents of each part sequentially into one HTML file.
+3. **Run in Browser**: Open the resultant HTML file in a web browser to view your login screen.
+
+### Notes
+
+- You can add more styles as needed to customize the appearance further.
+- Adjust the input types (e.g., changing text to email or date) according to your requirements.
+- Ensure that you have the "Inter" font available or link to it via Google Fonts in the head section for proper display. 
+
+This template is a basic structure and can be expanded or modified as needed to fit your specific design and functional requirements.
