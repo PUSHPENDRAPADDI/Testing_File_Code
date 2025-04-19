@@ -1,153 +1,114 @@
-Certainly! Based on the provided code for the `ClientProfileService` class, I will expand the implementation by adding methods for updating and deleting a `ClientProfile`, as well as providing a user story and test cases for these functionalities.
+To create a React.js component for the login screen based on the provided Figma metadata, we will break it down into a React component and a separate CSS file for styling. Below is an example of how you can structure your code:
 
-### User Story
+### 1. Create the React Component
 
-**Title**: Client Profile Management
+```jsx
+// LoginScreen.jsx
+import React from 'react';
+import './LoginScreen.css';
 
-**As a** user of the application,  
-**I want to** manage client profiles,  
-**So that** I can create, read, update, and delete client information efficiently.
+const LoginScreen = () => {
+    return (
+        <div className="login-container">
+            <h1 className="login-title">Login Screen</h1>
+            <div className="input-group">
+                <label htmlFor="email" className="input-label">Email:</label>
+                <input type="email" id="email" className="input-field" />
+            </div>
+            <div className="input-group">
+                <label htmlFor="password" className="input-label">Password:</label>
+                <input type="password" id="password" className="input-field" />
+            </div>
+            <button className="submit-button">Submit</button>
+        </div>
+    );
+};
 
-### Acceptance Criteria
+export default LoginScreen;
+```
 
-1. **Insert a Client Profile**: I can add a new client profile.
-2. **Get a Client Profile**: I can retrieve a client profile by its ID.
-3. **Update a Client Profile**: I can update an existing client profile.
-4. **Delete a Client Profile**: I can delete a client profile by its ID.
+### 2. Create the CSS File for Styling
 
-### Code Implementation
+```css
+/* LoginScreen.css */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
 
-Here’s the complete code for the `ClientProfileService` class including the new methods for updating and deleting:
+.login-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
 
-```csharp
-using DomainLayer.Models;
-using RepositoryLayer.IRepository;
-using ServiceLayer.ICustomServices;
+.login-title {
+    font-size: 60px;
+    color: #1a1a1a;
+    text-align: center;
+    margin-bottom: 40px;
+}
 
-namespace ServiceLayer.CustomServices
-{
-    public class ClientProfileService : ICustomService<ClientProfile>
-    {
-        private readonly IRepository<ClientProfile> _clientProfileRepository;
+.input-group {
+    margin-bottom: 20px;
+}
 
-        public ClientProfileService(IRepository<ClientProfile> clientProfileRepository)
-        {
-            _clientProfileRepository = clientProfileRepository;
-        }
+.input-label {
+    display: block;
+    font-size: 24px;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
 
-        public void Insert(ClientProfile entity)
-        {
-            _clientProfileRepository.Insert(entity);
-            _clientProfileRepository.SaveChanges();
-        }
+.input-field {
+    width: 100%;
+    padding: 12px;
+    font-size: 24px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+}
 
-        public ClientProfile Get(int id)
-        {
-            return _clientProfileRepository.Get(id);
-        }
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 24px;
+    background-color: #1e90ff; /* Adjust to match your design */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-        public void Update(ClientProfile entity)
-        {
-            _clientProfileRepository.Update(entity);
-            _clientProfileRepository.SaveChanges();
-        }
-
-        public void Delete(int id)
-        {
-            var clientProfile = _clientProfileRepository.Get(id);
-            if (clientProfile != null)
-            {
-                _clientProfileRepository.Delete(clientProfile);
-                _clientProfileRepository.SaveChanges();
-            }
-        }
-
-        // Additional methods can be added as needed
-    }
+.submit-button:hover {
+    background-color: #1c86ee; /* Darker shade for hover effect */
 }
 ```
 
-### Test Cases
+### 3. How to Use the Component
 
-Here are some example test cases that could be written to verify the functionality of the `ClientProfileService` class:
+You can now use the `LoginScreen` component in your main application file or wherever you want to display the login screen:
 
-```csharp
-using Moq;
-using Xunit;
+```jsx
+// App.jsx
+import React from 'react';
+import LoginScreen from './LoginScreen';
 
-public class ClientProfileServiceTests
-{
-    private readonly Mock<IRepository<ClientProfile>> _mockRepository;
-    private readonly ClientProfileService _service;
+const App = () => {
+    return (
+        <div>
+            <LoginScreen />
+        </div>
+    );
+};
 
-    public ClientProfileServiceTests()
-    {
-        _mockRepository = new Mock<IRepository<ClientProfile>>();
-        _service = new ClientProfileService(_mockRepository.Object);
-    }
-
-    [Fact]
-    public void Insert_ShouldCallInsertAndSaveChanges()
-    {
-        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
-
-        _service.Insert(clientProfile);
-
-        _mockRepository.Verify(repo => repo.Insert(clientProfile), Times.Once);
-        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Once);
-    }
-
-    [Fact]
-    public void Get_ShouldReturnClientProfileById()
-    {
-        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
-        _mockRepository.Setup(repo => repo.Get(1)).Returns(clientProfile);
-
-        var result = _service.Get(1);
-
-        Assert.Equal(clientProfile, result);
-    }
-
-    [Fact]
-    public void Update_ShouldCallUpdateAndSaveChanges()
-    {
-        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
-
-        _service.Update(clientProfile);
-
-        _mockRepository.Verify(repo => repo.Update(clientProfile), Times.Once);
-        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Once);
-    }
-
-    [Fact]
-    public void Delete_ShouldCallDeleteAndSaveChanges()
-    {
-        var clientProfile = new ClientProfile { Id = 1, Name = "John Doe" };
-        _mockRepository.Setup(repo => repo.Get(1)).Returns(clientProfile);
-
-        _service.Delete(1);
-
-        _mockRepository.Verify(repo => repo.Delete(clientProfile), Times.Once);
-        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Once);
-    }
-
-    [Fact]
-    public void Delete_ShouldNotCallDeleteIfClientProfileNotFound()
-    {
-        _mockRepository.Setup(repo => repo.Get(1)).Returns((ClientProfile)null);
-
-        _service.Delete(1);
-
-        _mockRepository.Verify(repo => repo.Delete(It.IsAny<ClientProfile>()), Times.Never);
-        _mockRepository.Verify(repo => repo.SaveChanges(), Times.Never);
-    }
-}
+export default App;
 ```
 
-### Explanation
-
-- The `ClientProfileService` class provides methods to manage client profiles, including insertion, retrieval, updating, and deletion.
-- The test cases use Moq to create a mock of the `IRepository<ClientProfile>` interface and verify that the appropriate methods are called on the repository when actions are performed on the service.
-- Each test method checks a specific functionality, ensuring that the service behaves as expected.
-
-This implementation and testing framework should help you manage client profiles effectively while ensuring that your code is reliable and maintainable.
+### Note:
+- Make sure you have the "Inter" font available in your project. You can include it in your `index.html` or import it in your CSS file.
+- Adjust the styles as needed to match your design from Figma more closely or according to your application's design system.
