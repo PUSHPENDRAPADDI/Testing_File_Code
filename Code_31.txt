@@ -1,329 +1,174 @@
-To create the code for the artifact based on the provided user story and test cases, we will follow the structure of the application you provided in your reference. The code will include a model, a controller, a service layer, and a repository layer to handle the client profile creation as described in the user story. 
+To generate a ReactJS component based on the provided metadata from Figma, we can create a simple login screen component. This will include text fields for entering the first name, last name, and emergency contact information, as well as buttons for submitting and handling user actions.
 
-Here's how the code structure will look:
+To maintain a clean structure, we will separate the styling into a CSS file. Below is an example of how you might structure your React component and CSS file.
 
-### 1. Domain Model
+### 1. Create a React Component
 
-First, we will create the domain model for `ClientProfile`.
+**LoginScreen.jsx**
 
-```csharp
-using System;
-using System.ComponentModel.DataAnnotations;
+```jsx
+import React from 'react';
+import './LoginScreen.css';
 
-namespace DomainLayer.Models
-{
-    public class ClientProfile : BaseEntity
-    {
-        [Key]
-        public int Id { get; set; }
-        
-        public string PatientFirstName { get; set; }
-        
-        public string PatientLastName { get; set; }
+const LoginScreen = () => {
+    return (
+        <div className="login-screen">
+            <h1>Edit Client Profile</h1>
+            <h2>Client Profile > Edit Client Profile</h2>
+            <div className="client-details">
+                <h3>Client Details</h3>
+                <div className="input-group">
+                    <label htmlFor="first-name">First Name</label>
+                    <input type="text" id="first-name" placeholder="Enter First Name" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="last-name">Last Name</label>
+                    <input type="text" id="last-name" placeholder="Enter Last Name" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="birth-date">Birth Date</label>
+                    <input type="date" id="birth-date" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="emergency-contact">Emergency Contact</label>
+                    <input type="text" id="emergency-contact" placeholder="Enter Emergency Contact" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="phone">Emergency Contact Phone</label>
+                    <input type="text" id="phone" placeholder="Enter Phone Number" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="address">Address Line 1</label>
+                    <input type="text" id="address" placeholder="Enter Address Line 1" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="address-2">Address Line 2</label>
+                    <input type="text" id="address-2" placeholder="Enter Address Line 2" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="zip-code">Home Zip Code</label>
+                    <input type="text" id="zip-code" placeholder="Enter Zip Code" />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="state">Home State</label>
+                    <input type="text" id="state" placeholder="Enter State" />
+                </div>
+                <div className="checkbox-group">
+                    <label>
+                        <input type="checkbox" /> Is Guardian same as emergency contact?
+                    </label>
+                </div>
+                <div className="input-group">
+                    <label htmlFor="medical-condition">Does your child have any medical condition?</label>
+                    <input type="text" id="medical-condition" placeholder="Enter Condition" />
+                </div>
+                <button className="submit-button">Submit</button>
+            </div>
+        </div>
+    );
+};
 
-        public string Gender { get; set; }
+export default LoginScreen;
+```
 
-        public string RaceEthnicity { get; set; }
+### 2. Create CSS for Styling
 
-        public DateTime BirthDate { get; set; }
+**LoginScreen.css**
 
-        public string AssignedTo { get; set; }
+```css
+.login-screen {
+    background-color: #FFFFFF;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
 
-        public string GuardianFirstName { get; set; }
+h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 50px;
+    color: #000;
+}
 
-        public string GuardianLastName { get; set; }
+h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 31px;
+    color: #000;
+}
 
-        public string AddressLine1 { get; set; }
+.client-details {
+    margin-top: 20px;
+}
 
-        public string AddressLine2 { get; set; }
+h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 32px;
+    color: #000;
+    margin-bottom: 10px;
+}
 
-        public string City { get; set; }
+.input-group {
+    margin-bottom: 15px;
+}
 
-        public string State { get; set; }
+.input-group label {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 19px;
+    margin-bottom: 5px;
+}
 
-        public string ZipCode { get; set; }
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 19px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
-        public string PrimaryPhone { get; set; }
+.checkbox-group {
+    margin: 20px 0;
+}
 
-        public string SecondaryPhone { get; set; }
+.submit-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 19px;
+}
 
-        public string Email { get; set; }
-
-        public string IsGuardianEmergencyContact { get; set; }
-
-        public string EmergencyContactFirstName { get; set; }
-
-        public string EmergencyContactLastName { get; set; }
-
-        public string EmergencyContactPhone { get; set; }
-
-        public string ServicePreferences { get; set; }
-
-        public string AvailabilityForTreatment { get; set; }
-
-        public string FirstPreferredClinic { get; set; }
-
-        public string SecondPreferredClinic { get; set; }
-
-        public string Conflicts { get; set; }
-
-        public string InsurancePayor { get; set; }
-
-        public string InsuranceStatus { get; set; }
-
-        public DateTime? CoverageEndDate { get; set; }
-
-        public string SubscriberFirstName { get; set; }
-
-        public string SubscriberLastName { get; set; }
-
-        public DateTime? SubscriberDOB { get; set; }
-
-        public string SubscriberRelationship { get; set; }
-
-        public string SubscriberID { get; set; }
-
-        public string GroupID { get; set; }
-
-        public string FrontBackInsuranceCardReceived { get; set; }
-
-        public string PCPFirstName { get; set; }
-
-        public string PCPLastName { get; set; }
-
-        public string PCPPhone { get; set; }
-
-        public string PCPFax { get; set; }
-
-        public string ReferringProviderName { get; set; }
-
-        public DateTime? ReferralReceivedDate { get; set; }
-
-        public string PracticeName { get; set; }
-
-        public string ReferralCoordinatorName { get; set; }
-
-        public string DiagnosisCurrent { get; set; }
-
-        public int? DiagnosisAge { get; set; }
-
-        public string TreatmentReceived { get; set; }
-
-        public string CurrentMedications { get; set; }
-
-        public string ImprovementGoals { get; set; }
-
-        public int EMRId { get; set; }
-
-        public int PatientId { get; set; }
-
-        public DateTime DateCreated { get; set; }
-        
-        public string Status { get; set; } // New, In-Process, Complete, etc.
-    }
+.submit-button:hover {
+    background-color: #45a049;
 }
 ```
 
-### 2. Repository Interface
+### 3. Use the Component in Your App
 
-Next, we will create the repository interface for `ClientProfile`.
+Now you can import and use this `LoginScreen` component in your main application file.
 
-```csharp
-using DomainLayer.Models;
-using System.Collections.Generic;
+**App.jsx**
 
-namespace RepositoryLayer.IRepository
-{
-    public interface IClientProfileRepository : IRepository<ClientProfile>
-    {
-        // Add any additional methods specific to ClientProfile if needed
-    }
-}
+```jsx
+import React from 'react';
+import LoginScreen from './LoginScreen';
+
+const App = () => {
+    return (
+        <div>
+            <LoginScreen />
+        </div>
+    );
+};
+
+export default App;
 ```
 
-### 3. Repository Implementation
+### Final Notes
 
-Now, let's implement the repository.
-
-```csharp
-using DomainLayer.Data;
-using DomainLayer.Models;
-using Microsoft.EntityFrameworkCore;
-using RepositoryLayer.IRepository;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace RepositoryLayer.Repository
-{
-    public class ClientProfileRepository : Repository<ClientProfile>, IClientProfileRepository
-    {
-        public ClientProfileRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext)
-        {
-        }
-
-        // Implement any additional methods here if needed
-    }
-}
-```
-
-### 4. Service Interface
-
-Now, we will create the service interface for `ClientProfile`.
-
-```csharp
-using DomainLayer.Models;
-using System.Collections.Generic;
-
-namespace ServiceLayer.ICustomServices
-{
-    public interface IClientProfileService : ICustomService<ClientProfile>
-    {
-        // Add any additional methods specific to ClientProfile if needed
-    }
-}
-```
-
-### 5. Service Implementation
-
-Now, we will implement the service.
-
-```csharp
-using DomainLayer.Models;
-using RepositoryLayer.IRepository;
-using ServiceLayer.ICustomServices;
-using System.Collections.Generic;
-
-namespace ServiceLayer.CustomServices
-{
-    public class ClientProfileService : IClientProfileService
-    {
-        private readonly IClientProfileRepository _clientProfileRepository;
-
-        public ClientProfileService(IClientProfileRepository clientProfileRepository)
-        {
-            _clientProfileRepository = clientProfileRepository;
-        }
-
-        public void Delete(ClientProfile entity)
-        {
-            _clientProfileRepository.Delete(entity);
-        }
-
-        public ClientProfile Get(int Id)
-        {
-            return _clientProfileRepository.Get(Id);
-        }
-
-        public IEnumerable<ClientProfile> GetAll()
-        {
-            return _clientProfileRepository.GetAll();
-        }
-
-        public void Insert(ClientProfile entity)
-        {
-            _clientProfileRepository.Insert(entity);
-        }
-
-        public void Update(ClientProfile entity)
-        {
-            _clientProfileRepository.Update(entity);
-        }
-    }
-}
-```
-
-### 6. Controller
-
-Finally, we will create the controller for `ClientProfile`.
-
-```csharp
-using DomainLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.ICustomServices;
-
-namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClientProfileController : ControllerBase
-    {
-        private readonly IClientProfileService _clientProfileService;
-
-        public ClientProfileController(IClientProfileService clientProfileService)
-        {
-            _clientProfileService = clientProfileService;
-        }
-
-        [HttpPost(nameof(CreateClientProfile))]
-        public IActionResult CreateClientProfile([FromBody] ClientProfile clientProfile)
-        {
-            if (clientProfile == null)
-            {
-                return BadRequest("Client profile cannot be null.");
-            }
-
-            _clientProfileService.Insert(clientProfile);
-            return Ok("Client profile created successfully.");
-        }
-
-        [HttpGet(nameof(GetClientProfileById))]
-        public IActionResult GetClientProfileById(int id)
-        {
-            var clientProfile = _clientProfileService.Get(id);
-            if (clientProfile == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(clientProfile);
-        }
-
-        [HttpGet(nameof(GetAllClientProfiles))]
-        public IActionResult GetAllClientProfiles()
-        {
-            var clientProfiles = _clientProfileService.GetAll();
-            return Ok(clientProfiles);
-        }
-
-        [HttpPut(nameof(UpdateClientProfile))]
-        public IActionResult UpdateClientProfile([FromBody] ClientProfile clientProfile)
-        {
-            if (clientProfile == null)
-            {
-                return BadRequest("Client profile cannot be null.");
-            }
-
-            _clientProfileService.Update(clientProfile);
-            return Ok("Client profile updated successfully.");
-        }
-
-        [HttpDelete(nameof(DeleteClientProfile))]
-        public IActionResult DeleteClientProfile(int id)
-        {
-            var clientProfile = _clientProfileService.Get(id);
-            if (clientProfile == null)
-            {
-                return NotFound();
-            }
-
-            _clientProfileService.Delete(clientProfile);
-            return Ok("Client profile deleted successfully.");
-        }
-    }
-}
-```
-
-### 7. Dependency Injection Configuration
-
-Finally, ensure that you register the necessary services and repositories in your `Startup.cs` or `Program.cs`.
-
-```csharp
-builder.Services.AddScoped<IClientProfileService, ClientProfileService>();
-builder.Services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
-```
-
-### Summary
-
-This code structure follows the repository pattern and service layer architecture that you provided in your reference. Adjustments may be needed based on specific implementation details, such as data validations, error handling, and any additional business logic that may arise from further discussions with stakeholders.
-
-This should provide you with a solid foundation for building the client profile module as described in your user story.
+- Ensure you have the `Inter` font included in your project, either via Google Fonts or by downloading it and including it in your CSS.
+- You can extend this component to handle form submission, validation, and other interactions as needed.
+- The component is styled to be responsive and looks clean. Adjust the styles as necessary for your specific design requirements.
