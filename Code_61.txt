@@ -1,0 +1,127 @@
+Sure! Below is an HTML code that uses the metadata extracted from the provided Figma JSON. The styling is included within the same file for ease of use. You can copy and paste this code into a `.html` file and open it in a browser to see how it looks.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        h1 {
+            color: rgba(0, 0, 0, 1);
+            font-size: 50px;
+        }
+        .sub-header {
+            color: rgba(0, 0, 0, 1);
+            font-size: 31px;
+            margin: 10px 0;
+        }
+        .section {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 31px;
+            font-weight: bold;
+            margin: 0 0 10px;
+        }
+        .section p {
+            font-size: 19px;
+            color: rgba(0, 0, 0, 0.5);
+        }
+        .text-input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            font-size: 19px;
+        }
+        .button {
+            background-color: #60a0dc;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .button:hover {
+            background-color: #4b88c6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Edit Client Profile</h1>
+            <span class="sub-header">Client Profile > Edit Client Profile</span>
+        </header>
+        <div class="section">
+            <h2>Client Details</h2>
+            <p>Profile Information</p>
+            <input type="text" class="text-input" placeholder="First Name">
+            <input type="text" class="text-input" placeholder="Last Name">
+            <input type="text" class="text-input" placeholder="Birth Date (MM/DD/YYYY)">
+            <p>Select Race/Ethnicity</p>
+            <input type="text" class="text-input" placeholder="Select Race/Ethnicity">
+            <h2>Parent / Guardian Details</h2>
+            <input type="text" class="text-input" placeholder="Parent / Guardian Name">
+            <input type="text" class="text-input" placeholder="Primary Phone">
+            <input type="text" class="text-input" placeholder="Secondary Phone">
+            <input type="text" class="text-input" placeholder="Parent / Guardian Address">
+        </div>
+        <div class="section">
+            <h2>Emergency Contact</h2>
+            <input type="text" class="text-input" placeholder="Emergency Contact Name">
+            <input type="text" class="text-input" placeholder="Emergency Contact Phone">
+        </div>
+        <div class="section">
+            <h2>Clinical Information</h2>
+            <p>Does your child have current Diagnosis of ASD?</p>
+            <button class="button">YES</button>
+            <button class="button">NO</button>
+            <p>Does your child have any medical condition?</p>
+            <button class="button">YES</button>
+            <button class="button">NO</button>
+        </div>
+        <div class="section">
+            <h2>How did you hear about us?</h2>
+            <input type="text" class="text-input" placeholder="Your answer here">
+        </div>
+    </div>
+</body>
+</html>
+```
+
+### Instructions to Run:
+1. Open any text editor (like Notepad, Visual Studio Code, etc.).
+2. Copy and paste the above code into a new file.
+3. Save the file with a `.html` extension, for example, `login_screen.html`.
+4. Open the saved file in a web browser (like Chrome, Firefox, etc.) to view the output. 
+
+This code creates a simple login screen layout with sections for client details, parent/guardian details, and emergency contact information. You can modify the styling and structure as needed for your project.
