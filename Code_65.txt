@@ -1,0 +1,106 @@
+Sure! Below is a simple HTML code that replicates the structure of the "Login Screen" you provided, with inline CSS for styling. You can copy and paste this code into a `.html` file and open it in a web browser to see the layout.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: left;
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            font-size: 50px;
+            color: rgba(0, 0, 0, 1);
+            margin: 0;
+        }
+        .breadcrumb {
+            font-size: 34px;
+            color: rgba(132, 193, 251, 1);
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1);
+            margin-top: 40px;
+        }
+        .input-field {
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+        }
+        .input-field label {
+            font-size: 19px;
+            color: rgba(0, 0, 0, 1);
+            margin-bottom: 5px;
+        }
+        .input-field input {
+            padding: 10px;
+            font-size: 19px;
+            border: 1px solid rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            width: 100%;
+        }
+        .button {
+            background-color: rgba(0, 104, 255, 1);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 31px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: rgba(0, 85, 205, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Edit Client Profile</h1>
+            <div class="breadcrumb">Client Profile > Edit Client Profile</div>
+        </div>
+        <div class="section-title">Client Details</div>
+        <div class="input-field">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" placeholder="Enter First Name">
+        </div>
+        <div class="input-field">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" placeholder="Enter Last Name">
+        </div>
+        <div class="section-title">Parent / Guardian Details</div>
+        <div class="input-field">
+            <label for="guardian-name">Guardian Name</label>
+            <input type="text" id="guardian-name" placeholder="Enter Guardian Name">
+        </div>
+        <div class="input-field">
+            <label for="guardian-phone">Guardian Phone</label>
+            <input type="text" id="guardian-phone" placeholder="Enter Guardian Phone">
+        </div>
+        <button class="button">Submit</button>
+    </div>
+</body>
+</html>
+```
+
+### Explanation:
+- The code uses basic HTML structure with a `<head>` section for metadata and styles and a `<body>` section for content.
+- The CSS is included in a `<style>` tag within the `<head>` for easy editing and styling.
+- The structure is organized into sections, including a header, breadcrumb navigation, input fields, and a submit button.
+- You can modify the styles or content to better fit your needs.
