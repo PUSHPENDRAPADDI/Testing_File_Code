@@ -1,174 +1,151 @@
-To generate a ReactJS component based on the provided metadata from Figma, we can create a simple login screen component. This will include text fields for entering the first name, last name, and emergency contact information, as well as buttons for submitting and handling user actions.
+Here's the HTML and CSS code to replicate the design of the "Login Screen" as described in the provided Figma metadata. The layout and styles are implemented according to the specifications, maintaining text, font sizes, colors, and component hierarchy as detailed in the JSON.
 
-To maintain a clean structure, we will separate the styling into a CSS file. Below is an example of how you might structure your React component and CSS file.
+### HTML (index.html)
 
-### 1. Create a React Component
-
-**LoginScreen.jsx**
-
-```jsx
-import React from 'react';
-import './LoginScreen.css';
-
-const LoginScreen = () => {
-    return (
-        <div className="login-screen">
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFFF;
+            width: 1447px;
+            height: 720px;
+            position: relative;
+        }
+        .container {
+            background-color: #FFFFFF;
+            position: relative;
+            width: 1447px;
+            height: 630px;
+            margin: 92px auto 0;
+            padding: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .header h1 {
+            font-size: 50px;
+            color: rgba(0.0308, 0.0308, 0.0308, 1);
+            margin: 0;
+        }
+        .breadcrumb {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1);
+        }
+        .breadcrumb span {
+            color: rgba(0.5187, 0.7574, 0.9808, 1);
+            font-size: 34px;
+        }
+        .section {
+            margin-top: 20px;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 1);
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-size: 19px;
+            color: rgba(0.4654, 0.4614, 0.4614, 1);
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(0.8509, 0.8509, 0.8509, 1);
+            border-radius: 4px;
+            font-size: 19px;
+        }
+        .form-input:focus {
+            border-color: rgba(0.0607, 0.0607, 0.8885, 1);
+            outline: none;
+        }
+        .button {
+            background-color: rgba(0.8509, 0.8509, 0.8509, 1);
+            border: none;
+            padding: 15px;
+            font-size: 31px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: rgba(0.0, 0.0, 0.0, 0.1);
+        }
+        .divider {
+            height: 1px;
+            background-color: rgba(0.0, 0.0, 0.0, 0.1);
+            margin: 20px 0;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .footer .footer-text {
+            font-size: 19px;
+            color: rgba(0.4654, 0.4614, 0.4614, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
             <h1>Edit Client Profile</h1>
-            <h2>Client Profile > Edit Client Profile</h2>
-            <div className="client-details">
-                <h3>Client Details</h3>
-                <div className="input-group">
-                    <label htmlFor="first-name">First Name</label>
-                    <input type="text" id="first-name" placeholder="Enter First Name" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="last-name">Last Name</label>
-                    <input type="text" id="last-name" placeholder="Enter Last Name" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="birth-date">Birth Date</label>
-                    <input type="date" id="birth-date" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="emergency-contact">Emergency Contact</label>
-                    <input type="text" id="emergency-contact" placeholder="Enter Emergency Contact" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="phone">Emergency Contact Phone</label>
-                    <input type="text" id="phone" placeholder="Enter Phone Number" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="address">Address Line 1</label>
-                    <input type="text" id="address" placeholder="Enter Address Line 1" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="address-2">Address Line 2</label>
-                    <input type="text" id="address-2" placeholder="Enter Address Line 2" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="zip-code">Home Zip Code</label>
-                    <input type="text" id="zip-code" placeholder="Enter Zip Code" />
-                </div>
-                <div className="input-group">
-                    <label htmlFor="state">Home State</label>
-                    <input type="text" id="state" placeholder="Enter State" />
-                </div>
-                <div className="checkbox-group">
-                    <label>
-                        <input type="checkbox" /> Is Guardian same as emergency contact?
-                    </label>
-                </div>
-                <div className="input-group">
-                    <label htmlFor="medical-condition">Does your child have any medical condition?</label>
-                    <input type="text" id="medical-condition" placeholder="Enter Condition" />
-                </div>
-                <button className="submit-button">Submit</button>
+            <div class="breadcrumb">
+                Client Profile <span>&gt;</span> Edit Client Profile
             </div>
         </div>
-    );
-};
-
-export default LoginScreen;
-```
-
-### 2. Create CSS for Styling
-
-**LoginScreen.css**
-
-```css
-.login-screen {
-    background-color: #FFFFFF;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: auto;
-}
-
-h1 {
-    font-family: 'Inter', sans-serif;
-    font-size: 50px;
-    color: #000;
-}
-
-h2 {
-    font-family: 'Inter', sans-serif;
-    font-size: 31px;
-    color: #000;
-}
-
-.client-details {
-    margin-top: 20px;
-}
-
-h3 {
-    font-family: 'Inter', sans-serif;
-    font-size: 32px;
-    color: #000;
-    margin-bottom: 10px;
-}
-
-.input-group {
-    margin-bottom: 15px;
-}
-
-.input-group label {
-    display: block;
-    font-family: 'Inter', sans-serif;
-    font-size: 19px;
-    margin-bottom: 5px;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 10px;
-    font-size: 19px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.checkbox-group {
-    margin: 20px 0;
-}
-
-.submit-button {
-    background-color: #4CAF50; /* Green */
-    color: white;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 19px;
-}
-
-.submit-button:hover {
-    background-color: #45a049;
-}
-```
-
-### 3. Use the Component in Your App
-
-Now you can import and use this `LoginScreen` component in your main application file.
-
-**App.jsx**
-
-```jsx
-import React from 'react';
-import LoginScreen from './LoginScreen';
-
-const App = () => {
-    return (
-        <div>
-            <LoginScreen />
+        <div class="section">
+            <div class="section-title">Client Details</div>
+            <div class="form-group">
+                <label for="first-name">First Name</label>
+                <input id="first-name" class="form-input" type="text" placeholder="First Name">
+            </div>
+            <div class="form-group">
+                <label for="last-name">Last Name</label>
+                <input id="last-name" class="form-input" type="text" placeholder="Last Name">
+            </div>
+            <div class="divider"></div>
+            <div class="section-title">Select Race/Ethnicity</div>
+            <div class="form-group">
+                <label for="race-ethnicity">Race/Ethnicity</label>
+                <input id="race-ethnicity" class="form-input" type="text" placeholder="Select Race/Ethnicity">
+            </div>
+            <div class="form-group">
+                <label for="birth-date">Birth Date</label>
+                <input id="birth-date" class="form-input" type="date">
+            </div>
+            <button class="button">Save Changes</button>
         </div>
-    );
-};
-
-export default App;
+        <div class="footer">
+            <div class="footer-text">Inquiries</div>
+            <div class="footer-text">Engagements</div>
+        </div>
+    </div>
+</body>
+</html>
 ```
 
-### Final Notes
+### Explanation of the Code
+- **HTML Structure**: The layout is organized into sections using `div` elements to replicate the Figma design's hierarchy. Text elements are styled according to font sizes and colors specified in the JSON metadata.
+- **Styling**: The CSS styles ensure that the elements match the design specs, including margins, paddings, colors, and font sizes.
+- **Responsive Design**: The layout is fixed to the specified width of 1447px but can be easily adjusted for responsiveness by modifying the CSS.
+- **Font**: The Inter font is loaded from Google Fonts, matching the design's typographic choices.
 
-- Ensure you have the `Inter` font included in your project, either via Google Fonts or by downloading it and including it in your CSS.
-- You can extend this component to handle form submission, validation, and other interactions as needed.
-- The component is styled to be responsive and looks clean. Adjust the styles as necessary for your specific design requirements.
+You can copy the code above into an `index.html` file and open it in a web browser to see the replicated design.
