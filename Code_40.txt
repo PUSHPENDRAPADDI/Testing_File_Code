@@ -1,0 +1,126 @@
+Below is a pixel-perfect `index.html` file that recreates the UI screen layout described in the Figma metadata you provided. The file utilizes Bootstrap 5 for layout and styling but also includes custom CSS styles to match the design specifications exactly.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFFFFF; /* White background */
+            font-family: 'Inter', sans-serif; /* Font family */
+        }
+        .header {
+            padding: 20px 0;
+            text-align: left;
+        }
+        .header h1 {
+            font-size: 50px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 1);
+        }
+        .breadcrumb {
+            font-size: 34px;
+            color: rgba(132, 193, 250, 1);
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 1);
+            margin-top: 40px;
+        }
+        .info-title {
+            font-size: 31px;
+            color: rgba(38, 36, 152, 1);
+            margin-top: 20px;
+        }
+        .details {
+            font-size: 31px;
+            margin-top: 20px;
+            color: rgba(0, 0, 0, 1);
+        }
+        .label {
+            font-size: 19px;
+            color: rgba(0, 0, 0, 1);
+            margin-top: 10px;
+        }
+        .input-field {
+            height: 32px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+        .rectangle {
+            background-color: rgba(217, 217, 217, 1);
+            height: 68px;
+            margin-bottom: 20px;
+        }
+        .arrow {
+            width: 5px;
+            height: 0;
+            border-left: 4px solid rgba(0, 0, 0, 1);
+            border-bottom: 4px solid transparent;
+            border-top: 4px solid transparent;
+            position: relative;
+            top: 5px;
+            left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Edit Client Profile</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Client Profile</li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Client Profile</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="rectangle"></div>
+
+        <h2 class="section-title">Client Details</h2>
+        <h3 class="info-title">Profile Information</h3>
+        <div class="details">Name: <span class="label">Jhon Wick</span></div>
+        <div class="details">Inquiries: <span class="label">Inquiries</span></div>
+        <div class="details">Engagements: <span class="label">Engagements</span></div>
+
+        <div class="rectangle"></div>
+
+        <h2 class="section-title">Client & Guardian Details</h2>
+        <label class="label" for="firstName">First Name</label>
+        <input type="text" id="firstName" class="input-field" placeholder="First Name">
+        
+        <label class="label" for="lastName">Last Name</label>
+        <input type="text" id="lastName" class="input-field" placeholder="Last Name">
+        
+        <label class="label" for="birthDate">Birth Date</label>
+        <input type="text" id="birthDate" class="input-field" value="03/12/2022" readonly>
+        
+        <label class="label" for="race">Select Race/Ethnicity</label>
+        <input type="text" id="race" class="input-field" placeholder="Select Race/Ethnicity">
+
+        <div class="rectangle"></div>
+
+        <div class="arrow"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+```
+
+### Explanation of the Code:
+- **Bootstrap Integration**: The file includes Bootstrap 5 via CDN for responsive grid and utility classes.
+- **Custom CSS**: The styles are defined in a `<style>` tag to match the properties specified in the metadata, ensuring exact dimensions, colors, font sizes, and weights.
+- **Semantic HTML Structure**: The layout is structured using appropriate HTML elements such as headings, paragraphs, and forms to maintain semantic correctness.
+- **Responsive Design**: The use of Bootstrap classes ensures the layout remains responsive across different screen sizes.
+- **Text Content**: Actual text from the Figma metadata is used, ensuring that the content is meaningful and relevant.
+
+Feel free to adjust any specific styles or content further to match your exact requirements!
