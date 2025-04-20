@@ -1,165 +1,137 @@
-Certainly! Below is a comprehensive Angular test specification (`component.spec.ts`) for the user story you provided regarding the creation of a client profile in a healthcare service application. This spec is designed to follow the structure and conventions found in the sample Angular code you provided.
+Here's a pixel-perfect `index.html` file that recreates the UI screen layout described in the provided Figma metadata. The layout utilizes Bootstrap 5 classes for styling and layout while also incorporating custom styles as necessary.
 
-```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InquiryComponent } from './inquiry.component';
-import { ApiService } from '@shared/services/api.service';
-import { AlertMessageService } from '@shared/services/alert-message/alert-message.service';
-import { UserDetailService } from '@core/services/user-detail.service';
-import { NotificationAlertService } from '@shared/services/event-bus.service';
-import { of, throwError } from 'rxjs';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ClientProfileModel } from '@shared/models/worker/service-inquiry/client-profile.model';
-import { MedicalNecessity } from '@shared/models/worker/medical-necessity/medical-necessity.model';
-
-describe('InquiryComponent', () => {
-  let component: InquiryComponent;
-  let fixture: ComponentFixture<InquiryComponent>;
-  let apiService: ApiService;
-  let alertMessageService: AlertMessageService;
-  let userDetailService: UserDetailService;
-  let notificationService: NotificationAlertService;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [InquiryComponent],
-      imports: [RouterTestingModule, BrowserAnimationsModule, FormsModule],
-      providers: [
-        ApiService,
-        AlertMessageService,
-        UserDetailService,
-        NotificationAlertService,
-        MatSnackBar,
-        ChangeDetectorRef,
-        MatDialog
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(InquiryComponent);
-    component = fixture.componentInstance;
-    apiService = TestBed.inject(ApiService);
-    alertMessageService = TestBed.inject(AlertMessageService);
-    userDetailService = TestBed.inject(UserDetailService);
-    notificationService = TestBed.inject(NotificationAlertService);
-  });
-
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize the component with defaults', () => {
-    expect(component.selectedtabIndex).toBe(0);
-    expect(component.isLoadedInq).toBeFalse();
-    expect(component.isLoadedClnt).toBeFalse();
-    expect(component.isLoadedMedicalNecessity).toBeFalse();
-  });
-
-  it('should load inquiries on initialization', () => {
-    spyOn(component, 'loadInqData').and.callThrough();
-    component.ngOnInit();
-    expect(component.loadInqData).toHaveBeenCalled();
-  });
-
-  it('should handle inquiry loading error', () => {
-    spyOn(apiService, 'getData').and.returnValue(throwError(() => new Error('Error loading inquiries')));
-    spyOn(alertMessageService, 'ErrorSnackBar');
-    component.loadInqData();
-    expect(alertMessageService.ErrorSnackBar).toHaveBeenCalledWith('Error loading inquiries');
-  });
-
-  it('should load client data successfully', () => {
-    const mockResponse = { clientProfiles: [{ clientFirstname: 'John', clientLastname: 'Doe' }] };
-    spyOn(apiService, 'getData').and.returnValue(of(mockResponse));
-    component.loadClientData();
-    expect(component.griddataClnt).toEqual(mockResponse.clientProfiles);
-    expect(component.isLoadedClnt).toBeTrue();
-  });
-
-  it('should handle error when loading client data', () => {
-    spyOn(apiService, 'getData').and.returnValue(throwError(() => new Error('Error loading clients')));
-    spyOn(alertMessageService, 'ErrorSnackBar');
-    component.loadClientData();
-    expect(alertMessageService.ErrorSnackBar).toHaveBeenCalledWith('Error loading clients');
-  });
-
-  it('should load medical necessity data successfully', () => {
-    const mockResponse = { medicalNecessity: [{ clientFirstname: 'Jane', clientLastname: 'Smith' }] };
-    spyOn(apiService, 'getData').and.returnValue(of(mockResponse));
-    component.loadMedicalNecesityData();
-    expect(component.griddataMedicalNecessity).toEqual(mockResponse.medicalNecessity);
-    expect(component.isLoadedMedicalNecessity).toBeTrue();
-  });
-
-  it('should handle error when loading medical necessity data', () => {
-    spyOn(apiService, 'getData').and.returnValue(throwError(() => new Error('Error loading medical necessity')));
-    spyOn(alertMessageService, 'ErrorSnackBar');
-    component.loadMedicalNecesityData();
-    expect(alertMessageService.ErrorSnackBar).toHaveBeenCalledWith('Error loading medical necessity');
-  });
-
-  it('should update inquiry model with correct parameters', () => {
-    const dueValue = 1;
-    const mockData = { type: 'INQUIRIES', due: dueValue };
-    component.updateAssignModel();
-    expect(component.modelInq.filterColumns[2].value).toBeDefined();
-  });
-
-  it('should create a client profile with all required fields filled', () => {
-    component.modelClnt = {
-      filterColumns: [
-        { name: 'clientFirstname', value: 'John' },
-        { name: 'clientLastname', value: 'Doe' },
-        { name: 'primaryPhone', value: '123-456-7890' },
-        { name: 'email', value: 'john.doe@example.com' }
-      ]
-    };
-    // Assuming there's a method to validate and save the profile
-    const isValid = component.validateClientProfile();
-    expect(isValid).toBeTrue();
-  });
-
-  it('should not create a client profile if required fields are missing', () => {
-    component.modelClnt = {
-      filterColumns: [
-        { name: 'clientFirstname', value: '' },
-        { name: 'clientLastname', value: 'Doe' },
-        { name: 'primaryPhone', value: '123-456-7890' },
-        { name: 'email', value: 'john.doe@example.com' }
-      ]
-    };
-    const isValid = component.validateClientProfile();
-    expect(isValid).toBeFalse();
-  });
-
-  it('should handle progress bar completion correctly', () => {
-    component.modelClnt.filterColumns = [
-      { name: 'clientFirstname', value: 'John' },
-      { name: 'clientLastname', value: 'Doe' }
-    ];
-    const totalMandatoryFields = 5; // Assume there are 5 mandatory fields
-    const completionPercentage = component.getProgressCompletion();
-    expect(completionPercentage).toEqual((2 / totalMandatoryFields) * 100); // Assuming 2 fields filled
-  });
-});
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            color: #000000;
+            margin: 0;
+            padding: 20px;
+        }
+        .header-text {
+            font-size: 50px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 20px;
+        }
+        .subheader-text {
+            font-size: 31px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 10px;
+        }
+        .client-details-text {
+            font-size: 31px;
+            font-weight: 700;
+            line-height: 32px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 20px;
+        }
+        .input-label {
+            font-size: 19px;
+            font-weight: 400;
+            line-height: 32px;
+        }
+        .input-field {
+            font-size: 31px;
+            line-height: 32px;
+        }
+        .rectangle {
+            background-color: #d9d9d9;
+            height: 82px;
+            margin-bottom: 20px;
+        }
+        .custom-date-input {
+            font-size: 31px;
+            line-height: 32px;
+        }
+        .date-label {
+            font-size: 19px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 10px;
+        }
+        .arrow {
+            width: 0;
+            height: 5px;
+            border-left: 4px solid #000000;
+            transform: rotate(90deg);
+            margin-top: 20px;
+        }
+        .section-divider {
+            height: 9px;
+            background-color: #3e3eec;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="header-text">Edit Client Profile</h1>
+        <h2 class="subheader-text">Client Profile > Edit Client Profile</h2>
+        
+        <div class="rectangle"></div>
+        
+        <h3 class="client-details-text">Client Details</h3>
+        
+        <div class="section-divider"></div>
+        
+        <h4 class="section-title">Profile Information</h4>
+        <label class="input-label" for="first-name">First Name</label>
+        <input type="text" id="first-name" class="form-control input-field" placeholder="First Name" aria-label="First Name">
+        
+        <label class="input-label" for="last-name">Last Name</label>
+        <input type="text" id="last-name" class="form-control input-field" placeholder="Last Name" aria-label="Last Name">
+        
+        <div class="row mb-3">
+            <div class="col">
+                <label class="input-label">Birth Date</label>
+                <input type="text" class="form-control custom-date-input" value="03/12/2022" aria-label="Birth Date">
+            </div>
+            <div class="col">
+                <label class="input-label">Select Race/Ethnicity</label>
+                <input type="text" class="form-control custom-date-input" placeholder="Select Race/Ethnicity" aria-label="Select Race/Ethnicity">
+            </div>
+        </div>
+        
+        <h4 class="section-title">Client & Guardian Details</h4>
+        <label class="input-label">Guardian's Name</label>
+        <input type="text" id="guardian-name" class="form-control input-field" placeholder="Guardian's Name" aria-label="Guardian's Name">
+        
+        <div class="rectangle"></div>
+        
+        <h4 class="section-title">Engagements</h4>
+        <p class="input-label">Inquiries</p>
+        <p class="input-label">Engagements</p>
+        
+        <div class="arrow"></div>
+        
+        <p class="input-label">Jhon Wick</p>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
 ```
 
-### Explanation:
+### Key Features of This HTML Code:
+1. **Bootstrap 5 Integration**: The file includes Bootstrap 5 for responsive design, ensuring the layout adapts across different screen sizes.
+2. **Custom Styles**: Additional CSS styles are defined in the `<style>` tag to match specific text sizes, colors, and spacing as per the Figma design.
+3. **Semantic Structure**: The HTML is structured using appropriate headings (`<h1>`, `<h2>`, etc.) and form elements, maintaining semantic correctness.
+4. **Responsive Design**: The use of Bootstrap's grid system allows for a responsive layout, and custom styles ensure that all elements maintain their intended appearance.
 
-1. **Setup**: The `beforeEach` function sets up the test bed, imports necessary modules and services, and initializes the component.
-
-2. **Basic Tests**: It includes tests to check if the component is created successfully, initializes with default values, and loads data correctly.
-
-3. **Error Handling**: It tests the error handling for API calls when loading inquiries, clients, and medical necessities.
-
-4. **Profile Creation**: It tests the logic for validating and creating client profiles with required fields.
-
-5. **Progress Tracking**: It checks if the progress bar's completion percentage is calculated correctly based on filled fields.
-
-### Notes:
-- Modify the test cases based on actual implementation details in your component (like the method names and properties).
-- Ensure to add or adjust any additional tests required based on your business logic or requirements outlined in the user stories.
+This code is ready to be opened in any modern web browser to view the responsive layout based on the provided Figma metadata.
