@@ -1,140 +1,121 @@
-Sure! Let's build a detailed code artifact for the `ClientProfileController` in C# based on your existing code structure and the context you've provided. Below, I'll include a user story, test cases, and the complete implementation of the `ClientProfileController`, along with additional methods for updating and deleting client profiles, as well as a method for listing all profiles.
+Here's a pixel-perfect HTML representation of the Figma metadata you provided, using Bootstrap 5 classes and embedded CSS for styles that aren't covered by Bootstrap. This layout will ensure that all design elements are recreated exactly as described in the metadata.
 
-### User Story
-As a user of the system, I want to be able to create, retrieve, update, and delete client profiles so that I can manage client information effectively.
-
-### Test Cases
-1. **Create Client Profile**
-   - **Input:** Valid `ClientProfile` object
-   - **Expected Output:** Status 200 OK with message "Client Profile Created Successfully"
-   
-2. **Create Client Profile with Invalid Data**
-   - **Input:** Null `ClientProfile` object
-   - **Expected Output:** Status 400 Bad Request with message "Invalid Client Profile Data"
-
-3. **Get Client Profile by ID**
-   - **Input:** Valid client profile ID
-   - **Expected Output:** Status 200 OK with the `ClientProfile` object
-
-4. **Get Client Profile by Non-Existent ID**
-   - **Input:** Invalid client profile ID
-   - **Expected Output:** Status 404 Not Found
-   
-5. **Update Client Profile**
-   - **Input:** Valid `ClientProfile` object with an existing ID
-   - **Expected Output:** Status 200 OK with message "Client Profile Updated Successfully"
-
-6. **Update Non-Existent Client Profile**
-   - **Input:** `ClientProfile` object with a non-existent ID
-   - **Expected Output:** Status 404 Not Found
-
-7. **Delete Client Profile**
-   - **Input:** Valid client profile ID
-   - **Expected Output:** Status 200 OK with message "Client Profile Deleted Successfully"
-
-8. **Delete Non-Existent Client Profile**
-   - **Input:** Invalid client profile ID
-   - **Expected Output:** Status 404 Not Found
-
-9. **Get All Client Profiles**
-   - **Expected Output:** Status 200 OK with a list of all `ClientProfile` objects
-
-### Implementation of `ClientProfileController`
-
-```csharp
-using DomainLayer.Data;
-using DomainLayer.Models;
-using Microsoft.AspNetCore.Mvc;
-using ServiceLayer.ICustomServices;
-using System.Collections.Generic;
-
-namespace OnionArchitectureInAspNetCore6WebAPI.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ClientProfileController : ControllerBase
-    {
-        private readonly ICustomService<ClientProfile> _customService;
-        private readonly ApplicationDbContext _applicationDbContext;
-
-        public ClientProfileController(ICustomService<ClientProfile> customService, ApplicationDbContext applicationDbContext)
-        {
-            _customService = customService;
-            _applicationDbContext = applicationDbContext;
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
         }
-
-        [HttpPost(nameof(CreateClientProfile))]
-        public IActionResult CreateClientProfile(ClientProfile clientProfile)
-        {
-            if (clientProfile == null)
-            {
-                return BadRequest("Invalid Client Profile Data");
-            }
-
-            _customService.Insert(clientProfile);
-            return Ok("Client Profile Created Successfully");
+        .header-text {
+            color: rgba(0, 0, 0, 1);
+            font-size: 50px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 16px;
         }
-
-        [HttpGet(nameof(GetClientProfileById))]
-        public IActionResult GetClientProfileById(int id)
-        {
-            var profile = _customService.Get(id);
-            if (profile == null)
-            {
-                return NotFound();
-            }
-            return Ok(profile);
+        .subheader-text {
+            color: rgba(0, 0, 0, 1);
+            font-size: 31px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 8px;
         }
-
-        [HttpPut(nameof(UpdateClientProfile))]
-        public IActionResult UpdateClientProfile(int id, ClientProfile clientProfile)
-        {
-            if (clientProfile == null || clientProfile.Id != id)
-            {
-                return BadRequest("Invalid Client Profile Data");
-            }
-
-            var existingProfile = _customService.Get(id);
-            if (existingProfile == null)
-            {
-                return NotFound();
-            }
-
-            _customService.Update(clientProfile);
-            return Ok("Client Profile Updated Successfully");
+        .section-title {
+            color: rgba(0, 0, 0, 1);
+            font-size: 31px;
+            font-weight: 700;
+            line-height: 32px;
+            margin-bottom: 16px;
         }
-
-        [HttpDelete(nameof(DeleteClientProfile))]
-        public IActionResult DeleteClientProfile(int id)
-        {
-            var existingProfile = _customService.Get(id);
-            if (existingProfile == null)
-            {
-                return NotFound();
-            }
-
-            _customService.Delete(id);
-            return Ok("Client Profile Deleted Successfully");
+        .profile-info {
+            color: rgba(0.240, 0.142, 0.596, 1);
+            font-size: 31px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 8px;
         }
-
-        [HttpGet(nameof(GetAllClientProfiles))]
-        public IActionResult GetAllClientProfiles()
-        {
-            var profiles = _customService.GetAll();
-            return Ok(profiles);
+        .info-label {
+            color: rgba(0.465, 0.461, 0.461, 1);
+            font-size: 19px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 8px;
         }
-    }
-}
+        .info-value {
+            color: rgba(0, 0, 0, 1);
+            font-size: 31px;
+            font-weight: 400;
+            line-height: 32px;
+            margin-bottom: 8px;
+        }
+        .divider {
+            height: 9px;
+            background-color: rgba(0.060, 0.060, 0.888, 1);
+            margin: 16px 0;
+        }
+        .rectangle {
+            background-color: rgba(0.850, 0.850, 0.850, 1);
+            height: 68px;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-12 mt-5">
+            <h1 class="header-text">Edit Client Profile</h1>
+            <h2 class="subheader-text">Client Profile   >  Edit Client Profile</h2>
+        </div>
+        
+        <div class="col-12">
+            <div class="section-title">Client Details</div>
+            <div class="profile-info">Profile Information</div>
+            <div class="info-label">First Name</div>
+            <div class="info-value">Jhon</div>
+            <div class="info-label">Last Name</div>
+            <div class="info-value">Wick</div>
+            <div class="info-label">Birth Date</div>
+            <div class="info-value">03/12/2022</div>
+            <div class="info-label">Race/Ethnicity</div>
+            <div class="info-value">Select Race/Ethnicity</div>
+            <div class="divider"></div>
+        </div>
+        
+        <div class="col-12">
+            <div class="rectangle"></div>
+        </div>
+
+        <div class="col-12">
+            <h2 class="section-title">Inquiries</h2>
+            <h2 class="section-title">Engagements</h2>
+        </div>
+
+        <div class="col-12">
+            <div class="rectangle"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 ```
 
-### Explanation of the Implementation
-- **Dependency Injection:** The `ClientProfileController` uses dependency injection to get instances of `ICustomService<ClientProfile>` and `ApplicationDbContext`.
-- **CRUD Operations:**
-  - **CreateClientProfile:** Inserts a new client profile into the database.
-  - **GetClientProfileById:** Retrieves a client profile by ID.
-  - **UpdateClientProfile:** Updates an existing client profile.
-  - **DeleteClientProfile:** Deletes a client profile by ID.
-  - **GetAllClientProfiles:** Retrieves all client profiles from the database.
-- **Error Handling:** The controller checks for null values and non-existent profiles, returning appropriate HTTP status codes and messages as specified in the test cases.
+### Explanation:
+1. **HTML Structure**: The document is structured with a `<div class="container">` to create a responsive layout using Bootstrap's grid system.
+2. **Headers and Text**: Custom classes are used for styling text elements to match font sizes, weights, and colors specified in the metadata.
+3. **Dividers and Rectangles**: The rectangles and dividers have custom styles to match the specified colors and dimensions.
+4. **Responsive Design**: The Bootstrap grid layout ensures that the elements will adjust properly on different screen sizes.
+5. **Embedded Styles**: All styles are embedded within a `<style>` tag to meet the requirement of not using external CSS files.
+6. **Semantic HTML**: The HTML is structured semantically, using appropriate elements like `<h1>`, `<h2>`, and `<div>` for layout and readability.
 
-You can modify the code or add further methods as per your requirements.
+This implementation should closely follow the design specified in the Figma metadata while ensuring that all requirements are met.
