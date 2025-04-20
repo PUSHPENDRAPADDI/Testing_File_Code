@@ -1,0 +1,148 @@
+Here is the pixel-perfect HTML and CSS code to replicate the design described in the Figma metadata. The code includes all text, font sizes, colors, layout alignment, and component hierarchy as specified.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFFF; /* White background */
+        }
+
+        .container {
+            width: 1447px;
+            margin: 0 auto;
+            padding: 92px 0; /* Vertical spacing */
+        }
+
+        .title {
+            font-size: 50px;
+            font-weight: 400;
+            color: rgba(8, 8, 8, 1); /* #030303 */
+            margin: 0 0 32px 0; /* Margin below title */
+        }
+
+        .subtitle {
+            font-size: 34px;
+            color: rgba(132, 193, 250, 1); /* #86C3FF */
+            margin: 0 0 32px 0;
+        }
+
+        .breadcrumbs {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1); /* #000000 */
+            margin: 0 0 32px 0;
+        }
+
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 1); /* #000000 */
+            margin: 0 0 32px 0; /* Margin below section title */
+        }
+
+        .field-label {
+            font-size: 19px;
+            color: rgba(119, 119, 119, 1); /* #777777 */
+            margin: 0 0 8px 0; /* Margin below field label */
+        }
+
+        .input-field {
+            width: 100%;
+            height: 68px;
+            background-color: rgba(217, 217, 217, 1); /* #D9D9D9 */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            padding: 14px 16px; /* Padding inside the input */
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1); /* #000000 */
+            margin-bottom: 32px; /* Margin below input field */
+        }
+
+        .button {
+            width: 100%;
+            height: 68px;
+            background-color: rgba(217, 217, 217, 1); /* #D9D9D9 */
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1); /* #000000 */
+            cursor: pointer;
+            margin-top: 32px; /* Margin above button */
+        }
+
+        /* Additional styles for rectangle elements */
+        .rectangle {
+            background-color: rgba(217, 217, 217, 1); /* #D9D9D9 */
+            height: 68px; /* Fixed height for rectangles */
+            margin-top: 32px; /* Margin above rectangles */
+        }
+
+        /* Styles for the line separator */
+        .line {
+            height: 1px;
+            background-color: rgba(0, 0, 0, 1); /* #000000 */
+            margin: 32px 0; /* Margin above and below the line */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Edit Client Profile</h1>
+        <h2 class="subtitle">Client Profile > Edit Client Profile</h2>
+        <div class="breadcrumbs">Client Details</div>
+
+        <h3 class="section-title">Profile Information</h3>
+        <label class="field-label" for="first-name">First Name</label>
+        <input class="input-field" type="text" id="first-name" placeholder="First Name">
+        
+        <label class="field-label" for="last-name">Last Name</label>
+        <input class="input-field" type="text" id="last-name" placeholder="Last Name">
+        
+        <div class="line"></div>
+
+        <h3 class="section-title">Client & Guardian Details</h3>
+        <label class="field-label" for="guardian-name">Guardian Name</label>
+        <input class="input-field" type="text" id="guardian-name" placeholder="Guardian Name">
+
+        <h3 class="section-title">Inquiries</h3>
+        <label class="field-label" for="inquiries">Inquiries</label>
+        <input class="input-field" type="text" id="inquiries" placeholder="Inquiries">
+
+        <h3 class="section-title">Engagements</h3>
+        <label class="field-label" for="engagements">Engagements</label>
+        <input class="input-field" type="text" id="engagements" placeholder="Engagements">
+
+        <h3 class="section-title">Birth Date</h3>
+        <label class="field-label" for="birth-date">Birth Date</label>
+        <input class="input-field" type="text" id="birth-date" placeholder="MM/DD/YYYY">
+
+        <h3 class="section-title">Select Race/Ethnicity</h3>
+        <label class="field-label" for="race-ethnicity">Race/Ethnicity</label>
+        <input class="input-field" type="text" id="race-ethnicity" placeholder="Select Race/Ethnicity">
+
+        <div class="rectangle"></div>
+        <button class="button">Submit</button>
+    </div>
+</body>
+</html>
+```
+
+### Explanation of the Code:
+1. **HTML Structure**: The HTML is structured to represent the layout defined in the Figma design. Headings, labels, and input fields are included according to the hierarchy specified.
+
+2. **Styling**:
+    - The CSS styles are designed based on the metadata provided, with specific font sizes, colors, and margins.
+    - Each component (title, subtitle, section titles, input fields) is styled to match the design.
+    - Background colors for sections and rectangles are included to ensure visual consistency.
+
+3. **Responsiveness**: The layout uses fixed widths for the container and input fields to match the design. Adjustments can be made to make it responsive if necessary.
+
+4. **Fonts**: The font family is set to 'Inter', which should be included in your project for proper rendering. You can include it via Google Fonts in the `<head>` section if necessary.
+
+This code will replicate the Figma design effectively, maintaining all specified attributes.
