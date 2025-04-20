@@ -1,0 +1,121 @@
+Here's a pixel-perfect `index.html` file based on the provided Figma metadata. The layout uses Bootstrap 5 classes for styling and layout, and custom styles are embedded directly in the `<style>` tag. Each element is styled to match the specifications in the metadata.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+        .header-title {
+            font-size: 50px;
+            font-weight: 400;
+            line-height: 32px;
+            color: rgba(0.030769200995564461, 0.030769200995564461, 0.030769200995564461, 1);
+            margin-top: 128px;
+        }
+        .breadcrumb {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1);
+            margin-top: 20px;
+        }
+        .breadcrumb .active {
+            color: rgba(0.51867604255676270, 0.75742417573928833, 0.98076921701431274, 1);
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 1);
+            margin-top: 24px;
+        }
+        .profile-info {
+            font-size: 31px;
+            color: rgba(0.24007616937160492, 0.14158660173416138, 0.59615385532379150, 1);
+            margin-top: 20px;
+        }
+        .details-label {
+            font-size: 19px;
+            color: rgba(0.46538469195365906, 0.46135723590850830, 0.46135723590850830, 1);
+            margin-top: 20px;
+        }
+        .details-value {
+            font-size: 31px;
+            color: rgba(0.0, 0.0, 0.0, 1);
+        }
+        .divider {
+            height: 9px;
+            background-color: rgba(0.060654383152723312, 0.060654383152723312, 0.88846164941787720, 1);
+            margin-top: 20px;
+        }
+        .background-rectangle {
+            background-color: rgba(0.85098040103912354, 0.85098040103912354, 0.85098040103912354, 1);
+            height: 68px;
+            margin-top: 20px;
+        }
+        .responsive-text {
+            font-size: 31px;
+            color: rgba(0.0, 0.0, 0.0, 1);
+        }
+        .date {
+            font-size: 19px;
+            color: rgba(0.46538469195365906, 0.46135723590850830, 0.46135723590850830, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="header-title">Edit Client Profile</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Client Profile</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Client Profile</li>
+            </ol>
+        </nav>
+        
+        <div class="section-title">Client Details</div>
+        <div class="profile-info">Profile Information</div>
+
+        <div class="details-label">First Name</div>
+        <div class="details-value">Jhon</div>
+
+        <div class="details-label">Last Name</div>
+        <div class="details-value">Wick</div>
+
+        <div class="divider"></div>
+        <div class="background-rectangle"></div>
+
+        <div class="details-label">Race/Ethnicity</div>
+        <div class="responsive-text">Select Race/Ethnicity</div>
+
+        <div class="details-label">Birth Date</div>
+        <div class="date">03/12/2022</div>
+
+        <div class="background-rectangle"></div>
+        <div class="background-rectangle"></div>
+        
+        <div class="section-title">Inquiries</div>
+        <div class="details-value">Engagements</div>
+
+        <div class="background-rectangle"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+```
+
+### Explanation:
+1. **Bootstrap Integration**: The HTML includes Bootstrap 5 for responsive design and layout.
+2. **Custom Styles**: Specific styles are defined within the `<style>` tag to match the design closely.
+3. **Semantic HTML**: Elements are structured semantically, using headings, navigational elements, and containers.
+4. **Content**: All text content is pulled directly from the provided Figma metadata, ensuring no placeholder content is used.
+5. **Responsive Design**: The layout is designed to be responsive, maintaining integrity across different screen sizes.
+
+You can copy and paste this code into an `index.html` file and open it in a web browser to view the login screen layout as specified.
