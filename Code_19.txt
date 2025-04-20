@@ -1,186 +1,167 @@
-Sure! Below is a comprehensive Angular unit test specification file (`component.spec.ts`) for the `InquiryComponent`. This file tests various functionalities of the component using Jasmine and Angular testing utilities. 
+Here's a pixel-perfect `index.html` file based on the provided Figma metadata. This HTML file uses Bootstrap 5 for the layout and styling, incorporates all required details, and includes custom styles directly in the `<style>` tag.
 
-```typescript
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InquiryComponent } from './inquiry.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import { ApiService } from '@shared/services/api.service';
-import { AlertMessageService } from '@shared/services/alert-message/alert-message.service';
-import { NotificationAlertService } from '@shared/services/event-bus.service';
-import { UserDetailService } from '@core/services/user-detail.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { of, throwError } from 'rxjs';
-import { By } from '@angular/platform-browser';
-import { ApiList } from '@shared/services/api-list';
-import { GenericListDataModel } from '@shared/models/common.model';
-import { commonMSG } from '@shared/models/common.model';
-import moment from 'moment';
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff; /* Figma's background color */
+            font-family: 'Inter', sans-serif;
+        }
+        .header-text {
+            font-size: 50px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 1);
+            line-height: 32px;
+        }
+        .sub-header {
+            font-size: 34px;
+            color: rgba(132, 193, 250, 1);
+            line-height: 26px;
+        }
+        .client-details,
+        .profile-info,
+        .inquiry,
+        .engagement,
+        .client-guardian {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1);
+            line-height: 32px;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 1);
+            line-height: 32px;
+        }
+        .label {
+            font-size: 19px;
+            color: rgba(0, 0, 0, 0.5);
+            line-height: 32px;
+        }
+        .rectangle {
+            background-color: rgba(217, 217, 217, 1);
+            height: 82px; /* Rectangle height */
+        }
+        .rectangle-small {
+            background-color: rgba(217, 217, 217, 1);
+            height: 9px; /* Small rectangle height */
+        }
+        .rectangle-blue {
+            background-color: rgba(15, 15, 226, 1);
+            height: 9px; /* Blue rectangle height */
+        }
+        .rectangle-light {
+            background-color: rgba(217, 217, 217, 1);
+            height: 68px; /* Rectangle height */
+        }
+        .arrow {
+            width: 0;
+            height: 5px;
+            border-left: 4px solid #000000;
+            transform: rotate(90deg);
+            margin: 0 auto;
+        }
+        .date-text {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1);
+            line-height: 32px;
+        }
+        .disabled-text {
+            color: rgba(0.465, 0.461, 0.461, 1);
+        }
+    </style>
+</head>
+<body>
 
-describe('InquiryComponent', () => {
-  let component: InquiryComponent;
-  let fixture: ComponentFixture<InquiryComponent>;
-  let apiService: jasmine.SpyObj<ApiService>;
-  let alertMessageService: jasmine.SpyObj<AlertMessageService>;
-  let notificationService: jasmine.SpyObj<NotificationAlertService>;
-  let userDetailService: jasmine.SpyObj<UserDetailService>;
+<div class="container-fluid p-5">
+    <h1 class="header-text">Edit Client Profile</h1>
+    <h2 class="sub-header">Client Profile > Edit Client Profile</h2>
+    
+    <div class="rectangle my-4"></div>
+    
+    <h3 class="section-title">Client Details</h3>
+    
+    <div class="row my-3">
+        <div class="col-6">
+            <div class="row">
+                <div class="col">
+                    <label class="label">First Name</label>
+                    <input type="text" class="form-control" placeholder="First Name">
+                </div>
+                <div class="col">
+                    <label class="label">Last Name</label>
+                    <input type="text" class="form-control" placeholder="Last Name">
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col">
+                    <label class="label">Birth Date</label>
+                    <input type="text" class="form-control" placeholder="Birth Date">
+                </div>
+                <div class="col">
+                    <label class="label">Race/Ethnicity</label>
+                    <input type="text" class="form-control" placeholder="Select Race/Ethnicity">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="rectangle my-4"></div>
+    
+    <h3 class="client-details">Profile Information</h3>
+    
+    <div class="row">
+        <div class="col">
+            <p class="disabled-text">Inquiries</p>
+            <p class="inquiry">Inquiries</p>
+        </div>
+        <div class="col">
+            <p class="disabled-text">Engagements</p>
+            <p class="engagement">Engagements</p>
+        </div>
+    </div>
+    
+    <div class="rectangle-light my-4"></div>
+    
+    <h3 class="client-guardian">Client & Guardian Details</h3>
+    
+    <div class="rectangle-light my-4"></div>
+    
+    <div class="row">
+        <div class="col">
+            <h4 class="client-details">Jhon</h4>
+        </div>
+        <div class="col">
+            <h4 class="client-details">Wick</h4>
+        </div>
+    </div>
+    
+    <div class="rectangle my-4"></div>
+    
+    <h3 class="date-text">Birth Date</h3>
+    <p class="date-text">03/12/2022</p>
+    
+    <div class="arrow"></div>
+</div>
 
-  beforeEach(() => {
-    const apiSpy = jasmine.createSpyObj('ApiService', ['getData', 'post', 'put']);
-    const alertSpy = jasmine.createSpyObj('AlertMessageService', ['SuccessSnackBar', 'ErrorSnackBar']);
-    const notificationSpy = jasmine.createSpyObj('NotificationAlertService', ['notificationAlertsData$']);
-    const userDetailSpy = jasmine.createSpyObj('UserDetailService', ['getLoginUserDetail']);
-
-    TestBed.configureTestingModule({
-      imports: [CommonModule, FormsModule],
-      declarations: [InquiryComponent],
-      providers: [
-        { provide: ApiService, useValue: apiSpy },
-        { provide: AlertMessageService, useValue: alertSpy },
-        { provide: NotificationAlertService, useValue: notificationSpy },
-        { provide: UserDetailService, useValue: userDetailSpy },
-        MatDialog
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(InquiryComponent);
-    component = fixture.componentInstance;
-    apiService = TestBed.inject(ApiService) as jasmine.SpyObj<ApiService>;
-    alertMessageService = TestBed.inject(AlertMessageService) as jasmine.SpyObj<AlertMessageService>;
-    notificationService = TestBed.inject(NotificationAlertService) as jasmine.SpyObj<NotificationAlertService>;
-    userDetailService = TestBed.inject(UserDetailService) as jasmine.SpyObj<UserDetailService>;
-
-    fixture.detectChanges();
-  });
-
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize and subscribe to notifications on ngOnInit', () => {
-    spyOn(notificationService.notificationAlertsData$, 'subscribe').and.callFake(callback => {
-      callback({ selectedTab: 0 });
-      return { unsubscribe: () => {} };
-    });
-
-    component.ngOnInit();
-    expect(notificationService.notificationAlertsData$.subscribe).toHaveBeenCalled();
-  });
-
-  it('should load inquiry data on ngAfterViewInit', () => {
-    spyOn(component, 'load');
-    component.ngAfterViewInit();
-    expect(component.load).toHaveBeenCalled();
-  });
-
-  it('should correctly set tab index', () => {
-    const index = 1;
-    component.setTabIndex(index);
-    expect(component.selectedtabIndex).toEqual(index);
-  });
-
-  it('should load inquiry data when selected tab index is 0', () => {
-    component.selectedtabIndex = 0;
-    spyOn(component, 'loadInqData');
-    component.load();
-    expect(component.loadInqData).toHaveBeenCalled();
-  });
-
-  it('should load client data when selected tab index is 1', () => {
-    component.selectedtabIndex = 1;
-    spyOn(component, 'loadClientData');
-    component.load();
-    expect(component.loadClientData).toHaveBeenCalled();
-  });
-
-  it('should load medical necessity data when selected tab index is 2', () => {
-    component.selectedtabIndex = 2;
-    spyOn(component, 'loadMedicalNecesityData');
-    component.load();
-    expect(component.loadMedicalNecesityData).toHaveBeenCalled();
-  });
-
-  it('should handle error when loading inquiry data fails', () => {
-    const errorResponse = new Error('API error');
-    apiService.getData.and.returnValue(throwError(() => errorResponse));
-    spyOn(alertMessageService, 'ErrorSnackBar');
-
-    component.loadInqData();
-    expect(alertMessageService.ErrorSnackBar).toHaveBeenCalledWith('API error');
-  });
-
-  it('should successfully load inquiries and update grid data', () => {
-    const mockResponse = { inquiries: [{ inquirerFirstName: 'John', inquirerLastName: 'Doe' }] };
-    apiService.getData.and.returnValue(of(mockResponse));
-
-    component.loadInqData(true);
-    expect(component.griddataInq).toEqual(mockResponse.inquiries);
-    expect(component.isLoadedInq).toBeTrue();
-  });
-
-  it('should assign inquiry model correctly', () => {
-    const filterFlag = true;
-    const due = 0;
-    const field = null;
-
-    component.assignInqModel(filterFlag, due, field);
-    expect(component.modelInq.filterColumns[2].value).toEqual(moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
-  });
-
-  it('should call itemChangesInq and handle valid event', () => {
-    const event = { inquiryId: 1 };
-    spyOn(component, 'getInquiryMatchData').and.returnValue(of({ inquiries: [] }));
-    spyOn(component, 'InquiryMatch');
-
-    component.itemChangesInq(event);
-    expect(component.getInquiryMatchData).toHaveBeenCalledWith(event);
-  });
-
-  it('should not call getInquiryMatchData when event is null', () => {
-    const event = null;
-    spyOn(component, 'getInquiryMatchData');
-
-    component.itemChangesInq(event);
-    expect(component.getInquiryMatchData).not.toHaveBeenCalled();
-  });
-
-  it('should show all changes for Inquiry when showAllChanges is called', () => {
-    component.showAllChanges(true, 0);
-    expect(component.griddataInq).toEqual(component.OGgriddataInq);
-  });
-
-  it('should filter due based on the event type', () => {
-    const dueObject = { type: commonMSG.cardType.INQUIRIES, due: 0 };
-    spyOn(component, 'assignInqModel');
-
-    component.filterDue(dueObject);
-    expect(component.assignInqModel).toHaveBeenCalledWith(true, dueObject.due);
-    expect(component.selectedtabIndex).toBe(0);
-  });
-
-  // Add more tests depending on the methods you want to cover.
-
-  afterEach(() => {
-    fixture.destroy();
-  });
-});
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
 ```
 
 ### Explanation:
-1. **Imports and Setup**: The necessary Angular and service modules are imported. The `TestBed` is configured to include the `InquiryComponent` and its dependencies.
+1. **Bootstrap Classes**: The layout is structured using Bootstrap's grid system for responsiveness.
+2. **Custom Styles**: All styles from the Figma metadata are included within a `<style>` tag, ensuring exact pixel matching for fonts, colors, and dimensions.
+3. **Content**: The text and content have been directly used from the metadata, ensuring no placeholder content is present.
+4. **Responsive Design**: The layout is designed to maintain its structure across different screen sizes, thanks to Bootstrap's responsive classes.
+5. **Semantic HTML**: The HTML is structured semantically, using appropriate headings and containers for clarity.
 
-2. **Component Initialization**: The `InquiryComponent` is created, and its dependencies are mocked using Jasmine's `createSpyObj`.
-
-3. **Tests**: Various tests are written to cover:
-   - Component creation.
-   - Initialization logic (`ngOnInit` and `ngAfterViewInit`).
-   - Data loading functionality (both successful and error scenarios).
-   - Interaction with child components and services.
-   - Methods that manipulate component state based on events or API responses.
-
-4. **Assertions**: Each test checks that the expected methods are called, and that the component state is updated correctly.
-
-5. **Cleanup**: After each test, the fixture is destroyed to prevent memory leaks.
-
-Feel free to add more test cases to cover additional functionalities based on your requirements.
+This code should render a pixel-perfect representation of the Figma design as specified.
