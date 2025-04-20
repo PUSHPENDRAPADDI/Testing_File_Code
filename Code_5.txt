@@ -1,172 +1,155 @@
-It seems you're asking for an artifact related to a `ClientProfile` class in C#. Based on the structure you've provided, I can help you create a more detailed implementation along with some potential user stories and test cases. 
+Creating a pixel-perfect HTML file based on the provided Figma metadata is a detailed task. Below is a complete `index.html` file that uses Bootstrap 5 for layout and styling, along with custom CSS to match the Figma design exactly. This HTML file includes all necessary elements, styles, and content as described in the metadata.
 
-Let's assume the user story is about creating, retrieving, updating, and deleting client profiles. Below is a detailed implementation that includes validation attributes and a basic repository pattern.
-
-### Updated ClientProfile Class
-
-```csharp
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace DomainLayer.Models
-{
-    public class ClientProfile : BaseEntity
-    {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string PatientFirstName { get; set; }
-
-        [Required]
-        [StringLength(50)]
-        public string PatientLastName { get; set; }
-
-        [Required]
-        [RegularExpression("^(Male|Female|Other)$", ErrorMessage = "Gender must be Male, Female, or Other")]
-        public string Gender { get; set; }
-
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime BirthDate { get; set; }
-
-        [StringLength(50)]
-        public string AssignedTo { get; set; }
-
-        [Phone]
-        public string PrimaryPhone { get; set; }
-
-        [Phone]
-        public string SecondaryPhone { get; set; }
-
-        [EmailAddress]
-        public string Email { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public string AddressLine1 { get; set; }
-
-        [StringLength(50)]
-        public string City { get; set; }
-
-        [StringLength(2)]
-        public string State { get; set; }
-
-        [RegularExpression(@"^\d{5}$", ErrorMessage = "Zip Code must be 5 digits")]
-        public string ZipCode { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime CreatedOn { get; set; } = DateTime.Now;
-
-        [Required]
-        [StringLength(20)]
-        public string Status { get; set; } // e.g. In-Process, Complete
-    }
-}
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1E1E1E;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+        }
+        .container {
+            max-width: 1447px;
+            margin: 0 auto;
+            padding: 92px 0;
+        }
+        .frame {
+            background-color: #FFF;
+            padding: 0 50px;
+            position: relative;
+        }
+        .frame h1 {
+            font-size: 50px;
+            font-weight: 400;
+            color: rgba(8, 8, 8, 1);
+            margin-bottom: 32px;
+        }
+        .breadcrumb {
+            font-size: 31px;
+            margin-bottom: 32px;
+        }
+        .breadcrumb-item a {
+            color: rgba(132, 193, 250, 1);
+            font-size: 34px;
+        }
+        .breadcrumb-item.active {
+            color: rgba(127, 193, 255, 1);
+        }
+        .nav-tabs {
+            border-bottom: 0;
+            margin-bottom: 82px;
+        }
+        .nav-tabs .nav-link {
+            font-size: 31px;
+            color: rgba(119, 118, 118, 1);
+            border: none;
+            background-color: transparent;
+        }
+        .nav-tabs .nav-link.active {
+            color: rgba(61, 36, 152, 1);
+            border-bottom: 9px solid rgba(15, 15, 227, 1);
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            margin-bottom: 32px;
+        }
+        .form-group {
+            margin-bottom: 68px;
+        }
+        .form-label {
+            font-size: 19px;
+            color: rgba(119, 118, 118, 1);
+            margin-bottom: 8px;
+        }
+        .form-control {
+            background-color: rgba(217, 217, 217, 1);
+            border: none;
+            height: 68px;
+            font-size: 31px;
+            color: #000;
+        }
+        .form-control::placeholder {
+            color: rgba(119, 118, 118, 1);
+        }
+        .arrow {
+            position: absolute;
+            top: 654px;
+            left: 573px;
+            width: 29px;
+            height: 17px;
+            transform: rotate(90deg);
+            border: 4px solid #000;
+            border-width: 0 4px 4px 0;
+            display: inline-block;
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="frame">
+            <h1>Edit Client Profile</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Client Profile</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Client Profile</li>
+                </ol>
+            </nav>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Profile Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Inquiries</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Engagements</a>
+                </li>
+            </ul>
+            <div class="section-title">Client Details</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName" value="Jhon">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="lastName">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" value="Wick">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="race">Race/Ethnicity</label>
+                        <input type="text" class="form-control" id="race" placeholder="Select Race/Ethnicity">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label" for="birthDate">Birth Date</label>
+                        <input type="text" class="form-control" id="birthDate" value="03/12/2022">
+                    </div>
+                </div>
+            </div>
+            <i class="arrow"></i>
+        </div>
+    </div>
+</body>
+</html>
 ```
 
-### Repository Interface
-
-```csharp
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace DomainLayer.Repositories
-{
-    public interface IClientProfileRepository
-    {
-        Task<ClientProfile> GetClientProfileByIdAsync(int id);
-        Task<IEnumerable<ClientProfile>> GetAllClientProfilesAsync();
-        Task AddClientProfileAsync(ClientProfile clientProfile);
-        Task UpdateClientProfileAsync(ClientProfile clientProfile);
-        Task DeleteClientProfileAsync(int id);
-    }
-}
-```
-
-### Repository Implementation
-
-```csharp
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-
-namespace DomainLayer.Repositories
-{
-    public class ClientProfileRepository : IClientProfileRepository
-    {
-        private readonly DbContext _context;
-
-        public ClientProfileRepository(DbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<ClientProfile> GetClientProfileByIdAsync(int id)
-        {
-            return await _context.Set<ClientProfile>().FindAsync(id);
-        }
-
-        public async Task<IEnumerable<ClientProfile>> GetAllClientProfilesAsync()
-        {
-            return await _context.Set<ClientProfile>().ToListAsync();
-        }
-
-        public async Task AddClientProfileAsync(ClientProfile clientProfile)
-        {
-            await _context.Set<ClientProfile>().AddAsync(clientProfile);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateClientProfileAsync(ClientProfile clientProfile)
-        {
-            _context.Set<ClientProfile>().Update(clientProfile);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteClientProfileAsync(int id)
-        {
-            var clientProfile = await GetClientProfileByIdAsync(id);
-            if (clientProfile != null)
-            {
-                _context.Set<ClientProfile>().Remove(clientProfile);
-                await _context.SaveChangesAsync();
-            }
-        }
-    }
-}
-```
-
-### User Stories
-
-1. **As a user, I want to create a new client profile so that I can store patient information.**
-2. **As a user, I want to retrieve a client profile to view patient information.**
-3. **As a user, I want to update an existing client profile to keep patient information current.**
-4. **As a user, I want to delete a client profile if a patient is no longer in the system.**
-
-### Test Cases
-
-Here are some test cases that could be implemented to verify the functionality.
-
-1. **Create Client Profile**
-   - Input: Valid client profile data.
-   - Expected Output: Client profile is created successfully and stored in the database.
-
-2. **Retrieve Client Profile by ID**
-   - Input: Valid client profile ID.
-   - Expected Output: Returns the corresponding client profile.
-
-3. **Update Client Profile**
-   - Input: Valid client profile ID and updated data.
-   - Expected Output: Client profile is updated successfully.
-
-4. **Delete Client Profile**
-   - Input: Valid client profile ID.
-   - Expected Output: Client profile is removed from the database.
-
-5. **Validation of Required Fields**
-   - Input: Client profile with missing required fields.
-   - Expected Output: Validation errors are returned.
-
-These components will help you build a robust structure for handling client profiles. You can further expand upon this by implementing service layers, controllers, and unit tests according to your project's architecture.
+### Key Points:
+- **Bootstrap 5** is used for the grid layout and basic styling.
+- **Custom CSS** is added to match the exact styles from the Figma metadata, including colors, font sizes, and positioning.
+- The **HTML structure** uses semantic elements and Bootstrap classes to ensure responsiveness and maintainability.
+- **Inline styles** are avoided, and all styles are included in a `<style>` block within the `<head>` section.
+- The **arrow** is created using CSS to match the vector element described in the metadata.
