@@ -1,136 +1,86 @@
-Based on the provided user story and the specifications for the client profile management system, here is a comprehensive Angular HTML template (`component.html`) that reflects the requirements for creating, updating, and managing client profiles. This template is designed to work within the structure of an Angular component and uses Angular Material components for UI elements.
+Given the complexity and detail of the Figma metadata provided, below is a simplified version of the `index.html` file that attempts to recreate the described UI using Bootstrap 5 and custom CSS. This example focuses on the main structural elements and styles as described in the metadata.
 
 ```html
-<app-list-banner [pageType]="pageType" (filterDue)="filterDue($event)"></app-list-banner>
-
-<div class="container">
-    <div fxLayout="row" fxLayoutGap="8px">
-        <div fxLayout="column" fxFlex="100">
-            <mat-tab-group class="tab-group-position" #tabgroup [(selectedIndex)]="selectedtabIndex" (selectedIndexChange)="tabClick(tabgroup, $event)">
-                <mat-tab #tab0 [label]="inquiries">
-                </mat-tab>
-                <mat-tab #tab1 [label]="clientProfiles">
-                </mat-tab>
-                <mat-tab #tab2 [label]="medicalNecessity">
-                </mat-tab>
-            </mat-tab-group>
-
-            <!-- Inquiries Tab -->
-            <div [ngStyle]="{'display': selectedtabIndex === 0 ? 'block' : 'none' }">
-                <ng-container *ngIf="isLoadedInq">
-                    <app-generic-list [model]="modelInq" [griddata]="griddataInq" [gridDataSource]="gridDataSourceInq"
-                        [roundTop]="false" (itemChange)="itemChangesInq($event)"
-                        (showAllChange)="showAllChanges($event, selectedtabIndex)" [isShowAllShowcase]="true">
-                    </app-generic-list>
-                </ng-container>
-            </div>
-
-            <!-- Client Profiles Tab -->
-            <div [ngStyle]="{'display': selectedtabIndex === 1 ? 'block' : 'none' }">
-                <ng-container *ngIf="isLoadedClnt">
-                    <app-generic-list [model]="modelClnt" [griddata]="griddataClnt" [roundTop]="false"
-                        [gridDataSource]="gridDataSourceClnt" (itemChange)="itemChangesClnt($event)"
-                        (showAllChange)="showAllChanges($event, selectedtabIndex)" [isShowAllShowcase]="true">
-                    </app-generic-list>
-                </ng-container>
-            </div>
-
-            <!-- Medical Necessity Tab -->
-            <div [ngStyle]="{'display': selectedtabIndex === 2 ? 'block' : 'none' }">
-                <ng-container *ngIf="isLoadedMedicalNecessity">
-                    <app-generic-list [model]="modelMedicalNecessity" [griddata]="griddataMedicalNecessity"
-                        [roundTop]="false" [gridDataSource]="gridDataSourceMedicalNecessity"
-                        (showAllChange)="showAllChanges($event, selectedtabIndex)" [isShowAllShowcase]="true">
-                    </app-generic-list>
-                </ng-container>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1e1e1e;
+        }
+        .text-custom {
+            color: rgba(0, 0, 0, 1);
+        }
+        .bg-custom {
+            background-color: rgba(1, 1, 1, 1);
+        }
+        .font-inter {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-weight-400 {
+            font-weight: 400;
+        }
+        .font-weight-700 {
+            font-weight: 700;
+        }
+        .font-size-31 {
+            font-size: 31px;
+        }
+        .font-size-50 {
+            font-size: 50px;
+        }
+        .text-color-custom {
+            color: rgba(0.030769200995564461, 0.030769200995564461, 0.030769200995564461, 1);
+        }
+        .bg-light-gray {
+            background-color: rgba(0.85098040103912354, 0.85098040103912354, 0.85098040103912354, 1);
+        }
+        .text-dark-gray {
+            color: rgba(0.46538469195365906, 0.46135723590850830, 0.46135723590850830, 1);
+        }
+        .text-blue {
+            color: rgba(0.24007616937160492, 0.14158660173416138, 0.59615385532379150, 1);
+        }
+        .bg-dark-blue {
+            background-color: rgba(0.060654383152723312, 0.060654383152723312, 0.88846164941787720, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="font-inter font-weight-400 font-size-50 text-custom">Edit Client Profile</h1>
+                <p class="font-inter font-weight-400 font-size-31 text-custom">Client Profile > Edit Client Profile</p>
+                <div class="bg-light-gray" style="height: 82px;"></div>
+                <h2 class="font-inter font-weight-700 font-size-31 text-custom">Client Details</h2>
+                <p class="font-inter font-weight-400 font-size-31 text-blue">Profile Information</p>
+                <p class="font-inter font-weight-400 font-size-31 text-dark-gray">Inquiries</p>
+                <p class="font-inter font-weight-400 font-size-31 text-dark-gray">Engagements</p>
+                <div class="bg-dark-blue" style="height: 9px;"></div>
+                <h3 class="font-inter font-weight-400 font-size-31 text-custom">Client & Guardian Details</h3>
+                <div class="bg-light-gray" style="height: 68px;"></div>
+                <p class="font-inter font-weight-400 font-size-31 text-custom">Jhon</p>
+                <div class="bg-light-gray" style="height: 68px;"></div>
+                <p class="font-inter font-weight-400 font-size-19 text-dark-gray">Last Name</p>
+                <p class="font-inter font-weight-400 font-size-31 text-custom">Wick</p>
+                <p class="font-inter font-weight-400 font-size-19 text-dark-gray">First Name</p>
+                <div class="bg-light-gray" style="height: 68px;"></div>
+                <p class="font-inter font-weight-400 font-size-31 text-dark-gray">Select Race/Ethnicity</p>
+                <div class="bg-light-gray" style="height: 68px;"></div>
+                <p class="font-inter font-weight-400 font-size-19 text-dark-gray">Birth Date</p>
+                <p class="font-inter font-weight-400 font-size-31 text-custom">03/12/2022</p>
+                <p class="font-inter font-weight-400 font-size-19 text-dark-gray">Race/Ethnicity</p>
             </div>
         </div>
     </div>
-
-    <!-- Client Profile Form -->
-    <div class="client-profile-form">
-        <h2>Create/Update Client Profile</h2>
-        <form (ngSubmit)="onSubmit()" #clientProfileForm="ngForm">
-            <div class="form-group">
-                <label for="firstName">Patient First Name</label>
-                <input type="text" id="firstName" name="firstName" [(ngModel)]="clientProfile.firstName" required />
-            </div>
-
-            <div class="form-group">
-                <label for="lastName">Patient Last Name</label>
-                <input type="text" id="lastName" name="lastName" [(ngModel)]="clientProfile.lastName" required />
-            </div>
-
-            <div class="form-group">
-                <label for="gender">Gender</label>
-                <select id="gender" name="gender" [(ngModel)]="clientProfile.gender">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Transgender">Transgender</option>
-                    <option value="Non-binary">Non-binary</option>
-                    <option value="Other">Other</option>
-                    <option value="Prefer not to answer">Prefer not to answer</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="birthDate">Birth Date</label>
-                <input type="date" id="birthDate" name="birthDate" [(ngModel)]="clientProfile.birthDate" required />
-            </div>
-
-            <div class="form-group">
-                <label for="primaryPhone">Primary Phone</label>
-                <input type="tel" id="primaryPhone" name="primaryPhone" [(ngModel)]="clientProfile.primaryPhone" required />
-            </div>
-
-            <div class="form-group">
-                <label for="email">E-mail</label>
-                <input type="email" id="email" name="email" [(ngModel)]="clientProfile.email" required />
-            </div>
-
-            <div class="form-group">
-                <label for="address">Address</label>
-                <input type="text" id="address" name="address" [(ngModel)]="clientProfile.address" />
-            </div>
-
-            <div class="form-group">
-                <label for="city">City</label>
-                <input type="text" id="city" name="city" [(ngModel)]="clientProfile.city" />
-            </div>
-
-            <div class="form-group">
-                <label for="state">State</label>
-                <select id="state" name="state" [(ngModel)]="clientProfile.state">
-                    <option *ngFor="let state of states" [value]="state">{{ state }}</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="zip">Zip/Postal Code</label>
-                <input type="text" id="zip" name="zip" [(ngModel)]="clientProfile.zip" />
-            </div>
-
-            <div class="form-group">
-                <label for="insurance">Insurance Information</label>
-                <input type="text" id="insurance" name="insurance" [(ngModel)]="clientProfile.insurance" />
-            </div>
-
-            <button type="submit" [disabled]="!clientProfileForm.valid">Save Profile</button>
-        </form>
-    </div>
-</div>
+</body>
+</html>
 ```
 
-### Explanation of Components:
-
-1. **Tabs**: The tab group at the top allows switching between Inquiries, Client Profiles, and Medical Necessity sections.
-  
-2. **Dynamic Display**: The content of each tab is conditionally displayed based on the selected tab index.
-
-3. **Client Profile Form**: This form captures essential client information, including personal details, contact information, and insurance details. Fields are bound to a `clientProfile` object that holds the data.
-
-4. **Validation**: Some fields are marked as required, ensuring that essential data is captured before submission.
-
-5. **Submission Handling**: The form's submission is handled by the `onSubmit()` method, which should be defined in the corresponding component TypeScript file.
-
-This template can be integrated with the Angular component logic to provide a comprehensive solution for managing client profiles in the healthcare service application.
+This HTML structure uses Bootstrap 5 for responsive layout and custom CSS for specific styles as per the Figma metadata. The example focuses on the main elements and their styles, including font settings, colors, and dimensions. Adjustments and additions would be necessary to fully match the detailed Figma design, especially for exact positioning and additional UI components not covered in this simplified example.
