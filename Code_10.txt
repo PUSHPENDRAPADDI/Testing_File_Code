@@ -1,0 +1,133 @@
+Below is a complete `index.html` file using the provided Figma metadata, structured with semantic HTML, and styled using inline CSS according to the specified styles in the JSON data.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Information</title>
+    <style>
+        body {
+            background-color: #1E1E1E;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #D9D9D9;
+            width: 100%;
+            height: 82px;
+            position: relative;
+            top: 191px;
+        }
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            position: relative;
+            top: 133px;
+        }
+        .nav-tabs a {
+            font-size: 31px;
+            font-weight: 400;
+            color: #767676;
+            text-decoration: none;
+            margin-right: 50px;
+        }
+        .nav-tabs a.active {
+            color: #3D2487;
+        }
+        .active-bar {
+            background-color: #0F0FE2;
+            width: 345px;
+            height: 9px;
+            position: relative;
+            top: 182px;
+            left: 121px;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 400;
+            color: #000000;
+            position: relative;
+            top: 209px;
+            left: 93px;
+        }
+        .client-details {
+            font-size: 31px;
+            font-weight: 700;
+            color: #000000;
+            position: relative;
+            top: 303px;
+            left: 91px;
+        }
+        .form-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            top: 372px;
+            margin: 0 91px;
+        }
+        .form-group .input-container {
+            background-color: #D9D9D9;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        .form-group .input-container:first-child {
+            width: 632px;
+        }
+        .form-group .input-container:last-child {
+            width: 633px;
+        }
+        .form-group label {
+            font-size: 19px;
+            font-weight: 400;
+            color: #767676;
+        }
+        .form-group input {
+            border: none;
+            background: transparent;
+            font-size: 31px;
+            font-weight: 400;
+            color: #000000;
+            outline: none;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-tabs">
+        <a href="#" class="active">Profile Information</a>
+        <a href="#">Inquiries</a>
+        <a href="#">Engagements</a>
+    </nav>
+    <div class="active-bar"></div>
+
+    <div class="header"></div>
+
+    <h1 class="section-title">Client & Guardian Details</h1>
+
+    <h2 class="client-details">Client Details</h2>
+
+    <div class="form-group">
+        <div class="input-container">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" value="Jhon">
+        </div>
+        <div class="input-container">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" value="Wick">
+        </div>
+    </div>
+
+</body>
+</html>
+```
+
+This HTML file replicates the layout and styling described in your Figma data. It includes a navigation bar, section titles, and a form with inputs for the first and last name, using the specified colors, font sizes, and weights.
