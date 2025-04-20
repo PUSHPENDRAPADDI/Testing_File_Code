@@ -1,0 +1,132 @@
+Here's the `index.html` file created based on the provided Figma metadata. I've used Bootstrap 5 for the layout while ensuring that all design details match the specifications in the metadata. Each element is styled according to the given dimensions, colors, fonts, and other attributes.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+        }
+        .header-title {
+            font-size: 50px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 1);
+            margin: 10px 0;
+        }
+        .sub-header {
+            font-size: 31px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 1);
+            margin: 20px 0;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: rgba(0, 0, 0, 1);
+            margin: 40px 0 10px;
+        }
+        .label {
+            font-size: 19px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 1);
+            margin-bottom: 5px;
+        }
+        .input-field {
+            font-size: 31px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 1);
+            border: 1px solid #D3D3D3;
+            border-radius: 5px;
+            height: 50px;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .input-field::placeholder {
+            color: rgba(0, 0, 0, 0.6);
+        }
+        .divider {
+            height: 9px;
+            background-color: rgba(0, 0, 0, 0.6);
+            margin: 20px 0;
+        }
+        .button {
+            background-color: rgba(0.0606, 0.0606, 0.8884, 1);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 31px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: rgba(0.0606, 0.0606, 0.8884, 0.8);
+        }
+        .text-muted {
+            color: rgba(0.465, 0.461, 0.461, 1);
+            font-size: 31px;
+            font-weight: 400;
+        }
+        .row {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="header-title">Edit Client Profile</h1>
+    <p class="sub-header">Client Profile &gt; Edit Client Profile</p>
+    <div class="divider"></div>
+
+    <h2 class="section-title">Client Details</h2>
+    <div class="row">
+        <div class="col">
+            <label class="label" for="firstName">First Name</label>
+            <input type="text" id="firstName" class="input-field" placeholder="First Name">
+        </div>
+        <div class="col">
+            <label class="label" for="lastName">Last Name</label>
+            <input type="text" id="lastName" class="input-field" placeholder="Last Name">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="label" for="birthDate">Birth Date</label>
+            <input type="text" id="birthDate" class="input-field" placeholder="03/12/2022">
+        </div>
+        <div class="col">
+            <label class="label" for="raceEthnicity">Race/Ethnicity</label>
+            <input type="text" id="raceEthnicity" class="input-field" placeholder="Select Race/Ethnicity">
+        </div>
+    </div>
+
+    <h2 class="section-title">Profile Information</h2>
+    <div class="text-muted">Inquiries</div>
+    <div class="text-muted">Engagements</div>
+    <div class="divider"></div>
+
+    <h2 class="section-title">Client & Guardian Details</h2>
+    <p class="text-muted">Jhon Wick</p>
+
+    <button class="button">Save Changes</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+```
+
+### Explanation of the Code:
+1. **Bootstrap Integration**: Bootstrap 5 is included for responsive design and layout structure.
+2. **Custom Styles**: Styles are provided in the `<style>` tag to match the specific font sizes, weights, and colors from the metadata.
+3. **Semantic HTML**: The structure uses headings, labels, and inputs correctly for accessibility.
+4. **Responsive Design**: Bootstrap's grid system is used to ensure that the layout adapts to different screen sizes.
+5. **Actual Text**: Text from the Figma metadata has been used instead of placeholders.
+
+This code will render a UI screen closely matching the design specified in the Figma metadata provided.
