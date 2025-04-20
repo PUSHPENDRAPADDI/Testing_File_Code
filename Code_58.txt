@@ -1,0 +1,156 @@
+To create a pixel-perfect HTML and CSS representation of the Figma design described in the provided metadata, we will craft the HTML structure and corresponding CSS styles based on the design specifications. Below is the complete code for an `index.html` file that includes embedded styles.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFFF;
+        }
+        .container {
+            width: 1447px;
+            margin: 0 auto;
+            padding: 92px 0;
+            position: relative;
+        }
+        .header {
+            margin-bottom: 32px;
+        }
+        .header h1 {
+            font-size: 50px;
+            color: rgba(0.03077, 0.03077, 0.03077, 1);
+            margin: 0;
+        }
+        .header h2 {
+            font-size: 31px;
+            color: rgba(0, 0, 0, 1);
+            margin: 0;
+        }
+        .subtitle {
+            font-size: 34px;
+            color: rgba(0.51868, 0.75742, 0.98077, 1);
+        }
+        .card {
+            background-color: rgba(0.85098, 0.85098, 0.85098, 1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .text {
+            font-size: 31px;
+            margin: 0;
+            color: rgba(0.0, 0.0, 0.0, 1);
+        }
+        .text-small {
+            font-size: 19px;
+            color: rgba(0.46538, 0.46136, 0.46136, 1);
+        }
+        .text-bold {
+            font-weight: bold;
+        }
+        .divider {
+            border: 1px solid rgba(0, 0, 0, 1);
+            margin: 40px 0;
+        }
+        .rect {
+            background-color: rgba(0.85098, 0.85098, 0.85098, 1);
+            height: 68px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .address {
+            font-size: 31px;
+            color: rgba(0.46538, 0.46136, 0.46136, 1);
+            margin: 0;
+        }
+        .address-line {
+            font-size: 19px;
+            color: rgba(0, 0, 0, 1);
+        }
+        .footer {
+            margin-top: 40px;
+            font-size: 31px;
+            color: rgba(0.0, 0.0, 0.0, 1);
+        }
+        .footer-text {
+            font-size: 31px;
+            color: rgba(0.0, 0.0, 0.0, 1);
+        }
+        .footer-text-small {
+            font-size: 19px;
+            color: rgba(0.46538, 0.46136, 0.46136, 1);
+        }
+        .button {
+            background-color: rgba(0.06065, 0.06065, 0.88846, 1);
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 31px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Edit Client Profile</h1>
+            <h2 class="subtitle">Client Profile > Edit Client Profile</h2>
+        </div>
+
+        <div class="card">
+            <h2 class="text">Client Details</h2>
+            <div class="divider"></div>
+            <h2 class="text">Profile Information</h2>
+            <div class="rect"></div>
+            <h2 class="text">Inquiries</h2>
+            <div class="rect"></div>
+            <h2 class="text">Engagements</h2>
+            <div class="rect"></div>
+            <h2 class="text">Emergency Contact</h2>
+            <div class="divider"></div>
+            <h2 class="text">Is Guardian same as emergency contact?</h2>
+            <div class="rect"></div>
+        </div>
+
+        <div class="footer">
+            <h2 class="footer-text">Address Line 1</h2>
+            <p class="address-line">1237 Broketon line</p>
+            <h2 class="footer-text">Address Line 2</h2>
+            <p class="address-line">South Delhi</p>
+            <h2 class="footer-text">Home zip code</h2>
+            <p class="address-line">123212</p>
+            <h2 class="footer-text">Home State</h2>
+            <p class="address-line">Delhi</p>
+            <button class="button">Submit</button>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+### Explanation:
+
+1. **HTML Structure**:
+   - The HTML document starts with a `<!DOCTYPE html>` declaration, followed by the opening `<html>` tag and the `<head>` section where metadata and styles are defined.
+   - The main content is wrapped in a `.container` div to maintain the overall width and alignment.
+   - The headings and text are structured using `<h1>`, `<h2>`, and `<p>` tags to reflect the hierarchy as described in the Figma metadata.
+
+2. **CSS Styles**:
+   - The styles are embedded within a `<style>` tag in the `<head>` section.
+   - Styles are defined for body, container, header, text, buttons, and rectangles to match the design specifications.
+   - Specific attributes such as color, font-size, margins, and paddings have been set according to the Figma design.
+
+3. **Components**:
+   - The design incorporates various components such as headers, text fields, buttons, and dividers, styled according to the metadata details.
+
+4. **Responsiveness**:
+   - The design is structured to a fixed width of 1447px, which corresponds to the specified dimensions from the Figma file. For a fully responsive design, media queries would need to be added.
+
+This code will produce a web page that closely resembles the layout and style indicated in the Figma metadata.
