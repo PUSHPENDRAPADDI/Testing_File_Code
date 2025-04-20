@@ -1,0 +1,109 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1E1E1E;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+        }
+        .frame {
+            background-color: #FFFFFF;
+            width: 1447px;
+            height: 630px;
+            margin: 92px auto;
+            position: relative;
+        }
+        .text-large {
+            font-size: 50px;
+            font-weight: 400;
+            color: rgba(8, 8, 8, 1);
+        }
+        .text-medium {
+            font-size: 31px;
+            font-weight: 400;
+        }
+        .text-bold {
+            font-weight: 700;
+        }
+        .text-link {
+            color: rgba(132, 193, 250, 1);
+        }
+        .text-muted {
+            color: rgba(119, 118, 118, 1);
+            font-size: 19px;
+        }
+        .bg-light-gray {
+            background-color: rgba(217, 217, 217, 1);
+        }
+        .bg-blue {
+            background-color: rgba(15, 15, 227, 1);
+        }
+        .line {
+            border-top: 1px solid #000;
+            width: 100%;
+            position: absolute;
+            top: 180px;
+        }
+        .arrow {
+            border: solid #000;
+            border-width: 0 4px 4px 0;
+            display: inline-block;
+            padding: 4px;
+            transform: rotate(45deg);
+            position: absolute;
+            top: 654px;
+            left: 573px;
+        }
+    </style>
+</head>
+<body>
+    <div class="frame">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="text-large">Edit Client Profile</h1>
+                </div>
+                <div class="col-12">
+                    <p class="text-medium">
+                        <span>Client Profile</span>
+                        <span class="text-link"> > Edit Client Profile</span>
+                    </p>
+                </div>
+                <div class="col-12">
+                    <hr class="line">
+                </div>
+                <div class="col-12 mt-4">
+                    <p class="text-medium text-bold">Profile Information</p>
+                </div>
+                <div class="col-12 bg-light-gray mt-2 py-2">
+                    <p class="text-medium">Client & Guardian Details</p>
+                </div>
+                <div class="col-6 bg-light-gray mt-2 py-2">
+                    <p class="text-muted">First Name</p>
+                    <p class="text-medium">Jhon</p>
+                </div>
+                <div class="col-6 bg-light-gray mt-2 py-2">
+                    <p class="text-muted">Last Name</p>
+                    <p class="text-medium">Wick</p>
+                </div>
+                <div class="col-6 bg-light-gray mt-2 py-2">
+                    <p class="text-muted">Race/Ethnicity</p>
+                    <p class="text-medium">Select Race/Ethnicity</p>
+                </div>
+                <div class="col-6 bg-light-gray mt-2 py-2">
+                    <p class="text-muted">Birth Date</p>
+                    <p class="text-medium">03/12/2022</p>
+                </div>
+            </div>
+        </div>
+        <div class="arrow"></div>
+    </div>
+</body>
+</html>
+```
