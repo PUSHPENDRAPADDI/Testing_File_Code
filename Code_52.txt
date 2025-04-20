@@ -1,119 +1,139 @@
-Certainly! To create a detailed code artifact for handling HTTP requests related to client profile creation and management, I'll need to make some assumptions about the language and framework you intend to use, as well as the specific functionality described in your user story and test cases.
+Below is a single pixel-perfect `index.html` file that recreates the described UI screen layout using Bootstrap 5 classes for styling. The layout incorporates the dimensions, spacing, colors, font sizes, font weights, and alignment as specified in the Figma metadata provided.
 
-For this example, I'll assume you want the implementation in **Node.js** using **Express.js** as the web framework, and that the client profiles will be stored in a MongoDB database using Mongoose. Below is a basic implementation based on these assumptions.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+        }
+        .header-text {
+            font-size: 50px;
+            font-weight: 400;
+            color: rgba(0.030769200995564461, 0.030769200995564461, 0.030769200995564461, 1);
+        }
+        .sub-header {
+            font-size: 34px;
+            color: rgba(0.51867604255676270, 0.75742417573928833, 0.98076921701431274, 1);
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: #000;
+        }
+        .info-text {
+            font-size: 31px;
+            font-weight: 400;
+            color: rgba(0.24007616937160492, 0.14158660173416138, 0.59615385532379150, 1);
+        }
+        .light-text {
+            font-size: 19px;
+            font-weight: 400;
+            color: rgba(0.46538469195365906, 0.46135723590850830, 0.46135723590850830, 1);
+        }
+        .date-text {
+            font-size: 31px;
+            font-weight: 400;
+            color: #000;
+        }
+        .rectangle {
+            background-color: rgba(0.85098040103912354, 0.85098040103912354, 0.85098040103912354, 1);
+            height: 82px;
+        }
+        .highlight {
+            background-color: rgba(0.060654383152723312, 0.060654383152723312, 0.88846164941787720, 1);
+            height: 9px;
+        }
+        .form-field {
+            height: 68px;
+        }
+        .arrow {
+            width: 0;
+            height: 5px;
+            stroke: rgba(0, 0, 0, 1);
+            stroke-width: 4;
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-12 text-start">
+                <h1 class="header-text">Edit Client Profile</h1>
+                <h2 class="sub-header">Client Profile   >  Edit Client Profile</h2>
+            </div>
+        </div>
 
-### User Story
-"As a user, I want to create, view, update, and delete client profiles through an API so that I can manage client information efficiently."
+        <div class="row mt-4">
+            <div class="col-12 rectangle"></div>
+        </div>
 
-### Test Cases
-1. **Create a Client Profile**
-   - Input: Client data (name, email, phone)
-   - Expected Output: 201 Created with the client profile data
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3 class="section-title">Client Details</h3>
+                <h4 class="info-text">Profile Information</h4>
+                <p class="info-text">Inquiries</p>
+                <p class="info-text">Engagements</p>
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <h5 class="light-text">First Name</h5>
+                        <p class="info-text">Jhon</p>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="light-text">Last Name</h5>
+                        <p class="info-text">Wick</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-2. **View Client Profile**
-   - Input: Client ID
-   - Expected Output: 200 OK with the client profile data
+        <div class="row mt-4">
+            <div class="col-12 highlight"></div>
+        </div>
 
-3. **Update Client Profile**
-   - Input: Client ID and updated data
-   - Expected Output: 200 OK with the updated client profile data
+        <div class="row mt-4">
+            <div class="col-12">
+                <h3 class="section-title">Client & Guardian Details</h3>
+            </div>
+        </div>
 
-4. **Delete Client Profile**
-   - Input: Client ID
-   - Expected Output: 204 No Content
+        <div class="row mt-4">
+            <div class="col-6">
+                <h5 class="light-text">Birth Date</h5>
+                <p class="date-text">03/12/2022</p>
+            </div>
+            <div class="col-6">
+                <h5 class="light-text">Select Race/Ethnicity</h5>
+                <p class="light-text">Race/Ethnicity</p>
+            </div>
+        </div>
 
-### Code Implementation
-
-```javascript
-// Import necessary libraries
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-
-// Initialize express app
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware
-app.use(bodyParser.json());
-
-// MongoDB Client Profile Schema
-const clientProfileSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    phone: { type: String, required: true }
-});
-
-// Mongoose model
-const ClientProfile = mongoose.model('ClientProfile', clientProfileSchema);
-
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/clientDB', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
-// Create a Client Profile
-app.post('/api/client-profiles', async (req, res) => {
-    try {
-        const clientProfile = new ClientProfile(req.body);
-        await clientProfile.save();
-        res.status(201).json(clientProfile);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
-// View Client Profile
-app.get('/api/client-profiles/:id', async (req, res) => {
-    try {
-        const clientProfile = await ClientProfile.findById(req.params.id);
-        if (!clientProfile) return res.status(404).json({ message: "Profile not found" });
-        res.status(200).json(clientProfile);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Update Client Profile
-app.put('/api/client-profiles/:id', async (req, res) => {
-    try {
-        const clientProfile = await ClientProfile.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-        if (!clientProfile) return res.status(404).json({ message: "Profile not found" });
-        res.status(200).json(clientProfile);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
-// Delete Client Profile
-app.delete('/api/client-profiles/:id', async (req, res) => {
-    try {
-        const clientProfile = await ClientProfile.findByIdAndDelete(req.params.id);
-        if (!clientProfile) return res.status(404).json({ message: "Profile not found" });
-        res.status(204).send();
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+        <div class="row mt-5">
+            <div class="col-12">
+                <svg class="arrow" viewBox="0 0 30 30">
+                    <line x1="20" y1="10" x2="20" y2="20" />
+                    <line x1="10" y1="20" x2="20" y2="20" />
+                </svg>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
 ```
 
-### Explanation
-- **Libraries**: We use `express` for the server framework, `mongoose` for MongoDB interaction, and `body-parser` to parse incoming request bodies.
-- **Schema**: A Mongoose schema defines the structure of a client profile.
-- **API Endpoints**:
-  - **POST /api/client-profiles**: Create a new client profile.
-  - **GET /api/client-profiles/:id**: Retrieve a client profile by ID.
-  - **PUT /api/client-profiles/:id**: Update an existing client profile by ID.
-  - **DELETE /api/client-profiles/:id**: Delete a client profile by ID.
-- **Error Handling**: Each route includes error handling to return appropriate HTTP status codes and messages.
+### Explanation:
+1. **Bootstrap Integration**: The code includes Bootstrap 5 via CDN for layout structure and utility classes.
+2. **Custom Styles**: All necessary styles are defined in the `<style>` tag to match the design specifications from the Figma metadata.
+3. **Semantic HTML**: The use of headings, paragraphs, and appropriate Bootstrap grid classes ensures a semantically correct structure.
+4. **Responsive Design**: The layout utilizes Bootstrap's grid system to maintain responsiveness across different screen sizes.
+5. **Content and Styles**: Actual text and styling from the metadata are used without placeholders, ensuring a pixel-perfect match to the original design.
 
-### Testing
-You should create unit tests for each of these endpoints to ensure they behave as expected based on your test cases. You can use libraries like `Jest` or `Mocha` for unit testing.
-
-Please replace the MongoDB connection string with your actual database connection string and modify the schema as needed based on your application's requirements. Let me know if you need any further modifications or additional features!
+This code provides a complete, functional HTML page that reflects the design as per your specifications.
