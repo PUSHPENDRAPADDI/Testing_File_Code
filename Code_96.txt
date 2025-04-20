@@ -1,0 +1,126 @@
+Below is an HTML file that translates the provided Figma metadata into a responsive Bootstrap 5-based structure. The design elements such as colors, font sizes, and weights are incorporated as inline styles:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-tabs .nav-link {
+            font-size: 31px;
+            font-weight: 400;
+        }
+        .nav-tabs .nav-link.active {
+            color: rgba(15, 36, 227, 1);
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            margin-top: 20px;
+        }
+        .form-label {
+            font-size: 19px;
+            color: rgba(119, 118, 118, 1);
+        }
+        .form-control {
+            font-size: 31px;
+        }
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+            margin: 20px 0;
+            font-size: 34px;
+        }
+        .breadcrumb-item a {
+            color: rgba(132, 193, 250, 1);
+        }
+        .breadcrumb-item.active {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h1 style="font-size:50px; font-weight:400;">Edit Client Profile</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Client Profile</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit Client Profile</li>
+                </ol>
+            </nav>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profile Information</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="inquiries-tab" data-bs-toggle="tab" data-bs-target="#inquiries" type="button" role="tab" aria-controls="inquiries" aria-selected="false">Inquiries</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="engagements-tab" data-bs-toggle="tab" data-bs-target="#engagements" type="button" role="tab" aria-controls="engagements" aria-selected="false">Engagements</button>
+                </li>
+            </ul>
+            <div class="tab-content mt-3" id="myTabContent">
+                <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="section-title">Client Details</div>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" value="Jhon">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" value="Wick">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="race" class="form-label">Race/Ethnicity</label>
+                                    <input type="text" class="form-control" id="race" placeholder="Select Race/Ethnicity">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="birthDate" class="form-label">Birth Date</label>
+                                    <input type="text" class="form-control" id="birthDate" value="03/12/2022">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="inquiries" role="tabpanel" aria-labelledby="inquiries-tab">
+                    <div class="section-title">Inquiries</div>
+                    <!-- Additional content for Inquiries can be added here -->
+                </div>
+                <div class="tab-pane fade" id="engagements" role="tabpanel" aria-labelledby="engagements-tab">
+                    <div class="section-title">Engagements</div>
+                    <!-- Additional content for Engagements can be added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+```
+
+This HTML file is structured to reflect the layout and styling described in the Figma metadata. It uses Bootstrap 5 for responsive design and includes inline CSS for specific text styles and colors. Adjustments can be made to fine-tune the design further.
