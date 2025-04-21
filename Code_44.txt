@@ -1,155 +1,137 @@
-Based on the user story and specifications you've provided, below is a comprehensive Angular component SCSS code snippet for the `client-profile-form.component.scss`. This code is structured to style the various input fields, buttons, and overall layout of the client profile form. The styles will reflect a clean and user-friendly design.
+Below is the HTML and CSS code generated from the provided Figma JSON data. This code includes semantic HTML tags, form inputs, section titles, and navigation tabs, matching the styles specified in the JSON.
 
-```scss
-// client-profile-form.component.scss
-
-// General Styles
-$primary-color: #007bff;
-$secondary-color: #6c757d;
-$success-color: #28a745;
-$error-color: #dc3545;
-$font-family: 'Arial, sans-serif';
-$border-radius: 4px;
-$padding: 10px;
-$margin: 15px;
-
-body {
-  font-family: $font-family;
-  background-color: #f8f9fa;
-}
-
-// Form Container
-.form-container {
-  background: white;
-  border: 1px solid $secondary-color;
-  border-radius: $border-radius;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin: $margin;
-  border-radius: $border-radius;
-
-  h1 {
-    font-size: 24px;
-    color: $primary-color;
-    margin-bottom: 20px;
-  }
-}
-
-// Input Fields
-input[type="text"],
-input[type="date"],
-input[type="tel"],
-input[type="email"],
-select {
-  width: 100%;
-  padding: $padding;
-  margin-bottom: 15px;
-  border: 1px solid #ced4da;
-  border-radius: $border-radius;
-  transition: border-color 0.3s;
-
-  &:focus {
-    border-color: $primary-color;
-    outline: none;
-  }
-
-  &.invalid {
-    border-color: $error-color;
-  }
-}
-
-// TextArea
-textarea {
-  width: 100%;
-  padding: $padding;
-  margin-bottom: 15px;
-  border: 1px solid #ced4da;
-  border-radius: $border-radius;
-  resize: vertical;
-
-  &:focus {
-    border-color: $primary-color;
-    outline: none;
-  }
-}
-
-// Dropdowns
-select {
-  background: white;
-  appearance: none; // Remove default arrow
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><polygon points="0,0 10,0 5,5" fill="%236c757d"/></svg>');
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size: 10px;
-}
-
-// Buttons
-button {
-  padding: $padding;
-  background-color: $primary-color;
-  color: white;
-  border: none;
-  border-radius: $border-radius;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: darken($primary-color, 10%);
-  }
-
-  &.secondary {
-    background-color: $secondary-color;
-
-    &:hover {
-      background-color: darken($secondary-color, 10%);
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Screen</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: Inter, sans-serif;
+        background-color: #1e1e1e;
     }
-  }
-}
-
-// Error Messages
-.error-message {
-  color: $error-color;
-  font-size: 14px;
-  margin-top: -10px;
-  margin-bottom: 15px;
-}
-
-// Layout Adjustments
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: $margin;
-
-  .col {
-    flex: 1;
-    margin-right: 10px;
-
-    &:last-child {
-      margin-right: 0;
+    .desktop-1 {
+        position: relative;
+        width: 1447px;
+        height: 484px;
+        background-color: #ffffff;
     }
-  }
-}
-
-// Responsive Design
-@media (max-width: 768px) {
-  .row {
-    flex-direction: column;
-
-    .col {
-      margin-right: 0;
-      margin-bottom: 10px;
+    .rectangle-1, .rectangle-2, .rectangle-3, .rectangle-4 {
+        position: absolute;
+        background-color: #d9d9d9;
     }
-  }
-}
+    .rectangle-1 {
+        top: 191px;
+        left: -121px;
+        width: 1447px;
+        height: 82px;
+    }
+    .rectangle-2 {
+        top: 182px;
+        left: -121px;
+        width: 345px;
+        height: 9px;
+        background-color: #0f0f0f;
+    }
+    .rectangle-3, .rectangle-4 {
+        width: 632px;
+        height: 68px;
+        top: 372px;
+    }
+    .rectangle-3 {
+        left: -91px;
+    }
+    .rectangle-4 {
+        left: 640px;
+    }
+    .profile-information, .client-details, .inquiries, .engagements, .client-guardian-details, .first-name, .last-name, .jhon, .wick {
+        position: absolute;
+        color: #000000;
+    }
+    .profile-information {
+        top: 133px;
+        left: -93px;
+        font-size: 31px;
+        font-weight: 400;
+        color: #3d246f;
+    }
+    .client-details {
+        top: 303px;
+        left: -91px;
+        font-size: 31px;
+        font-weight: 700;
+    }
+    .inquiries {
+        top: 128px;
+        left: 264px;
+        font-size: 31px;
+        font-weight: 400;
+        color: #767676;
+    }
+    .engagements {
+        top: 133px;
+        left: 525px;
+        font-size: 31px;
+        font-weight: 400;
+        color: #767676;
+    }
+    .client-guardian-details {
+        top: 209px;
+        left: -93px;
+        font-size: 31px;
+        font-weight: 400;
+    }
+    .first-name, .last-name {
+        font-size: 19px;
+        font-weight: 400;
+        color: #767676;
+    }
+    .first-name {
+        top: 358px;
+        left: -73px;
+    }
+    .last-name {
+        top: 356px;
+        left: 669px;
+    }
+    .jhon, .wick {
+        font-size: 31px;
+        font-weight: 400;
+    }
+    .jhon {
+        top: 390px;
+        left: -73px;
+    }
+    .wick {
+        top: 390px;
+        left: 669px;
+    }
+</style>
+</head>
+<body>
+<div class="desktop-1">
+    <div class="rectangle-1"></div>
+    <div class="rectangle-2"></div>
+    <div class="rectangle-3"></div>
+    <div class="rectangle-4"></div>
+    <h1 class="profile-information">Profile Information</h1>
+    <h2 class="client-details">Client Details</h2>
+    <nav>
+        <a class="inquiries">Inquiries</a>
+        <a class="engagements">Engagements</a>
+    </nav>
+    <section class="client-guardian-details">Client & Guardian Details</section>
+    <label class="first-name">First Name</label>
+    <input type="text" class="jhon" value="Jhon">
+    <label class="last-name">Last Name</label>
+    <input type="text" class="wick" value="Wick">
+</div>
+</body>
+</html>
 ```
 
-### Explanation of SCSS Structure:
-- **Variables**: Common styles like colors, font families, border radius, padding, and margins are defined as variables for better maintainability.
-- **Container Styles**: The `.form-container` class styles the form with padding, margin, and box shadow for a card-like appearance.
-- **Input Fields**: Styles for various input types ensure they are full-width and visually consistent, with focus and error states clearly defined.
-- **Buttons**: Styles for primary and secondary buttons with hover effects to enhance user interaction.
-- **Error Messages**: Clear visibility for error messages to guide the user.
-- **Responsive Design**: Flexbox layout adjustments for mobile responsiveness.
-
-This SCSS can be compiled into CSS and linked to the Angular component to style the client profile form accordingly.
+This HTML structure uses semantic tags such as `<nav>` for navigation links and `<section>` for sections of content. The CSS styles are embedded within the `<style>` tag and are designed to closely replicate the layout and styling provided in the Figma JSON data. The form inputs for "First Name" and "Last Name" are included with default values as per the design.
