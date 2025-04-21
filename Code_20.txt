@@ -1,0 +1,118 @@
+To generate CSS code for a food app based on metadata from Figma, I would need specific details about the design elements such as colors, font sizes, margins, paddings, layout, and any other relevant properties. However, I can provide you with a general template based on common UI elements found in food apps. 
+
+Below is a sample CSS code that you might use for a food app interface. You can modify it based on your actual Figma design.
+
+### Sample CSS Code
+
+```css
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+/* Header Styles */
+.header {
+    background-color: #ff6347; /* Tomato Color */
+    padding: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    color: white;
+    font-size: 28px;
+    margin: 0;
+}
+
+/* Navigation Styles */
+.nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav a {
+    text-decoration: none;
+    color: #ff6347;
+    font-weight: bold;
+}
+
+/* Card Styles */
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 15px;
+    padding: 20px;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.card h2 {
+    font-size: 22px;
+    margin: 10px 0;
+}
+
+.card p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Button Styles */
+.button {
+    background-color: #ff6347;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #e5533d;
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+```
+
+### Explanation of the Code:
+
+- **Global Styles**: Sets the base font, background color, and text color for the app.
+- **Header Styles**: Defines the appearance of the header, including background color, padding, and text styling.
+- **Navigation Styles**: Styles for the navigation bar, including layout and link styling.
+- **Card Styles**: Styles for food item cards, including hover effects, image handling, and text styling.
+- **Button Styles**: Defines the look of buttons within the app, including hover effects.
+- **Footer Styles**: Styles for the footer, similar to the header.
+
+### Adjustments:
+- Adjust colors, font sizes, and other properties according to the specifications from your Figma design.
+- Ensure that any images used are properly sized and linked in your HTML.
+
+If you provide specific Figma details, I can help you refine this CSS further!
