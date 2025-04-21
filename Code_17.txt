@@ -1,0 +1,101 @@
+Based on the provided Figma JSON data, here is the HTML structure and corresponding CSS styles. This example will create a responsive layout with form inputs, section titles, and navigation tabs as described in the JSON data.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1e1e1e;
+            color: #000;
+        }
+        .container {
+            width: 100%;
+            max-width: 1447px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .navigation {
+            background-color: #d9d9d9;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .navigation a {
+            color: #3c3c3c;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: #000;
+        }
+        .profile-info, .inquiries, .engagements {
+            font-size: 31px;
+            color: #3d246e;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        .highlight {
+            background-color: #0a0a0a;
+            color: #fff;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navigation">
+            <a href="#" style="color: #3d246e;">Profile Information</a>
+            <a href="#">Inquiries</a>
+            <a href="#">Engagements</a>
+        </div>
+        <div class="section">
+            <h1 class="section-title">Client Details</h1>
+            <form>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" class="form-input" placeholder="Enter first name">
+                
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" class="form-input" placeholder="Enter last name">
+            </form>
+        </div>
+        <div class="section">
+            <h2 class="profile-info">Profile Information</h2>
+            <p class="highlight">This section contains personal data.</p>
+        </div>
+        <div class="section">
+            <h2 class="inquiries">Inquiries</h2>
+            <p>Details about recent inquiries.</p>
+        </div>
+        <div class="section">
+            <h2 class="engagements">Engagements</h2>
+            <p>Information on client engagements.</p>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+### Explanation:
+1. **HTML Structure**: The HTML is structured into a main container that holds all content, with separate sections for navigation, client details, profile information, inquiries, and engagements.
+2. **CSS Styles**: The CSS is included in a `<style>` tag in the head of the document. It sets up basic styles for the body, container, and navigation, as well as specific styles for section titles and form inputs.
+3. **Responsive Design**: The container's width is set to 100% with a maximum width of 1447px, which makes the layout responsive. Padding and margins are used to space elements nicely.
+4. **Colors and Fonts**: Colors and font styles are applied as specified in the Figma JSON data, ensuring the design matches the intended look.
+
+This HTML file should render a page that closely matches the design specified in the Figma JSON data, with functional form inputs and navigation links.
