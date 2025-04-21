@@ -1,0 +1,143 @@
+Below is the HTML and CSS code generated based on the provided Figma JSON data. This code includes semantic HTML tags, class names derived from the Figma node names, and styles that match the Figma design specifications.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma Design to HTML</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .desktop-1 {
+            position: absolute;
+            top: -29px;
+            left: -121px;
+            width: 1447px;
+            height: 484px;
+            background-color: #ffffff;
+        }
+        .rectangle-1, .rectangle-2, .rectangle-3, .rectangle-4 {
+            position: absolute;
+            height: 82px;
+            background-color: #D9D9D9; /* Assuming a grey background as placeholder */
+        }
+        .rectangle-1 {
+            top: 191px;
+            left: -121px;
+            width: 1447px;
+        }
+        .rectangle-2 {
+            top: 182px;
+            left: -121px;
+            width: 345px;
+            height: 9px;
+        }
+        .rectangle-3 {
+            top: 372px;
+            left: -91px;
+            width: 632px;
+            height: 68px;
+        }
+        .rectangle-4 {
+            top: 372px;
+            left: 640px;
+            width: 633px;
+            height: 68px;
+        }
+        .profile-information, .client-details, .inquiries, .engagements, .client-guardian-details, .jhon, .wick, .last-name, .first-name {
+            position: absolute;
+            color: #000000;
+        }
+        .profile-information, .client-details, .inquiries, .engagements, .client-guardian-details, .jhon, .wick {
+            font-size: 31px;
+            line-height: 32px;
+            font-weight: 400; /* Regular */
+        }
+        .last-name, .first-name {
+            font-size: 19px;
+            line-height: 32px;
+            font-weight: 400; /* Regular */
+        }
+        .profile-information {
+            top: 133px;
+            left: -93px;
+            width: 269px;
+        }
+        .client-details {
+            top: 303px;
+            left: -91px;
+            width: 203px;
+        }
+        .inquiries {
+            top: 128px;
+            left: 264px;
+            width: 124px;
+        }
+        .engagements {
+            top: 133px;
+            left: 525px;
+            width: 201px;
+        }
+        .client-guardian-details {
+            top: 209px;
+            left: -93px;
+            width: 369px;
+        }
+        .jhon {
+            top: 390px;
+            left: -73px;
+            width: 72px;
+        }
+        .wick {
+            top: 390px;
+            left: 669px;
+            width: 71px;
+        }
+        .last-name {
+            top: 356px;
+            left: 669px;
+            width: 97px;
+        }
+        .first-name {
+            top: 358px;
+            left: -73px;
+            width: 98px;
+        }
+    </style>
+</head>
+<body>
+    <div class="desktop-1">
+        <div class="rectangle-1"></div>
+        <div class="rectangle-2"></div>
+        <div class="rectangle-3"></div>
+        <div class="rectangle-4"></div>
+        <h1 class="profile-information">Profile Information</h1>
+        <h2 class="client-details">Client Details</h2>
+        <nav>
+            <a class="inquiries">Inquiries</a>
+            <a class="engagements">Engagements</a>
+        </nav>
+        <section class="client-guardian-details">Client & Guardian Details</section>
+        <article>
+            <header class="jhon">Jhon</header>
+            <footer class="wick">Wick</footer>
+        </article>
+        <label class="last-name">Last Name</label>
+        <label class="first-name">First Name</label>
+    </div>
+</body>
+</html>
+```
+
+### Notes:
+- The CSS is embedded within the `<style>` tag in the `<head>` section of the HTML document.
+- The layout uses absolute positioning to closely match the Figma design.
+- Semantic HTML tags like `<nav>`, `<section>`, `<article>`, `<header>`, and `<footer>` are used to structure the content meaningfully.
+- The font family "Inter" is assumed to be available or should be included via a link to a web font service like Google Fonts if not available by default.
+- Colors and dimensions are based on the Figma data provided. Adjustments may be needed based on actual design requirements or additional details from the design file.
