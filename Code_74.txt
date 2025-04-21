@@ -1,0 +1,106 @@
+Below is the `index.html` file created based on the provided Figma metadata. This file includes inline CSS for styling and uses semantic HTML elements to structure the content according to the design specified in the JSON data.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Screen</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1e1e1e;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #d9d9d9;
+            width: 100%;
+            padding: 10px 0;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+        }
+        .nav {
+            color: #3c3c3c;
+            font-size: 31px;
+            font-weight: 400;
+            margin: 20px 0;
+        }
+        .nav a {
+            color: inherit;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+        .active {
+            color: #3d247b;
+        }
+        .content {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .title {
+            font-size: 31px;
+            font-weight: 700;
+        }
+        .sub-title {
+            font-size: 31px;
+            font-weight: 400;
+            color: #3c3c3c;
+        }
+        .form-group {
+            margin: 20px 0;
+        }
+        label {
+            font-size: 19px;
+            color: #767676;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 31px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="active">Profile Information</a>
+                <a href="#">Inquiries</a>
+                <a href="#">Engagements</a>
+            </nav>
+        </div>
+    </header>
+    <div class="container content">
+        <h1 class="title">Client Details</h1>
+        <section>
+            <h2 class="sub-title">Client & Guardian Details</h2>
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName">
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName">
+            </div>
+        </section>
+    </div>
+</body>
+</html>
+```
+
+### Explanation:
+- **HTML Structure**: The HTML is structured with a `<header>` for navigation, and a `<div>` with class `container` for the main content area. Inside the main content area, there are sections for different parts of the form.
+- **CSS Styling**: Inline CSS is used within a `<style>` tag in the `<head>` of the document. The styles are directly derived from the Figma metadata, such as colors, font sizes, and weights.
+- **Responsive Design**: Basic responsiveness is achieved with percentage-based widths and media queries could be added for more specific responsive behaviors.
+- **Semantic HTML**: Semantic tags like `<header>`, `<nav>`, `<section>`, and form-related tags (`<label>`, `<input>`) are used to structure the content semantically.
+
+This HTML file should render a page that visually corresponds to the design specified in the Figma metadata, using the exact colors, font sizes, and layout dimensions provided.
