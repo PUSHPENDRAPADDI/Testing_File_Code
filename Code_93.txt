@@ -1,87 +1,134 @@
+Below is the complete HTML file with embedded CSS based on the provided Figma JSON data. This file includes semantic HTML tags, form inputs, section titles, and navigation tabs, all styled according to the specifications in the JSON.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Client Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Client Profile</title>
     <style>
-        body {
-            background-color: #1E1E1E;
-            color: #000;
-        }
-        .form-label {
+        body, html {
+            margin: 0;
+            padding: 0;
             font-family: 'Inter', sans-serif;
+        }
+        .desktop-1 {
+            background-color: #ffffff;
+            position: relative;
+            width: 1447px;
+            height: 484px;
+            margin: 0 auto;
+        }
+        .rectangle-1, .rectangle-3, .rectangle-4 {
+            background-color: #d9d9d9;
+        }
+        .rectangle-1 {
+            width: 1447px;
+            height: 82px;
+            position: absolute;
+            top: 191px;
+        }
+        .rectangle-2 {
+            background-color: #0f0fe3;
+            width: 345px;
+            height: 9px;
+            position: absolute;
+            top: 182px;
+        }
+        .rectangle-3, .rectangle-4 {
+            width: 632px;
+            height: 68px;
+            position: absolute;
+        }
+        .rectangle-3 {
+            top: 372px;
+            left: 0;
+        }
+        .rectangle-4 {
+            top: 372px;
+            left: 640px;
+        }
+        .profile-information, .inquiries, .engagements, .client-details, .client-guardian-details, .first-name, .last-name {
+            color: #777676;
             font-weight: 400;
-            font-size: 19px;
-            color: #767676;
         }
-        .form-control {
-            font-family: 'Inter', sans-serif;
-            font-weight: 400;
-            font-size: 31px;
-            color: #000;
+        .profile-information {
+            position: absolute;
+            top: 133px;
+            left: 0;
+            color: #3d2498;
         }
-        .section-title {
-            font-family: 'Inter', sans-serif;
+        .inquiries {
+            position: absolute;
+            top: 128px;
+            left: 357px;
+        }
+        .engagements {
+            position: absolute;
+            top: 133px;
+            left: 618px;
+        }
+        .client-details, .client-guardian-details {
+            position: absolute;
+            top: 303px;
+            left: 0;
             font-weight: 700;
-            font-size: 31px;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            color: #000000;
         }
-        .nav-tabs .nav-link {
-            font-family: 'Inter', sans-serif;
+        .client-guardian-details {
+            top: 209px;
+        }
+        .first-name, .last-name {
+            position: absolute;
+            top: 356px;
+        }
+        .first-name {
+            left: 0;
+        }
+        .last-name {
+            left: 640px;
+        }
+        .jhon, .wick {
+            position: absolute;
+            top: 390px;
             font-weight: 400;
-            font-size: 31px;
-            color: #767676;
+            color: #000000;
         }
-        .nav-tabs .nav-link.active {
-            color: #3D3D3D;
-            background-color: #F0F0F0;
-            border-color: #F0F0F0;
+        .jhon {
+            left: 0;
+        }
+        .wick {
+            left: 640px;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Edit Client Profile</h1>
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Profile Information</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Inquiries</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Engagements</a>
-            </li>
-        </ul>
-        <div class="section-title">Client Details</div>
-        <form>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstName" value="Jhon">
-                </div>
-                <div class="col-md-6">
-                    <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastName" value="Wick">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="race" class="form-label">Race/Ethnicity</label>
-                    <input type="text" class="form-control" id="race" placeholder="Select Race/Ethnicity">
-                </div>
-                <div class="col-md-6">
-                    <label for="birthDate" class="form-label">Birth Date</label>
-                    <input type="text" class="form-control" id="birthDate" value="03/12/2022">
-                </div>
-            </div>
-        </form>
+    <div class="desktop-1">
+        <div class="rectangle-1"></div>
+        <div class="rectangle-2"></div>
+        <header>
+            <h1 class="profile-information">Profile Information</h1>
+            <nav>
+                <a class="inquiries" href="#">Inquiries</a>
+                <a class="engagements" href="#">Engagements</a>
+            </nav>
+        </header>
+        <main>
+            <section class="client-details">Client Details</section>
+            <section class="client-guardian-details">Client & Guardian Details</section>
+            <article>
+                <div class="rectangle-3"></div>
+                <label class="first-name" for="first-name">First Name</label>
+                <input type="text" id="first-name" class="jhon" value="Jhon">
+                <div class="rectangle-4"></div>
+                <label class="last-name" for="last-name">Last Name</label>
+                <input type="text" id="last-name" class="wick" value="Wick">
+            </article>
+        </main>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 ```
+
+This HTML file uses absolute positioning to closely match the layout specified in the Figma design. The CSS styles are embedded within the `<style>` tag in the `<head>` section, and the HTML structure is organized semantically with `<header>`, `<nav>`, `<main>`, `<section>`, and `<article>` tags.
