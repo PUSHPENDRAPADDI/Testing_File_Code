@@ -1,63 +1,99 @@
+Below is the HTML structure with inline CSS based on the provided Figma JSON data. This example includes semantic HTML tags, form inputs, section titles, and navigation tabs, matching the styles specified in the JSON.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile Edit</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <title>Login Screen</title>
     <style>
         body {
-            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            background-color: #1e1e1e;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 1447px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #fff;
         }
-        .form-container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .navigation {
+            background-color: #d9d9d9;
+            height: 82px;
+            width: 100%;
+            margin-bottom: 20px;
         }
-        .form-label {
-            font-weight: bold;
+        .section-title {
+            font-size: 31px;
+            font-weight: 700;
+            color: #000;
+        }
+        .info-section {
+            margin-top: 20px;
+        }
+        .info-box {
+            background-color: #d9d9d9;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .form-input {
+            font-size: 31px;
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .tab {
+            display: inline-block;
+            margin-right: 20px;
+            color: #3b3b3b;
+            font-size: 31px;
+        }
+        .active-tab {
+            color: #0731b1;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="form-container">
-                    <form>
-                        <div class="mb-3">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="firstName" value="Jhon">
-                        </div>
-                        <div class="mb-3">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" value="Wick">
-                        </div>
-                        <div class="mb-3">
-                            <label for="birthDate" class="form-label">Birth Date</label>
-                            <input type="date" class="form-control" id="birthDate" value="2022-03-12">
-                        </div>
-                        <div class="mb-3">
-                            <label for="raceEthnicity" class="form-label">Race/Ethnicity</label>
-                            <input type="text" class="form-control" id="raceEthnicity" placeholder="Select Race/Ethnicity">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </form>
-                </div>
+        <div class="navigation"></div>
+        <div class="info-section">
+            <h1 class="section-title">Profile Information</h1>
+            <div class="info-box">
+                <label for="firstName" class="tab active-tab">First Name</label>
+                <input type="text" id="firstName" class="form-input" placeholder="Enter first name">
+            </div>
+            <div class="info-box">
+                <label for="lastName" class="tab">Last Name</label>
+                <input type="text" id="lastName" class="form-input" placeholder="Enter last name">
+            </div>
+        </div>
+        <div class="info-section">
+            <h1 class="section-title">Client Details</h1>
+            <div class="info-box">
+                <label for="clientName" class="tab">Client Name</label>
+                <input type="text" id="clientName" class="form-input" placeholder="Enter client name">
+            </div>
+            <div class="info-box">
+                <label for="guardianName" class="tab">Guardian Name</label>
+                <input type="text" id="guardianName" class="form-input" placeholder="Enter guardian name">
             </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 ```
 
 ### Explanation:
-- **Bootstrap Grid**: The form is wrapped in a `container` with a `row` and a `col-md-6` to center it on the page.
-- **Form Elements**: Each input field is accompanied by a `<label>` for accessibility and clarity.
-- **Input Values**: The values from the metadata are used directly in the `value` or `placeholder` attributes.
-- **Custom CSS**: A `<style>` block is included to style the form container and labels, ensuring a clean and modern look.
+1. **Font and Colors**: The CSS uses the `Inter` font family and color codes directly from the Figma JSON. The background colors for different sections are set according to the `fills` values.
+
+2. **Layout and Spacing**: The layout dimensions (width and height) are set according to the `absoluteBoundingBox` values. Margins and paddings are assumed for better visual separation.
+
+3. **Form Inputs**: Text inputs are provided for user data entry, styled according to the specifications.
+
+4. **Navigation and Tabs**: Simple navigation and tab structures are included, with active states for selected tabs.
+
+This HTML file should be viewed in a modern web browser for best results. Adjustments might be needed based on additional context or specific design requirements not covered in the JSON data.
