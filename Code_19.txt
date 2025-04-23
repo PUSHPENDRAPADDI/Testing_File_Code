@@ -1,167 +1,164 @@
-Here's a pixel-perfect `index.html` file based on the provided Figma metadata. This HTML file uses Bootstrap 5 for the layout and styling, incorporates all required details, and includes custom styles directly in the `<style>` tag.
+Certainly! Below is a FastAPI implementation based on the Business Requirements Document (BRD) you provided. This code establishes the structure for the APIs defined in the BRD: Patient Management, Appointment Scheduling, Electronic Medical Records (EMR), Prescription Management, and Billing & Insurance.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Screen</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #ffffff; /* Figma's background color */
-            font-family: 'Inter', sans-serif;
-        }
-        .header-text {
-            font-size: 50px;
-            font-weight: 400;
-            color: rgba(0, 0, 0, 1);
-            line-height: 32px;
-        }
-        .sub-header {
-            font-size: 34px;
-            color: rgba(132, 193, 250, 1);
-            line-height: 26px;
-        }
-        .client-details,
-        .profile-info,
-        .inquiry,
-        .engagement,
-        .client-guardian {
-            font-size: 31px;
-            color: rgba(0, 0, 0, 1);
-            line-height: 32px;
-        }
-        .section-title {
-            font-size: 31px;
-            font-weight: 700;
-            color: rgba(0, 0, 0, 1);
-            line-height: 32px;
-        }
-        .label {
-            font-size: 19px;
-            color: rgba(0, 0, 0, 0.5);
-            line-height: 32px;
-        }
-        .rectangle {
-            background-color: rgba(217, 217, 217, 1);
-            height: 82px; /* Rectangle height */
-        }
-        .rectangle-small {
-            background-color: rgba(217, 217, 217, 1);
-            height: 9px; /* Small rectangle height */
-        }
-        .rectangle-blue {
-            background-color: rgba(15, 15, 226, 1);
-            height: 9px; /* Blue rectangle height */
-        }
-        .rectangle-light {
-            background-color: rgba(217, 217, 217, 1);
-            height: 68px; /* Rectangle height */
-        }
-        .arrow {
-            width: 0;
-            height: 5px;
-            border-left: 4px solid #000000;
-            transform: rotate(90deg);
-            margin: 0 auto;
-        }
-        .date-text {
-            font-size: 31px;
-            color: rgba(0, 0, 0, 1);
-            line-height: 32px;
-        }
-        .disabled-text {
-            color: rgba(0.465, 0.461, 0.461, 1);
-        }
-    </style>
-</head>
-<body>
+We'll create a simple FastAPI application with endpoints for each of the API modules. Note that this is a basic implementation without a persistent database; to make it fully functional, you would need to implement a database layer (e.g., using SQLAlchemy) and add error handling, data validation, and authentication.
 
-<div class="container-fluid p-5">
-    <h1 class="header-text">Edit Client Profile</h1>
-    <h2 class="sub-header">Client Profile > Edit Client Profile</h2>
-    
-    <div class="rectangle my-4"></div>
-    
-    <h3 class="section-title">Client Details</h3>
-    
-    <div class="row my-3">
-        <div class="col-6">
-            <div class="row">
-                <div class="col">
-                    <label class="label">First Name</label>
-                    <input type="text" class="form-control" placeholder="First Name">
-                </div>
-                <div class="col">
-                    <label class="label">Last Name</label>
-                    <input type="text" class="form-control" placeholder="Last Name">
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="row">
-                <div class="col">
-                    <label class="label">Birth Date</label>
-                    <input type="text" class="form-control" placeholder="Birth Date">
-                </div>
-                <div class="col">
-                    <label class="label">Race/Ethnicity</label>
-                    <input type="text" class="form-control" placeholder="Select Race/Ethnicity">
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="rectangle my-4"></div>
-    
-    <h3 class="client-details">Profile Information</h3>
-    
-    <div class="row">
-        <div class="col">
-            <p class="disabled-text">Inquiries</p>
-            <p class="inquiry">Inquiries</p>
-        </div>
-        <div class="col">
-            <p class="disabled-text">Engagements</p>
-            <p class="engagement">Engagements</p>
-        </div>
-    </div>
-    
-    <div class="rectangle-light my-4"></div>
-    
-    <h3 class="client-guardian">Client & Guardian Details</h3>
-    
-    <div class="rectangle-light my-4"></div>
-    
-    <div class="row">
-        <div class="col">
-            <h4 class="client-details">Jhon</h4>
-        </div>
-        <div class="col">
-            <h4 class="client-details">Wick</h4>
-        </div>
-    </div>
-    
-    <div class="rectangle my-4"></div>
-    
-    <h3 class="date-text">Birth Date</h3>
-    <p class="date-text">03/12/2022</p>
-    
-    <div class="arrow"></div>
-</div>
+### FastAPI Implementation
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+```python
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+
+app = FastAPI()
+
+# Models
+class Patient(BaseModel):
+    id: int
+    name: str
+    contact_details: str
+    medical_history: Optional[str] = None
+
+class Appointment(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    date: str  # Use a proper datetime format in a real implementation
+
+class MedicalRecord(BaseModel):
+    patient_id: int
+    record: str
+
+class Prescription(BaseModel):
+    id: int
+    patient_id: int
+    doctor_id: int
+    details: str
+
+class Invoice(BaseModel):
+    id: int
+    patient_id: int
+    amount: float
+    status: str
+
+# In-memory storage (for demonstration purposes)
+patients = []
+appointments = []
+medical_records = []
+prescriptions = []
+invoices = []
+
+# Patient Management API
+@app.post("/patients", response_model=Patient)
+def register_patient(patient: Patient):
+    patients.append(patient)
+    return patient
+
+@app.get("/patients/{id}", response_model=Patient)
+def retrieve_patient(id: int):
+    for patient in patients:
+        if patient.id == id:
+            return patient
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+@app.put("/patients/{id}", response_model=Patient)
+def update_patient(id: int, updated_patient: Patient):
+    for idx, patient in enumerate(patients):
+        if patient.id == id:
+            patients[idx] = updated_patient
+            return updated_patient
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+@app.delete("/patients/{id}")
+def deactivate_patient(id: int):
+    for patient in patients:
+        if patient.id == id:
+            patients.remove(patient)
+            return {"detail": "Patient profile deactivated"}
+    raise HTTPException(status_code=404, detail="Patient not found")
+
+# Appointment Scheduling API
+@app.post("/appointments", response_model=Appointment)
+def schedule_appointment(appointment: Appointment):
+    appointments.append(appointment)
+    return appointment
+
+@app.put("/appointments/{id}", response_model=Appointment)
+def modify_appointment(id: int, updated_appointment: Appointment):
+    for idx, appointment in enumerate(appointments):
+        if appointment.id == id:
+            appointments[idx] = updated_appointment
+            return updated_appointment
+    raise HTTPException(status_code=404, detail="Appointment not found")
+
+@app.get("/appointments")
+def get_appointments():
+    return appointments
+
+# EMR API
+@app.post("/patients/{patient_id}/records", response_model=MedicalRecord)
+def add_medical_record(patient_id: int, record: MedicalRecord):
+    medical_records.append(record)
+    return record
+
+@app.get("/patients/{patient_id}/records")
+def get_medical_records(patient_id: int):
+    return [record for record in medical_records if record.patient_id == patient_id]
+
+# Prescription Management API
+@app.post("/prescriptions", response_model=Prescription)
+def generate_prescription(prescription: Prescription):
+    prescriptions.append(prescription)
+    return prescription
+
+@app.get("/prescriptions/{id}")
+def get_prescription(id: int):
+    for prescription in prescriptions:
+        if prescription.id == id:
+            return prescription
+    raise HTTPException(status_code=404, detail="Prescription not found")
+
+# Billing & Insurance API
+@app.post("/billing", response_model=Invoice)
+def generate_invoice(invoice: Invoice):
+    invoices.append(invoice)
+    return invoice
+
+@app.get("/billing/{id}")
+def get_invoice(id: int):
+    for invoice in invoices:
+        if invoice.id == id:
+            return invoice
+    raise HTTPException(status_code=404, detail="Invoice not found")
+
+# Run the application
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
-### Explanation:
-1. **Bootstrap Classes**: The layout is structured using Bootstrap's grid system for responsiveness.
-2. **Custom Styles**: All styles from the Figma metadata are included within a `<style>` tag, ensuring exact pixel matching for fonts, colors, and dimensions.
-3. **Content**: The text and content have been directly used from the metadata, ensuring no placeholder content is present.
-4. **Responsive Design**: The layout is designed to maintain its structure across different screen sizes, thanks to Bootstrap's responsive classes.
-5. **Semantic HTML**: The HTML is structured semantically, using appropriate headings and containers for clarity.
+### Instructions to Run the Application
 
-This code should render a pixel-perfect representation of the Figma design as specified.
+1. **Install FastAPI and Uvicorn** if you haven't already:
+
+   ```bash
+   pip install fastapi uvicorn
+   ```
+
+2. **Save the code** into a file named `main.py`.
+
+3. **Run the FastAPI application**:
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+4. **Access the API documentation** at `http://127.0.0.1:8000/docs`.
+
+### Notes
+
+- This implementation uses in-memory lists to store data, which is suitable for demonstration purposes. For a production environment, a persistent database (e.g., PostgreSQL, MongoDB) is recommended.
+- The endpoints are basic and do not include authentication, which is crucial for a healthcare application.
+- Error handling is minimal; you should enhance it according to your application requirements.
+- Data validation can be improved using Pydantic's features (e.g., using validators). 
+
+Feel free to expand on this base code according to your project's specifications!
