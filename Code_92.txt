@@ -1,227 +1,236 @@
-To create an HTML structure based on the metadata provided for the "Login Screen" design in Figma, I'll generate a basic HTML and CSS template that includes input fields, buttons, and display text. Since the content is quite extensive, I'll break it into sections for clarity and ease of copying.
+Certainly! Below is an Express.js implementation outline for a healthcare API system based on the provided Business Requirements Document (BRD). This implementation will cover the core endpoints for each API module specified in the BRD. For brevity, I'll demonstrate basic routing and structure without delving into database integration or advanced error handling.
 
-### Part 1: Basic Structure and Styles
+### Express.js Healthcare API Implementation
 
-Here's the initial part of the HTML code for the login screen. This will include the basic structure and styles.
+1. **Setup and Installation**
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Screen</title>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #FFFFFF;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            background-color: #FFFFFF;
-        }
-        h1, h2 {
-            color: #000000;
-        }
-        .text {
-            margin-bottom: 15px;
-            font-size: 31px;
-            color: #000000;
-        }
-        .input-field {
-            margin-bottom: 20px;
-        }
-        .input-field label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 19px;
-            color: #465384;
-        }
-        .input-field input {
-            width: 100%;
-            padding: 10px;
-            font-size: 19px;
-            border: 1px solid #CCCCCC;
-            border-radius: 5px;
-        }
-        .button {
-            padding: 10px 20px;
-            font-size: 19px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .section-divider {
-            margin: 20px 0;
-            border-top: 1px solid #CCCCCC;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Edit Client Profile</h1>
-        <p class="text">Client Profile > Edit Client Profile</p>
-        <div class="section-divider"></div>
+First, ensure you have Node.js and npm installed on your machine. Then, create a new project folder and initialize a new Node.js application.
 
-        <div class="input-field">
-            <label for="first-name">First Name</label>
-            <input type="text" id="first-name" placeholder="Enter First Name">
-        </div>
-
-        <div class="input-field">
-            <label for="last-name">Last Name</label>
-            <input type="text" id="last-name" placeholder="Enter Last Name">
-        </div>
-
-        <div class="input-field">
-            <label for="birth-date">Birth Date</label>
-            <input type="date" id="birth-date">
-        </div>
-
-        <div class="input-field">
-            <label for="race-ethnicity">Select Race/Ethnicity</label>
-            <input type="text" id="race-ethnicity" placeholder="Enter Race/Ethnicity">
-        </div>
-
-        <div class="section-divider"></div>
-        
-        <h2>Client & Guardian Details</h2>
-        <div class="input-field">
-            <label for="guardian-first-name">Guardian First Name</label>
-            <input type="text" id="guardian-first-name" placeholder="Enter Guardian First Name">
-        </div>
-
-        <div class="input-field">
-            <label for="guardian-last-name">Guardian Last Name</label>
-            <input type="text" id="guardian-last-name" placeholder="Enter Guardian Last Name">
-        </div>
-
-        <div class="input-field">
-            <label for="guardian-phone">Guardian Phone</label>
-            <input type="text" id="guardian-phone" placeholder="Enter Guardian Phone">
-        </div>
-
-        <div class="input-field">
-            <label for="guardian-address">Guardian Address</label>
-            <input type="text" id="guardian-address" placeholder="Enter Guardian Address">
-        </div>
-
-        <div class="input-field">
-            <label for="guardian-address-line2">Address Line 2</label>
-            <input type="text" id="guardian-address-line2" placeholder="Enter Address Line 2">
-        </div>
-
-        <div class="section-divider"></div>
-
-        <button class="button">Submit</button>
-    </div>
-</body>
-</html>
+```bash
+mkdir healthcare-api
+cd healthcare-api
+npm init -y
+npm install express body-parser cors
 ```
 
-### Part 2: Additional Input Fields and Sections
+2. **Create Project Structure**
 
-This second part will include sections for the clinical information and emergency contact details, continuing from where we left off.
+Create the following folder structure:
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Screen - Additional Information</title>
-    <style>
-        /* Include the same styles as in Part 1 */
-        /* ... (styles from Part 1) ... */
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Clinical Information</h2>
-        <div class="input-field">
-            <label for="as-diagnosis">Does your child have current Diagnosis of ASD?</label>
-            <input type="text" id="as-diagnosis" placeholder="Yes / No">
-        </div>
-        
-        <div class="input-field">
-            <label for="medical-condition">Does your child have any medical condition?</label>
-            <input type="text" id="medical-condition" placeholder="Yes / No">
-        </div>
-
-        <div class="section-divider"></div>
-
-        <h2>Emergency Contact</h2>
-        <div class="input-field">
-            <label for="emergency-contact-name">Emergency Contact Name</label>
-            <input type="text" id="emergency-contact-name" placeholder="Enter Emergency Contact Name">
-        </div>
-
-        <div class="input-field">
-            <label for="emergency-contact-phone">Emergency Contact Phone</label>
-            <input type="text" id="emergency-contact-phone" placeholder="Enter Emergency Contact Phone">
-        </div>
-
-        <div class="section-divider"></div>
-
-        <button class="button">Submit</button>
-    </div>
-</body>
-</html>
+```
+healthcare-api/
+├── index.js
+├── routes/
+│   ├── patient.js
+│   ├── appointment.js
+│   ├── emr.js
+│   ├── prescription.js
+│   └── billing.js
+└── middleware/
+    └── auth.js
 ```
 
-### Part 3: Final Touches and Additional Elements
+3. **Implementation**
 
-This part can include any additional elements and final touches to your design.
+Now we will implement the basic routes in each file.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Touches</title>
-    <style>
-        /* Include the same styles as in Part 1 */
-        /* ... (styles from Part 1) ... */
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Additional Options</h2>
-        <div class="input-field">
-            <label for="additional-info">Any Additional Information</label>
-            <textarea id="additional-info" rows="4" placeholder="Enter any additional information here..."></textarea>
-        </div>
+### `index.js`
 
-        <div class="section-divider"></div>
+```javascript
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 
-        <button class="button">Submit</button>
-    </div>
-</body>
-</html>
+const patientRoutes = require('./routes/patient');
+const appointmentRoutes = require('./routes/appointment');
+const emrRoutes = require('./routes/emr');
+const prescriptionRoutes = require('./routes/prescription');
+const billingRoutes = require('./routes/billing');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+// Use routes
+app.use('/patients', patientRoutes);
+app.use('/appointments', appointmentRoutes);
+app.use('/emr', emrRoutes);
+app.use('/prescriptions', prescriptionRoutes);
+app.use('/billing', billingRoutes);
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
 ```
 
-### Instructions
+### `routes/patient.js`
 
-1. **Copy and Paste Each Part**: Copy each part into separate HTML files (e.g., `index.html`, `additional.html`, `final.html`).
-2. **Merge If Necessary**: If you want to combine all parts into a single file, simply copy the contents of each part sequentially into one HTML file.
-3. **Run in Browser**: Open the resultant HTML file in a web browser to view your login screen.
+```javascript
+const express = require('express');
+const router = express.Router();
 
-### Notes
+// Mock data for demonstration
+let patients = [];
 
-- You can add more styles as needed to customize the appearance further.
-- Adjust the input types (e.g., changing text to email or date) according to your requirements.
-- Ensure that you have the "Inter" font available or link to it via Google Fonts in the head section for proper display. 
+// Register a new patient
+router.post('/', (req, res) => {
+    const newPatient = { id: patients.length + 1, ...req.body };
+    patients.push(newPatient);
+    res.status(201).json(newPatient);
+});
 
-This template is a basic structure and can be expanded or modified as needed to fit your specific design and functional requirements.
+// Retrieve patient details
+router.get('/:id', (req, res) => {
+    const patient = patients.find(p => p.id === parseInt(req.params.id));
+    if (!patient) return res.status(404).send('Patient not found');
+    res.json(patient);
+});
+
+// Update patient details
+router.put('/:id', (req, res) => {
+    const patient = patients.find(p => p.id === parseInt(req.params.id));
+    if (!patient) return res.status(404).send('Patient not found');
+    Object.assign(patient, req.body);
+    res.json(patient);
+});
+
+// Deactivate patient profile
+router.delete('/:id', (req, res) => {
+    const patientIndex = patients.findIndex(p => p.id === parseInt(req.params.id));
+    if (patientIndex === -1) return res.status(404).send('Patient not found');
+    patients.splice(patientIndex, 1);
+    res.status(204).send();
+});
+
+module.exports = router;
+```
+
+### `routes/appointment.js`
+
+```javascript
+const express = require('express');
+const router = express.Router();
+
+// Mock data for demonstration
+let appointments = [];
+
+// Schedule an appointment
+router.post('/', (req, res) => {
+    const newAppointment = { id: appointments.length + 1, ...req.body };
+    appointments.push(newAppointment);
+    res.status(201).json(newAppointment);
+});
+
+// Modify or cancel an appointment
+router.put('/:id', (req, res) => {
+    const appointment = appointments.find(a => a.id === parseInt(req.params.id));
+    if (!appointment) return res.status(404).send('Appointment not found');
+    Object.assign(appointment, req.body);
+    res.json(appointment);
+});
+
+// Retrieve doctor availability (mock)
+router.get('/doctors/:id/availability', (req, res) => {
+    // Return mock availability for demonstration
+    res.json({ available: true });
+});
+
+module.exports = router;
+```
+
+### `routes/emr.js`
+
+```javascript
+const express = require('express');
+const router = express.Router();
+
+// Mock data for demonstration
+let medicalRecords = [];
+
+// Retrieve medical records
+router.get('/patients/:id/records', (req, res) => {
+    const records = medicalRecords.filter(record => record.patientId === parseInt(req.params.id));
+    res.json(records);
+});
+
+// Add/update medical records
+router.post('/patients/:id/records', (req, res) => {
+    const newRecord = { id: medicalRecords.length + 1, patientId: parseInt(req.params.id), ...req.body };
+    medicalRecords.push(newRecord);
+    res.status(201).json(newRecord);
+});
+
+module.exports = router;
+```
+
+### `routes/prescription.js`
+
+```javascript
+const express = require('express');
+const router = express.Router();
+
+// Mock data for demonstration
+let prescriptions = [];
+
+// Generate digital prescription
+router.post('/', (req, res) => {
+    const newPrescription = { id: prescriptions.length + 1, ...req.body };
+    prescriptions.push(newPrescription);
+    res.status(201).json(newPrescription);
+});
+
+// Retrieve prescription details
+router.get('/:id', (req, res) => {
+    const prescription = prescriptions.find(p => p.id === parseInt(req.params.id));
+    if (!prescription) return res.status(404).send('Prescription not found');
+    res.json(prescription);
+});
+
+module.exports = router;
+```
+
+### `routes/billing.js`
+
+```javascript
+const express = require('express');
+const router = express.Router();
+
+// Mock data for demonstration
+let invoices = [];
+
+// Generate invoice
+router.post('/', (req, res) => {
+    const newInvoice = { id: invoices.length + 1, ...req.body };
+    invoices.push(newInvoice);
+    res.status(201).json(newInvoice);
+});
+
+// Retrieve invoice details
+router.get('/:id', (req, res) => {
+    const invoice = invoices.find(i => i.id === parseInt(req.params.id));
+    if (!invoice) return res.status(404).send('Invoice not found');
+    res.json(invoice);
+});
+
+module.exports = router;
+```
+
+### Middleware for Authentication (Optional)
+
+You can create an `auth.js` middleware to handle authentication using OAuth 2.0 or JWT, but this is optional for this basic implementation.
+
+### Running the Application
+
+To run the application, execute the following command in your terminal:
+
+```bash
+node index.js
+```
+
+Your API will be accessible at `http://localhost:3000`, and you can test it using tools like Postman or CURL.
+
+### Conclusion
+
+This is a simple Express.js setup for the Healthcare API System as per the BRD. In a real-world scenario, you would need to integrate a database for persistent storage, implement proper error handling, input validation, and possibly a logging mechanism. You would also ensure compliance with security standards like HIPAA for handling sensitive patient data.
