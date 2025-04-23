@@ -1,119 +1,208 @@
-Below is a complete, responsive HTML file based on the provided Figma metadata. I've used Bootstrap 5 to structure the layout and ensured that the styles, fonts, and colors match the given specifications.
+To develop an Express.js application that meets the requirements outlined in the Business Requirements Document (BRD), we will create a basic structure for the API endpoints specified. Below is a simplified example of how to set up the Express server with the necessary routes and middleware to handle the specified API functionalities.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Client Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #1E1E1E;
-            font-family: 'Inter', sans-serif;
-        }
-        .container {
-            background-color: #FFFFFF;
-            width: 100%;
-            max-width: 1447px;
-            margin: 92px auto;
-            padding: 0 50px;
-            position: relative;
-        }
-        .section-title {
-            font-size: 50px;
-            color: #080808;
-        }
-        .breadcrumb {
-            font-size: 31px;
-            color: #000000;
-        }
-        .nav-tabs {
-            border-bottom: none;
-        }
-        .nav-link {
-            font-size: 31px;
-            color: #767676;
-        }
-        .nav-link.active {
-            color: #3D244B;
-            border-width: 0 0 9px 0;
-            border-style: solid;
-            border-color: #0F0E70;
-            background-color: transparent;
-            padding-bottom: 0;
-        }
-        .form-label {
-            font-weight: bold;
-            font-size: 31px;
-            color: #000000;
-        }
-        .detail-box {
-            background-color: #D9D9D9;
-            height: 68px;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-        }
-        .detail-box label {
-            font-size: 19px;
-            color: #767676;
-            margin-bottom: 0;
-            width: 100%;
-        }
-        .detail-box input {
-            font-size: 31px;
-            color: #000000;
-            border: none;
-            background-color: transparent;
-            width: 100%;
-        }
-        hr {
-            border: 0;
-            border-top: 1px solid #000000;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <input type="text" class="section-title" value="Edit Client Profile" readonly>
-        <hr>
-        <input type="text" class="breadcrumb" value="Client Profile > Edit Client Profile" readonly>
-        <ul class="nav nav-tabs mt-3">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Profile Information</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Inquiries</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Engagements</a>
-            </li>
-        </ul>
-        <div class="mt-4">
-            <label class="form-label">Client & Guardian Details</label>
-        </div>
-        <div class="detail-box mt-3">
-            <label for="first-name">First Name</label>
-            <input type="text" id="first-name" value="Jhon">
-        </div>
-        <div class="detail-box mt-3">
-            <label for="last-name">Last Name</label>
-            <input type="text" id="last-name" value="Wick">
-        </div>
-        <div class="detail-box mt-3">
-            <label for="race-ethnicity">Race/Ethnicity</label>
-            <input type="text" id="race-ethnicity" value="Select Race/Ethnicity">
-        </div>
-        <div class="detail-box mt-3">
-            <label for="birth-date">Birth Date</label>
-            <input type="text" id="birth-date" value="03/12/2022">
-        </div>
-    </div>
-</body>
-</html>
+### Step 1: Set Up Your Project
+
+1. **Initialize the Project**
+   ```bash
+   mkdir healthcare-api
+   cd healthcare-api
+   npm init -y
+   npm install express body-parser mongoose cors dotenv
+   ```
+
+2. **Create Basic File Structure**
+   ```bash
+   mkdir src
+   cd src
+   touch server.js routes.js controllers.js models.js middleware.js
+   ```
+
+### Step 2: Implement the Server
+
+**server.js**
+```javascript
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const routes = require('./routes');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+
+// Connect to MongoDB (replace 'your_mongo_db_uri' with your actual MongoDB URI)
+mongoose.connect('your_mongo_db_uri', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
+
+// API Routes
+app.use('/api', routes);
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
 ```
 
-This HTML file includes a responsive layout using Bootstrap 5 and styles inline with the provided Figma metadata. Ensure to have an internet connection for the Bootstrap and Google Fonts CDN links to work correctly. Adjust any paths or CDN versions as needed for your project requirements.
+### Step 3: Define Routes
+
+**routes.js**
+```javascript
+const express = require('express');
+const router = express.Router();
+const { 
+  registerPatient, 
+  getPatient, 
+  updatePatient, 
+  deactivatePatient,
+  scheduleAppointment,
+  modifyAppointment,
+  getDoctorAvailability,
+  getMedicalRecords,
+  addMedicalRecords,
+  generatePrescription,
+  getPrescription,
+  generateInvoice,
+  getInvoice,
+  processInsuranceClaim 
+} = require('./controllers');
+
+// Patient Management Routes
+router.post('/patients', registerPatient);
+router.get('/patients/:id', getPatient);
+router.put('/patients/:id', updatePatient);
+router.delete('/patients/:id', deactivatePatient);
+
+// Appointment Scheduling Routes
+router.post('/appointments', scheduleAppointment);
+router.put('/appointments/:id', modifyAppointment);
+router.get('/doctors/:id/availability', getDoctorAvailability);
+
+// EMR Routes
+router.get('/patients/:id/records', getMedicalRecords);
+router.post('/patients/:id/records', addMedicalRecords);
+
+// Prescription Management Routes
+router.post('/prescriptions', generatePrescription);
+router.get('/prescriptions/:id', getPrescription);
+
+// Billing & Insurance Routes
+router.post('/billing', generateInvoice);
+router.get('/billing/:id', getInvoice);
+router.post('/insurance/claims', processInsuranceClaim);
+
+module.exports = router;
+```
+
+### Step 4: Implement Controllers
+
+**controllers.js**
+```javascript
+// Placeholder functions - implement actual logic as needed
+exports.registerPatient = (req, res) => {
+  // Logic to register a new patient
+  res.send("Patient registered.");
+};
+
+exports.getPatient = (req, res) => {
+  // Logic to retrieve a patient
+  res.send(`Details of patient with ID: ${req.params.id}`);
+};
+
+exports.updatePatient = (req, res) => {
+  // Logic to update patient details
+  res.send(`Patient with ID ${req.params.id} updated.`);
+};
+
+exports.deactivatePatient = (req, res) => {
+  // Logic to deactivate a patient profile
+  res.send(`Patient with ID ${req.params.id} deactivated.`);
+};
+
+exports.scheduleAppointment = (req, res) => {
+  // Logic to schedule an appointment
+  res.send("Appointment scheduled.");
+};
+
+exports.modifyAppointment = (req, res) => {
+  // Logic to modify or cancel an appointment
+  res.send(`Appointment with ID ${req.params.id} modified.`);
+};
+
+exports.getDoctorAvailability = (req, res) => {
+  // Logic to get doctor's availability
+  res.send(`Availability for doctor with ID: ${req.params.id}`);
+};
+
+exports.getMedicalRecords = (req, res) => {
+  // Logic to retrieve medical records
+  res.send(`Medical records for patient with ID: ${req.params.id}`);
+};
+
+exports.addMedicalRecords = (req, res) => {
+  // Logic to add/update medical records
+  res.send(`Medical records for patient with ID: ${req.params.id} updated.`);
+};
+
+exports.generatePrescription = (req, res) => {
+  // Logic to generate a prescription
+  res.send("Prescription generated.");
+};
+
+exports.getPrescription = (req, res) => {
+  // Logic to retrieve a prescription
+  res.send(`Prescription details for ID: ${req.params.id}`);
+};
+
+exports.generateInvoice = (req, res) => {
+  // Logic to generate an invoice
+  res.send("Invoice generated.");
+};
+
+exports.getInvoice = (req, res) => {
+  // Logic to retrieve an invoice
+  res.send(`Invoice details for ID: ${req.params.id}`);
+};
+
+exports.processInsuranceClaim = (req, res) => {
+  // Logic to process insurance claims
+  res.send("Insurance claim processed.");
+};
+```
+
+### Step 5: Middleware for Security and Compliance (Optional)
+
+**middleware.js**
+```javascript
+const jwt = require('jsonwebtoken');
+
+// Middleware for authentication
+exports.verifyToken = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.sendStatus(403);
+  
+  jwt.verify(token.split(' ')[1], process.env.SECRET_KEY, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+```
+
+### Step 6: Run the Server
+Start the server by running:
+```bash
+node src/server.js
+```
+
+### Step 7: Testing the API
+You can use tools like Postman or curl to test your API endpoints as you implement the logic for each controller function.
+
+### Note
+Make sure to implement actual data handling, error handling, and security features (like input validation and secure token management) as per your application's requirements. Also, replace 'your_mongo_db_uri' with your actual MongoDB connection string.
+
+This example provides a foundational structure for the healthcare API system that can be expanded with additional features and integrations as needed.
