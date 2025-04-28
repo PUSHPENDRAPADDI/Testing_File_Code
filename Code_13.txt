@@ -1,0 +1,116 @@
+Certainly! Below is a comprehensive Angular unit test file (`component.spec.ts`) for the client profile component based on the user story and data specification you provided. This example assumes you have a client profile component set up in your Angular application. It will include tests for various functionalities such as creating a new profile, editing, saving, and validating the input fields.
+
+```typescript
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ClientProfileComponent } from './client-profile.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+
+describe('ClientProfileComponent', () => {
+  let component: ClientProfileComponent;
+  let fixture: ComponentFixture<ClientProfileComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ClientProfileComponent],
+      imports: [ReactiveFormsModule],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ClientProfileComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize the form', () => {
+    expect(component.clientProfileForm).toBeDefined();
+    expect(component.clientProfileForm.controls['firstName']).toBeDefined();
+    expect(component.clientProfileForm.controls['lastName']).toBeDefined();
+    expect(component.clientProfileForm.controls['birthDate']).toBeDefined();
+    // Add more fields as per your form structure
+  });
+
+  it('should validate mandatory fields', () => {
+    const firstNameControl = component.clientProfileForm.controls['firstName'];
+    const lastNameControl = component.clientProfileForm.controls['lastName'];
+
+    firstNameControl.setValue('');
+    lastNameControl.setValue('');
+
+    expect(firstNameControl.valid).toBeFalsy();
+    expect(lastNameControl.valid).toBeFalsy();
+  });
+
+  it('should save the profile when valid', () => {
+    component.clientProfileForm.controls['firstName'].setValue('John');
+    component.clientProfileForm.controls['lastName'].setValue('Doe');
+    component.clientProfileForm.controls['birthDate'].setValue('2000-01-01');
+    // Set other fields accordingly
+
+    expect(component.clientProfileForm.valid).toBeTruthy();
+
+    component.saveProfile();
+    
+    // Assuming saveProfile() makes a service call or similar
+    expect(component.isSaved).toBeTrue(); // Assuming you have an isSaved flag to indicate save success
+  });
+
+  it('should display error messages for invalid fields', () => {
+    const firstNameInput = fixture.debugElement.query(By.css('input[name="firstName"]'));
+    const lastNameInput = fixture.debugElement.query(By.css('input[name="lastName"]'));
+    
+    firstNameInput.nativeElement.value = '';
+    lastNameInput.nativeElement.value = '';
+    firstNameInput.nativeElement.dispatchEvent(new Event('input'));
+    lastNameInput.nativeElement.dispatchEvent(new Event('input'));
+    
+    fixture.detectChanges();
+
+    const errorMsg = fixture.debugElement.query(By.css('.error-message')); // Adjust based on your error message class
+    expect(errorMsg).toBeTruthy(); // Expect at least one error message to be displayed
+  });
+
+  it('should show percentage completion', () => {
+    component.clientProfileForm.controls['firstName'].setValue('John');
+    component.clientProfileForm.controls['lastName'].setValue('Doe');
+    // Set other fields accordingly
+
+    const completionPercent = component.calculateCompletionPercentage(); // Assuming this method calculates completion
+    expect(completionPercent).toBeGreaterThan(0);
+    expect(completionPercent).toBeLessThanOrEqual(100);
+  });
+
+  it('should allow multiple saves', () => {
+    component.clientProfileForm.controls['firstName'].setValue('John');
+    component.saveProfile();
+    
+    expect(component.isSaved).toBeTrue();
+
+    component.clientProfileForm.controls['lastName'].setValue('Smith');
+    component.saveProfile();
+    
+    expect(component.isSaved).toBeTrue();
+  });
+
+  // Add more tests to cover other functionalities as required
+});
+```
+
+### Explanation
+1. **Component Initialization**: The first test checks if the component initializes correctly.
+2. **Form Initialization**: The second test verifies that the form controls are defined.
+3. **Field Validation**: The third test checks if mandatory fields validate correctly.
+4. **Profile Saving**: The fourth test checks if a valid form can be saved and sets a flag indicating success.
+5. **Error Messages**: The fifth test ensures that error messages are displayed for invalid fields.
+6. **Completion Percentage**: The sixth test checks if the completion percentage can be calculated correctly based on filled fields.
+7. **Multiple Saves**: The seventh test checks if multiple saves can be performed correctly.
+
+### Notes
+- Adjust the selectors and method names based on your actual component implementation and HTML structure.
+- Ensure that you implement the `saveProfile`, `calculateCompletionPercentage`, and other methods in your component accordingly to make these tests pass.
+- Include additional tests to cover other functionalities as necessary.
