@@ -1,0 +1,220 @@
+Certainly! Based on your detailed requirements for a client profile management system in .NET, I'll provide you with a simplified version of the code for the management layer. This will include basic functionalities such as creating, updating, retrieving, and deleting client profiles, along with managing user roles and statuses.
+
+For simplicity, I'll use Entity Framework Core for data access and assume that you're using a SQL Server database. This example will focus on the management layer, including basic CRUD operations.
+
+### Step 1: Define the ClientProfile Model
+
+First, let's define a `ClientProfile` model class representing the client profile.
+
+```csharp
+public class ClientProfile
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Address { get; set; }
+    public string ContactNumber { get; set; }
+    public string InsuranceDetails { get; set; }
+    public string ClinicPreference { get; set; }
+    public string MedicalHistory { get; set; }
+    public string Status { get; set; } // New, In Process, Complete
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+}
+```
+
+### Step 2: Create the DbContext
+
+Next, create a `DbContext` class to manage the database connections and entities.
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+public class ApplicationDbContext : DbContext
+{
+    public DbSet<ClientProfile> ClientProfiles { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("YourConnectionStringHere");
+    }
+}
+```
+
+### Step 3: Create the Repository
+
+Now, create a repository to handle the operations for client profiles.
+
+```csharp
+using System.Collections.Generic;
+using System.Linq;
+
+public class ClientProfileRepository
+{
+    private readonly ApplicationDbContext _context;
+
+    public ClientProfileRepository(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public void AddClientProfile(ClientProfile profile)
+    {
+        profile.CreatedAt = DateTime.Now;
+        profile.UpdatedAt = DateTime.Now;
+        _context.ClientProfiles.Add(profile);
+        _context.SaveChanges();
+    }
+
+    public ClientProfile GetClientProfile(int id)
+    {
+        return _context.ClientProfiles.Find(id);
+    }
+
+    public IEnumerable<ClientProfile> GetAllClientProfiles()
+    {
+        return _context.ClientProfiles.ToList();
+    }
+
+    public void UpdateClientProfile(ClientProfile profile)
+    {
+        profile.UpdatedAt = DateTime.Now;
+        _context.ClientProfiles.Update(profile);
+        _context.SaveChanges();
+    }
+
+    public void DeleteClientProfile(int id)
+    {
+        var profile = _context.ClientProfiles.Find(id);
+        if (profile != null)
+        {
+            _context.ClientProfiles.Remove(profile);
+            _context.SaveChanges();
+        }
+    }
+}
+```
+
+### Step 4: Create the Service Layer
+
+Now, create a service layer to abstract the business logic from the controllers.
+
+```csharp
+using System.Collections.Generic;
+
+public class ClientProfileService
+{
+    private readonly ClientProfileRepository _repository;
+
+    public ClientProfileService(ClientProfileRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public void CreateProfile(ClientProfile profile)
+    {
+        _repository.AddClientProfile(profile);
+    }
+
+    public ClientProfile GetProfile(int id)
+    {
+        return _repository.GetClientProfile(id);
+    }
+
+    public IEnumerable<ClientProfile> GetAllProfiles()
+    {
+        return _repository.GetAllClientProfiles();
+    }
+
+    public void UpdateProfile(ClientProfile profile)
+    {
+        _repository.UpdateClientProfile(profile);
+    }
+
+    public void DeleteProfile(int id)
+    {
+        _repository.DeleteClientProfile(id);
+    }
+}
+```
+
+### Step 5: Create the Controller
+
+Finally, create a simple ASP.NET Core controller to expose these functionalities via an API.
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ClientProfilesController : ControllerBase
+{
+    private readonly ClientProfileService _service;
+
+    public ClientProfilesController(ClientProfileService service)
+    {
+        _service = service;
+    }
+
+    [HttpPost]
+    public IActionResult CreateProfile([FromBody] ClientProfile profile)
+    {
+        _service.CreateProfile(profile);
+        return CreatedAtAction(nameof(GetProfile), new { id = profile.Id }, profile);
+    }
+
+    [HttpGet("{id}")]
+    public IActionResult GetProfile(int id)
+    {
+        var profile = _service.GetProfile(id);
+        if (profile == null)
+        {
+            return NotFound();
+        }
+        return Ok(profile);
+    }
+
+    [HttpGet]
+    public IActionResult GetAllProfiles()
+    {
+        var profiles = _service.GetAllProfiles();
+        return Ok(profiles);
+    }
+
+    [HttpPut("{id}")]
+    public IActionResult UpdateProfile(int id, [FromBody] ClientProfile profile)
+    {
+        if (id != profile.Id)
+        {
+            return BadRequest();
+        }
+        _service.UpdateProfile(profile);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeleteProfile(int id)
+    {
+        _service.DeleteProfile(id);
+        return NoContent();
+    }
+}
+```
+
+### Step 6: Configure Dependency Injection
+
+In your `Startup.cs`, make sure to configure the dependency injection for your services and repositories.
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddDbContext<ApplicationDbContext>();
+    services.AddScoped<ClientProfileRepository>();
+    services.AddScoped<ClientProfileService>();
+    services.AddControllers();
+}
+```
+
+### Conclusion
+
+This is a foundational structure for your management layer in a .NET application. Depending on your requirements, you can expand this by adding validation, authentication, role-based access control, logging, and exception handling. This example should help you get started with building a more robust application tailored to your healthcare service needs.
