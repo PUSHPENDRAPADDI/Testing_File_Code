@@ -1,99 +1,110 @@
-Below is the HTML structure with inline CSS based on the provided Figma JSON data. This example includes semantic HTML tags, form inputs, section titles, and navigation tabs, matching the styles specified in the JSON.
+To create a comprehensive Angular component for your user story and data specification, we'll structure the component to handle client profile data collection, including input fields for demographics, medical history, and inquiries, as well as functionality for saving and editing profiles.
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Screen</title>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #1e1e1e;
-            color: #000;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            width: 1447px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-        }
-        .navigation {
-            background-color: #d9d9d9;
-            height: 82px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .section-title {
-            font-size: 31px;
-            font-weight: 700;
-            color: #000;
-        }
-        .info-section {
-            margin-top: 20px;
-        }
-        .info-box {
-            background-color: #d9d9d9;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        .form-input {
-            font-size: 31px;
-            padding: 10px;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-        .tab {
-            display: inline-block;
-            margin-right: 20px;
-            color: #3b3b3b;
-            font-size: 31px;
-        }
-        .active-tab {
-            color: #0731b1;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="navigation"></div>
-        <div class="info-section">
-            <h1 class="section-title">Profile Information</h1>
-            <div class="info-box">
-                <label for="firstName" class="tab active-tab">First Name</label>
-                <input type="text" id="firstName" class="form-input" placeholder="Enter first name">
-            </div>
-            <div class="info-box">
-                <label for="lastName" class="tab">Last Name</label>
-                <input type="text" id="lastName" class="form-input" placeholder="Enter last name">
-            </div>
-        </div>
-        <div class="info-section">
-            <h1 class="section-title">Client Details</h1>
-            <div class="info-box">
-                <label for="clientName" class="tab">Client Name</label>
-                <input type="text" id="clientName" class="form-input" placeholder="Enter client name">
-            </div>
-            <div class="info-box">
-                <label for="guardianName" class="tab">Guardian Name</label>
-                <input type="text" id="guardianName" class="form-input" placeholder="Enter guardian name">
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+Below is a sample Angular component code (`client-profile.component.ts`) based on your specifications:
+
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-client-profile',
+  templateUrl: './client-profile.component.html',
+  styleUrls: ['./client-profile.component.css']
+})
+export class ClientProfileComponent implements OnInit {
+  clientProfileForm: FormGroup;
+  status: string = 'not_started';
+  percentageCompletion: number = 0;
+
+  constructor(private fb: FormBuilder) {
+    this.clientProfileForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
+      birthDate: ['', Validators.required],
+      addressLine1: ['', [Validators.required, Validators.maxLength(300)]],
+      addressLine2: ['', Validators.maxLength(300)],
+      homeZipCode: ['', [Validators.required, Validators.maxLength(10)]],
+      homeState: ['', [Validators.required, Validators.maxLength(50)]],
+      raceEthnicity: ['', Validators.required],
+      primaryPhone: ['', [Validators.required, Validators.maxLength(15)]],
+      secondaryPhone: ['', [Validators.maxLength(15)]],
+      parentGuardianDetails: this.fb.group({
+        parentFirstName: ['', [Validators.required, Validators.maxLength(50)]],
+        parentLastName: ['', [Validators.required, Validators.maxLength(50)]],
+        parentAddress: ['', [Validators.required, Validators.maxLength(300)]],
+        emergencyContactName: ['', [Validators.required, Validators.maxLength(50)]],
+        emergencyContactPhone: ['', [Validators.required, Validators.maxLength(15)]],
+        isGuardianSameAsEmergency: [false]
+      }),
+      inquiries: this.fb.array([]),
+      medicalHistory: this.fb.group({
+        diagnosisOfASD: [false],
+        hasMedicalCondition: [false],
+        currentDiagnosisDetails: ['']
+      })
+    });
+  }
+
+  ngOnInit(): void {
+    // On initialization, check if form is empty or partially filled
+    this.updateStatusAndCompletion();
+  }
+
+  addInquiry(): void {
+    // Logic to add a new inquiry
+    // This could be an array of inquiries in a FormArray
+  }
+
+  saveProfile(): void {
+    if (this.clientProfileForm.valid) {
+      // Logic to save the client profile data
+      console.log('Saved Profile Data', this.clientProfileForm.value);
+      this.status = 'complete';
+      this.updateStatusAndCompletion();
+    } else {
+      console.log('Form is invalid, please fill all required fields.');
+    }
+  }
+
+  updateStatusAndCompletion(): void {
+    const totalFields = Object.keys(this.clientProfileForm.controls).length;
+    const filledFields = Object.keys(this.clientProfileForm.controls).filter(field => 
+      this.clientProfileForm.get(field)?.value).length;
+
+    this.percentageCompletion = (filledFields / totalFields) * 100;
+
+    if (this.percentageCompletion === 0) {
+      this.status = 'not_started';
+    } else if (this.percentageCompletion < 100) {
+      this.status = 'in_process';
+    } else {
+      this.status = 'complete';
+    }
+  }
+
+  // Add any other methods required for validation, editing, etc.
+}
 ```
 
 ### Explanation:
-1. **Font and Colors**: The CSS uses the `Inter` font family and color codes directly from the Figma JSON. The background colors for different sections are set according to the `fills` values.
+1. **Imports and Decorator:**
+   - We import necessary Angular modules and decorators.
+   - The `@Component` decorator defines the selector, template URL, and styles for the component.
 
-2. **Layout and Spacing**: The layout dimensions (width and height) are set according to the `absoluteBoundingBox` values. Margins and paddings are assumed for better visual separation.
+2. **Form Initialization:**
+   - The `FormBuilder` is used to create a reactive form (`clientProfileForm`).
+   - The form includes various fields as per your specifications, with validations for required fields and maximum character limits.
 
-3. **Form Inputs**: Text inputs are provided for user data entry, styled according to the specifications.
+3. **Status and Completion Logic:**
+   - A status (`not_started`, `in_process`, `complete`) is tracked based on the form's filled status.
+   - A method to calculate the percentage completion based on filled fields.
 
-4. **Navigation and Tabs**: Simple navigation and tab structures are included, with active states for selected tabs.
+4. **Methods:**
+   - `addInquiry()`: Placeholder method to add inquiries (you can implement the logic as required).
+   - `saveProfile()`: Validates the form and logs the profile data if valid.
+   - `updateStatusAndCompletion()`: Updates the status and calculates the completion percentage.
 
-This HTML file should be viewed in a modern web browser for best results. Adjustments might be needed based on additional context or specific design requirements not covered in the JSON data.
+### Note:
+- You'll need to create the corresponding HTML template (`client-profile.component.html`) to build the form UI.
+- Additional methods for editing profiles and handling inquiries can be added based on your needs.
+- Ensure that you have reactive forms module imported in your Angular module file.
