@@ -1,132 +1,177 @@
-Below is a complete `index.html` file that recreates the UI screen layout described in the provided Figma metadata. The HTML uses Bootstrap 5 classes for layout and styling, and all specific styles are embedded in the `<style>` tag.
+Based on the conversation and requirements you've provided for the healthcare client profile application, below is a basic structure of a .NET application that could help you automate the collection and management of patient information. This includes a simple model, a controller, and a view. 
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Screen</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #FFFFFF;
-        }
-        .container {
-            max-width: 1447px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .header {
-            font-family: 'Inter', sans-serif;
-            font-size: 50px;
-            font-weight: 400;
-            color: rgba(0.030769200995564461, 0.030769200995564461, 0.030769200995564461, 1);
-            margin-bottom: 20px;
-        }
-        .breadcrumb {
-            font-family: 'Inter', sans-serif;
-            font-size: 31px;
-            color: rgba(0.0, 0.0, 0.0, 1);
-            margin-bottom: 20px;
-        }
-        .section-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 31px;
-            font-weight: 700;
-            color: rgba(0.0, 0.0, 0.0, 1);
-            margin-bottom: 10px;
-        }
-        .sub-section-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 31px;
-            color: rgba(0.24007616937160492, 0.14158660173416138, 0.59615385532379150, 1);
-            margin-bottom: 10px;
-        }
-        .text-muted {
-            font-family: 'Inter', sans-serif;
-            font-size: 19px;
-            color: rgba(0.46538469195365906, 0.46135723590850830, 0.46135723590850830, 1);
-        }
-        .date-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 19px;
-            color: rgba(0.46538469195365906, 0.46135723590850830, 0.46135723590850830, 1);
-        }
-        .data-entry {
-            font-family: 'Inter', sans-serif;
-            font-size: 31px;
-            color: rgba(0.0, 0.0, 0.0, 1);
-            margin-bottom: 20px;
-        }
-        .form-field {
-            border: 1px solid rgba(0.85098040103912354, 0.85098040103912354, 0.85098040103912354, 1);
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 20px;
-        }
-        .divider {
-            height: 5px;
-            background-color: rgba(0.060654383152723312, 0.060654383152723312, 0.88846164941787720, 1);
-            margin: 20px 0;
-        }
-        .arrow {
-            width: 0;
-            height: 5px;
-            border-left: 4px solid rgba(0.0, 0.0, 0.0, 1);
-            transform: rotate(90deg);
-            margin-left: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1 class="header">Edit Client Profile</h1>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item text-muted">Client Profile</li>
-                <div class="arrow"></div>
-                <li class="breadcrumb-item active" aria-current="page">Edit Client Profile</li>
-            </ol>
-        </nav>
-        
-        <div class="section-title">Client Details</div>
-        <div class="sub-section-title">Profile Information</div>
-        <div class="form-field">First Name: <span class="data-entry">Jhon</span></div>
-        <div class="form-field">Last Name: <span class="data-entry">Wick</span></div>
-        <div class="form-field">Birth Date: <span class="data-entry">03/12/2022</span></div>
-        <div class="form-field">Race/Ethnicity: <span class="data-entry">Select Race/Ethnicity</span></div>
-        
-        <div class="divider"></div>
-        
-        <div class="section-title">Inquiries</div>
-        <div class="text-muted">Inquiries</div>
-        <div class="section-title">Engagements</div>
-        <div class="text-muted">Engagements</div>
-        
-        <div class="divider"></div>
-        
-        <div class="section-title">Client & Guardian Details</div>
-        <div class="form-field">Guardian Name: <span class="data-entry">[Guardian Name]</span></div>
-        <div class="form-field">Guardian Contact: <span class="data-entry">[Guardian Contact]</span></div>
-        
-        <div class="divider"></div>
-        
-        <footer>
-            <p class="text-muted">© 2025 Your Company Name</p>
-        </footer>
-    </div>
+### 1. Model
+
+First, we will create a model class to represent the patient or client profile.
+
+```csharp
+public class ClientProfile
+{
+    public int Id { get; set; }
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    // Basic Demographics
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Address { get; set; }
+    public string ContactNumber { get; set; }
+    public string InsuranceDetails { get; set; }
+    public string PreferredClinic { get; set; }
+    
+    // Medical History
+    public string OngoingTreatment { get; set; }
+    public string BehaviorStatus { get; set; }
+    public string CommunicationLevel { get; set; }
+    
+    // Status
+    public string Status { get; set; } // e.g., New, In Process, Complete
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
+    public DateTime? CompletedDate { get; set; }
+
+    // Inquiry Tracking
+    public List<string> Inquiries { get; set; } = new List<string>();
+}
 ```
 
-### Explanation:
-1. **HTML Structure**: The HTML is structured using Bootstrap's grid system and utility classes to ensure proper alignment and spacing.
-2. **Custom Styles**: All specific styles (color codes, font sizes, etc.) are included in the `<style>` tag to match the design exactly as per the metadata.
-3. **Text Content**: The actual content from the Figma metadata is used instead of placeholders.
-4. **Responsive Design**: The layout is responsive, taking advantage of Bootstrap's classes to ensure the design adapts to different screen sizes.
-5. **Semantically Correct**: The HTML is well-structured and adheres to semantic HTML practices.
+### 2. Database Context
 
-You can save this code as `index.html` and open it in a web browser to see the rendered UI. Adjust any specific details as needed based on further design requirements or updates.
+Next, we need a DbContext to interact with the database.
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+
+public class ApplicationDbContext : DbContext
+{
+    public DbSet<ClientProfile> ClientProfiles { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("YourConnectionStringHere");
+    }
+}
+```
+
+### 3. Controller
+
+Now, we will create a controller to manage the client profiles.
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+
+public class ClientProfileController : Controller
+{
+    private readonly ApplicationDbContext _context;
+
+    public ClientProfileController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    // GET: ClientProfile
+    public IActionResult Index()
+    {
+        var profiles = _context.ClientProfiles.ToList();
+        return View(profiles);
+    }
+
+    // GET: ClientProfile/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    // POST: ClientProfile/Create
+    [HttpPost]
+    public IActionResult Create(ClientProfile profile)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.ClientProfiles.Add(profile);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        return View(profile);
+    }
+
+    // GET: ClientProfile/Edit/5
+    public IActionResult Edit(int id)
+    {
+        var profile = _context.ClientProfiles.Find(id);
+        return View(profile);
+    }
+
+    // POST: ClientProfile/Edit/5
+    [HttpPost]
+    public IActionResult Edit(ClientProfile profile)
+    {
+        if (ModelState.IsValid)
+        {
+            _context.ClientProfiles.Update(profile);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+        return View(profile);
+    }
+}
+```
+
+### 4. Views
+
+You'll need to create views for these actions. Here’s a basic example for the Create view (`Create.cshtml`):
+
+```html
+@model ClientProfile
+
+<form asp-action="Create">
+    <div>
+        <label asp-for="FirstName"></label>
+        <input asp-for="FirstName" required />
+    </div>
+    <div>
+        <label asp-for="LastName"></label>
+        <input asp-for="LastName" required />
+    </div>
+    <div>
+        <label asp-for="Address"></label>
+        <input asp-for="Address" required />
+    </div>
+    <div>
+        <label asp-for="ContactNumber"></label>
+        <input asp-for="ContactNumber" required />
+    </div>
+    <div>
+        <label asp-for="InsuranceDetails"></label>
+        <input asp-for="InsuranceDetails" />
+    </div>
+    <div>
+        <label asp-for="PreferredClinic"></label>
+        <input asp-for="PreferredClinic" />
+    </div>
+    <div>
+        <label asp-for="OngoingTreatment"></label>
+        <input asp-for="OngoingTreatment" />
+    </div>
+    <div>
+        <label asp-for="BehaviorStatus"></label>
+        <input asp-for="BehaviorStatus" />
+    </div>
+    <div>
+        <label asp-for="CommunicationLevel"></label>
+        <input asp-for="CommunicationLevel" />
+    </div>
+    <div>
+        <button type="submit">Save</button>
+    </div>
+</form>
+```
+
+### 5. Optional Features
+
+- **Validation Attributes:** You can add validation attributes to the model properties to enforce constraints like required fields, string length, etc.
+- **Status Tracking and Completion Percentage:** You might want to add logic to calculate how much of the form is completed and display that somewhere in your UI.
+- **User Role Management:** Implement user authentication and role management if you need to restrict access to certain features.
+- **Data Fetching:** You can implement methods to fetch data from the client profile for various stages of the treatment process.
+
+### Conclusion
+
+This is a basic setup to get you started with your client profile management system in .NET. You can expand upon this by adding more features like error handling, notifications, or integrating with an existing EMR system as needed. Be sure to test thoroughly and implement security best practices, especially when handling sensitive healthcare information.
