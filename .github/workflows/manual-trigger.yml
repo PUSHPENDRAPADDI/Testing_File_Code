@@ -1,24 +1,42 @@
-name: Manual Trigger
+# name: Manual Trigger
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: 'Choose environment'
+#         required: true
+#         default: 'staging'
+#         type: choice
+#         options:
+#           - staging
+#           - production
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Print Environment
+#         run: echo "Deploying to ${{ github.event.inputs.environment }}"
+
+#       # You can add your actual deployment script here
+#       - name: Simulate Deployment
+#         run: echo "🚀 Deploy logic goes here!"
+
+
+
+
+
+name: Call DummyJSON API
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Choose environment'
-        required: true
-        default: 'staging'
-        type: choice
-        options:
-          - staging
-          - production
 
 jobs:
-  deploy:
+  call-api:
     runs-on: ubuntu-latest
     steps:
-      - name: Print Environment
-        run: echo "Deploying to ${{ github.event.inputs.environment }}"
-
-      # You can add your actual deployment script here
-      - name: Simulate Deployment
-        run: echo "🚀 Deploy logic goes here!"
+      - name: Call DummyJSON API
+        run: |
+          echo "🔗 Making GET request to https://dummyjson.com/products"
+          curl --fail -X GET https://dummyjson.com/products
