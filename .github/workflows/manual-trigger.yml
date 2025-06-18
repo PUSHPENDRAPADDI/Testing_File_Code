@@ -25,12 +25,19 @@
 
 
 
-
-
-name: Call DummyJSON API
+name: Call Selected DummyJSON API
 
 on:
   workflow_dispatch:
+    inputs:
+      endpoint:
+        description: 'Select the API endpoint to call'
+        required: true
+        type: choice
+        options:
+          - users
+          - posts
+          - test
 
 jobs:
   call-api:
@@ -38,5 +45,7 @@ jobs:
     steps:
       - name: Call DummyJSON API
         run: |
-          echo "🔗 Making GET request to https://dummyjson.com/products"
-          curl --fail -X GET https://dummyjson.com/products
+          echo "🔗 Selected endpoint: ${{ github.event.inputs.endpoint }}"
+          URL="https://dummyjson.com/${{ github.event.inputs.endpoint }}"
+          echo "🔗 Calling URL: $URL"
+          curl --fail -X GET "$URL"
