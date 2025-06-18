@@ -13,6 +13,14 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: npm install js-yaml
+
       - name: Generate YAML options list
         run: |
           mkdir -p .github/generated
@@ -22,15 +30,18 @@ jobs:
           echo "    options:" >> .github/generated/file-options.yml
           find . -type f | sed 's/^/      - /' >> .github/generated/file-options.yml
 
-      - name: Show generated file
-        run: cat .github/generated/file-options.yml
+      - name: Run Node script to inject into workflow
+        run: node update-workflow.js
 
-      - name: Commit dropdown options to repo
+      - name: Show updated workflow
+        run: cat .github/workflows/manual-trigger.yml
+
+      - name: Commit updates
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add .github/generated/file-options.yml
-          git commit -m "🔁 Auto-generate file dropdown options"
+          git add .github/generated/file-options.yml .github/workflows/manual-trigger.yml
+          git commit -m "🔁 Auto-update workflow file dropdown options"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
