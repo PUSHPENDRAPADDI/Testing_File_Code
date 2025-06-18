@@ -12,6 +12,7 @@ jobs:
 
       - name: Generate YAML options list
         run: |
+          mkdir -p .github/generated
           echo "  file_choice:" > .github/generated/file-options.yml
           echo "    description: 'Choose a file'" >> .github/generated/file-options.yml
           echo "    type: choice" >> .github/generated/file-options.yml
