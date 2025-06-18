@@ -1,0 +1,30 @@
+name: Generate File Dropdown Options
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Generate YAML options list
+        run: |
+          echo "  file_choice:" > .github/generated/file-options.yml
+          echo "    description: 'Choose a file'" >> .github/generated/file-options.yml
+          echo "    type: choice" >> .github/generated/file-options.yml
+          echo "    options:" >> .github/generated/file-options.yml
+          find . -type f | sed 's/^/      - /' >> .github/generated/file-options.yml
+
+      - name: Show generated file
+        run: cat .github/generated/file-options.yml
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .github/generated/file-options.yml
+          git commit -m "Auto-generated file options list"
+          git push
