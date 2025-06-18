@@ -1,0 +1,24 @@
+name: Manual Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Environment
+        run: echo "Deploying to ${{ github.event.inputs.environment }}"
+
+      # You can add your actual deployment script here
+      - name: Simulate Deployment
+        run: echo "🚀 Deploy logic goes here!"
