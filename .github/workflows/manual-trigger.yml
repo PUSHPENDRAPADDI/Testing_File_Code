@@ -25,27 +25,68 @@
 
 
 
-name: Call Selected DummyJSON API
+# name: Call Selected DummyJSON API
+
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       endpoint:
+#         description: 'Select the API endpoint to call'
+#         required: true
+#         type: choice
+#         options:
+#           - users
+#           - posts
+#           - test
+
+# jobs:
+#   call-api:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Call DummyJSON API
+#         run: |
+#           echo "🔗 Selected endpoint: ${{ github.event.inputs.endpoint }}"
+#           URL="https://dummyjson.com/${{ github.event.inputs.endpoint }}"
+#           echo "🔗 Calling URL: $URL"
+#           curl --fail -X GET "$URL"
+
+
+
+
+name: Select File from Repo
 
 on:
   workflow_dispatch:
     inputs:
-      endpoint:
-        description: 'Select the API endpoint to call'
+      filename:
+        description: 'Enter the file path (e.g., src/index.js)'
         required: true
-        type: choice
-        options:
-          - users
-          - posts
-          - test
 
 jobs:
-  call-api:
+  validate-and-use-file:
     runs-on: ubuntu-latest
     steps:
-      - name: Call DummyJSON API
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: List all available files
         run: |
-          echo "🔗 Selected endpoint: ${{ github.event.inputs.endpoint }}"
-          URL="https://dummyjson.com/${{ github.event.inputs.endpoint }}"
-          echo "🔗 Calling URL: $URL"
-          curl --fail -X GET "$URL"
+          echo "📂 All files in the repository:"
+          find . -type f
+
+      - name: Check if the entered file exists
+        run: |
+          FILE="${{ github.event.inputs.filename }}"
+          echo "🔍 Checking if file '$FILE' exists..."
+          if [[ -f "$FILE" ]]; then
+            echo "✅ File found: $FILE"
+          else
+            echo "❌ File not found: $FILE"
+            exit 1
+          fi
+
+      - name: (Optional) Show file content
+        if: success()
+        run: |
+          echo "📄 Content of the file:"
+          cat "${{ github.event.inputs.filename }}"
