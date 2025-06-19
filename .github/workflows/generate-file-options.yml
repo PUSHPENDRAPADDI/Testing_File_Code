@@ -83,8 +83,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-
           git add .github/workflows/manual-trigger.yml
           git commit -m "🔁 Auto-update file dropdown options" || echo "No changes to commit"
-
+          echo "Token starts with: ${PERSONAL_GITHUB_TOKEN:0:4}"
           git push https://x-access-token:${PERSONAL_GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:SUNNY!!!!
