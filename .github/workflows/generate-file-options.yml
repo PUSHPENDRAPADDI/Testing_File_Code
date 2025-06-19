@@ -84,12 +84,14 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          # Make sure we're on the correct branch
-          git checkout ${{ github.ref_name }}
-
-          # Set remote with PAT instead of GitHub App token
           git remote set-url origin https://x-access-token:${PERSONAL_GITHUB_TOKEN}@github.com/${{ github.repository }}
-
+          
           git add .github/workflows/manual-trigger.yml
           git commit -m "🔁 Auto-update file dropdown options" || echo "No changes to commit"
-          git push origin HEAD:${{ github.ref_name }}
+
+          # Debug: Show current branch and remote
+          git branch --show-current
+          git remote -v
+
+          # Push safely
+          git push origin HEAD
