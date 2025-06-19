@@ -77,7 +77,7 @@ jobs:
       - name: Show updated workflow
         run: cat .github/workflows/manual-trigger.yml
 
-            - name: Commit updates
+      - name: Commit updates
         env:
           PERSONAL_GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
         run: |
@@ -93,4 +93,3 @@ jobs:
           git add .github/workflows/manual-trigger.yml
           git commit -m "🔁 Auto-update file dropdown options" || echo "No changes to commit"
           git push origin HEAD:${{ github.ref_name }}
-
